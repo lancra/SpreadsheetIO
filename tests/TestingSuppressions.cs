@@ -21,6 +21,14 @@ using System.Diagnostics.CodeAnalysis;
     "CA2007:Consider calling ConfigureAwait on the awaited task",
     Justification = "Test methods will not be called outside of the scope of the project.")]
 [assembly: SuppressMessage(
+    "Microsoft.CodeAnalysis.CSharp",
+    "CS8604:Possible null reference argument.",
+    Justification = "Necessary to add coverage for projects that do not use nullable reference types.")]
+[assembly: SuppressMessage(
+    "Microsoft.CodeAnalysis.CSharp",
+    "CS8625:Cannot convert null literal to non-nullable reference type.",
+    Justification = "Necessary to add coverage for projects that do not use nullable reference types.")]
+[assembly: SuppressMessage(
     "StyleCop.CSharp.ReadabilityRules",
     "SA1118:Parameter should not span multiple lines",
     Justification = "This situation is hard to avoid with complex theory data.")]
