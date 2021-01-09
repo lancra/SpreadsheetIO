@@ -4,4 +4,34 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageVersion>0.0.1</PackageVersion>
+    <Authors>Lance Craig</Authors>
+    <Title>Spreadsheet IO</Title>
+    <Description>Provides simple input and output for Excel spreadsheets.</Description>
+    <PackageReleaseNotes>
+Initial prerelease.
+    </PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/lanceccraig/SpreadsheetIO</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/lanceccraig/SpreadsheetIO.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Copyright>Copyright @ Lance Craig</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DebugType>portable</DebugType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ardalis.GuardClauses" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+    <InternalsVisibleTo Include="LanceC.SpreadsheetIO.Facts" />
+  </ItemGroup>
+
 </Project>

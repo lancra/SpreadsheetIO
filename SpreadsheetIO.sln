@@ -19,6 +19,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LanceC.SpreadsheetIO", "src\SpreadsheetIO\LanceC.SpreadsheetIO.csproj", "{449B99F6-25EB-4FDC-B219-FDC041733084}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{026063D8-6981-4D51-B3AB-6AC3B9A91F1E}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Build.props = tests\Directory.Build.props
+		tests\TestingSuppressions.cs = tests\TestingSuppressions.cs
+		tests\xunit.runner.json = tests\xunit.runner.json
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LanceC.SpreadsheetIO.Facts", "tests\SpreadsheetIO.Facts\LanceC.SpreadsheetIO.Facts.csproj", "{6006DE60-66D0-4C20-9F2F-6A6BBB887390}"
 EndProject
