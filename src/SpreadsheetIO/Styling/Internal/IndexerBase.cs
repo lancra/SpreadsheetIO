@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LanceC.SpreadsheetIO.Shared;
 
 namespace LanceC.SpreadsheetIO.Styling.Internal
 {
@@ -17,6 +18,9 @@ namespace LanceC.SpreadsheetIO.Styling.Internal
 
             AddDefaultResources();
         }
+
+        public IReadOnlyCollection<TResource> Resources
+            => _resourceIndexer.Keys.AsReadOnly();
 
         protected abstract IReadOnlyCollection<TResource> DefaultResources { get; }
 

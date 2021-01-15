@@ -14,7 +14,30 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal
         private FontIndexer CreateSystemUnderTest()
             => _mocker.CreateInstance<FontIndexer>();
 
-        public class TheIndexer : FontIndexerFacts
+        public class TheResourcesProperty : FontIndexerFacts
+        {
+            [Fact]
+            public void ReturnsIndexedResources()
+            {
+                // Arrange
+                var defaultFont = Font.Default;
+                var nonDefaultFont = new Font("Arial", 20D, Color.White, true, true);
+
+                var sut = CreateSystemUnderTest();
+                sut.Add(defaultFont);
+                sut.Add(nonDefaultFont);
+
+                // Act
+                var fonts = sut.Resources;
+
+                // Assert
+                Assert.Equal(2, fonts.Count);
+                Assert.Single(fonts, font => font == defaultFont);
+                Assert.Single(fonts, font => font == nonDefaultFont);
+            }
+        }
+
+        public class TheResourceIndexer : FontIndexerFacts
         {
             [Fact]
             public void ReturnsIndexForFont()

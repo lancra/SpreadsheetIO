@@ -23,7 +23,30 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal
         private StyleIndexer CreateSystemUnderTest()
             => _mocker.CreateInstance<StyleIndexer>();
 
-        public class TheIndexer : StyleIndexerFacts
+        public class TheKeysProperty : StyleIndexerFacts
+        {
+            [Fact]
+            public void ReturnsIndexedKeys()
+            {
+                // Arrange
+                var defaultKey = BuiltInExcelStyle.Normal.IndexerKey;
+                var defaultStyle = BuiltInExcelStyle.Normal.Style;
+
+                var sut = CreateSystemUnderTest();
+                sut.Add(defaultKey, defaultStyle);
+                sut.Add(Key, Style);
+
+                // Act
+                var keys = sut.Keys;
+
+                // Assert
+                Assert.Equal(2, keys.Count);
+                Assert.Single(keys, key => key == defaultKey);
+                Assert.Single(keys, key => key == Key);
+            }
+        }
+
+        public class TheKeyIndexer : StyleIndexerFacts
         {
             [Fact]
             public void ReturnsIndexForKey()

@@ -14,7 +14,33 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal
         private FillIndexer CreateSystemUnderTest()
             => _mocker.CreateInstance<FillIndexer>();
 
-        public class TheIndexer : FillIndexerFacts
+        public class TheResourcesProperty : FillIndexerFacts
+        {
+            [Fact]
+            public void ReturnsIndexedResources()
+            {
+                // Arrange
+                var firstDefaultFill = Fill.Default;
+                var secondDefaultFill = Fill.Default with { Kind = FillKind.Gray125, };
+                var nonDefaultFill = new Fill(FillKind.Solid, Color.Black);
+
+                var sut = CreateSystemUnderTest();
+                sut.Add(firstDefaultFill);
+                sut.Add(secondDefaultFill);
+                sut.Add(nonDefaultFill);
+
+                // Act
+                var fills = sut.Resources;
+
+                // Assert
+                Assert.Equal(3, fills.Count);
+                Assert.Single(fills, fill => fill == firstDefaultFill);
+                Assert.Single(fills, fill => fill == secondDefaultFill);
+                Assert.Single(fills, fill => fill == nonDefaultFill);
+            }
+        }
+
+        public class TheResourceIndexer : FillIndexerFacts
         {
             [Fact]
             public void ReturnsIndexForFill()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LanceC.SpreadsheetIO.Shared;
 
 namespace LanceC.SpreadsheetIO.Styling.Internal
 {
@@ -16,6 +17,9 @@ namespace LanceC.SpreadsheetIO.Styling.Internal
             _initialIndex = initialIndex;
             _indexProvider = initialIndex;
         }
+
+        public IReadOnlyCollection<IndexerKey> Keys
+            => _nameIndexer.Keys.AsReadOnly();
 
         public uint this[IndexerKey key]
         {

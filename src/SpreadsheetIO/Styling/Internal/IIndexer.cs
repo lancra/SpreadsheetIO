@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace LanceC.SpreadsheetIO.Styling.Internal
 {
@@ -9,6 +10,11 @@ namespace LanceC.SpreadsheetIO.Styling.Internal
     internal interface IIndexer<TResource>
         where TResource : IEquatable<TResource>
     {
+        /// <summary>
+        /// Gets the indexed resources.
+        /// </summary>
+        IReadOnlyCollection<TResource> Resources { get; }
+
         /// <summary>
         /// Gets the index for a resource.
         /// </summary>

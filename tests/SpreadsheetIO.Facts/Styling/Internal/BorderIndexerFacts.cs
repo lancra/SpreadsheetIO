@@ -14,7 +14,30 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal
         private BorderIndexer CreateSystemUnderTest()
             => _mocker.CreateInstance<BorderIndexer>();
 
-        public class TheIndexer : BorderIndexerFacts
+        public class TheResourcesProperty : BorderIndexerFacts
+        {
+            [Fact]
+            public void ReturnsIndexedResources()
+            {
+                // Arrange
+                var defaultBorder = Border.Default;
+                var nonDefaultBorder = new Border(new BorderLine(Color.White, BorderLineKind.Thick));
+
+                var sut = CreateSystemUnderTest();
+                sut.Add(defaultBorder);
+                sut.Add(nonDefaultBorder);
+
+                // Act
+                var borders = sut.Resources;
+
+                // Assert
+                Assert.Equal(2, borders.Count);
+                Assert.Single(borders, border => border == defaultBorder);
+                Assert.Single(borders, border => border == nonDefaultBorder);
+            }
+        }
+
+        public class TheResourceIndexer : BorderIndexerFacts
         {
             [Fact]
             public void ReturnsIndexForBorder()
