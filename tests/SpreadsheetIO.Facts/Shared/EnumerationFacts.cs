@@ -544,6 +544,20 @@ namespace LanceC.SpreadsheetIO.Facts.Shared
                 // Assert
                 Assert.Equal(expecteds, actuals);
             }
+
+            [Fact]
+            public void ThrowsNotSupportedExceptionWhenTypeIsNotEnumeration()
+            {
+                // Arrange
+                var type = typeof(string);
+
+                // Act
+                var exception = Record.Exception(() => Enumeration.GetAll(type));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<NotSupportedException>(exception);
+            }
         }
 
         public class TheCompareToMethod : EnumerationFacts

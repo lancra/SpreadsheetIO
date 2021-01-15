@@ -6,8 +6,7 @@
       "documentInterfaces": true,
       "documentInternalElements": false,
       "documentPrivateElements": false,
-      "documentPrivateFields": false,
-      "fileNamingConvention": "metadata"
+      "documentPrivateFields": false
     },
     "layoutRules": {
       "newlineAtEndOfFile": "require"
