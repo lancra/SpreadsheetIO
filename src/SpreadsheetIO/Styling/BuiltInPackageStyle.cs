@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Shared;
-using LanceC.SpreadsheetIO.Styling.Internal;
+using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 
 namespace LanceC.SpreadsheetIO.Styling
 {

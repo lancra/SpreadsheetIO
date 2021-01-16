@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace LanceC.SpreadsheetIO.Styling.Internal
+namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
 {
     internal class FontIndexer : IndexerBase<Font>, IFontIndexer
     {

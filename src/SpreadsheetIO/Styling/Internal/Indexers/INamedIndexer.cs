@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace LanceC.SpreadsheetIO.Styling.Internal
+namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
 {
     /// <summary>
     /// Defines a resource indexer that supports custom naming.

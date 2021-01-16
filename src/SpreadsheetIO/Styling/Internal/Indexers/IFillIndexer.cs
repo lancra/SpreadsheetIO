@@ -1,4 +1,4 @@
-namespace LanceC.SpreadsheetIO.Styling.Internal
+namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
 {
     /// <summary>
     /// Defines a fill indexer.

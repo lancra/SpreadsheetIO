@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Shared;
 
-namespace LanceC.SpreadsheetIO.Styling.Internal
+namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
 {
     internal abstract class NamedIndexerBase<TResource>
         where TResource : IEquatable<TResource>

@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Styling.Internal;
+using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LanceC.SpreadsheetIO

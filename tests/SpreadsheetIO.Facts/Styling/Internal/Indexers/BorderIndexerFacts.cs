@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using LanceC.SpreadsheetIO.Styling;
-using LanceC.SpreadsheetIO.Styling.Internal;
+using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Styling.Internal
+namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
 {
     public class BorderIndexerFacts
     {

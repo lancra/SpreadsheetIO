@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace LanceC.SpreadsheetIO.Styling.Internal
+namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
 {
     [ExcludeFromCodeCoverage]
     internal record IndexerKey(string Name, IndexerKeyKind Kind)
