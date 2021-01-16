@@ -29,8 +29,8 @@ namespace LanceC.SpreadsheetIO.Styling
                 "Bad",
                 new Style(
                     Border.Default,
-                    new Fill(FillKind.Solid, CreateColor(0xFFFFC7CE)),
-                    Font.Default with { Color = CreateColor(0xFF9C0006), },
+                    new Fill(FillKind.Solid, 0xFFFFC7CE.ToColor()),
+                    Font.Default with { Color = 0xFF9C0006.ToColor(), },
                     27));
 
         /// <summary>
@@ -42,8 +42,8 @@ namespace LanceC.SpreadsheetIO.Styling
                 "Good",
                 new Style(
                     Border.Default,
-                    new Fill(FillKind.Solid, CreateColor(0xFFC6EFCE)),
-                    Font.Default with { Color = CreateColor(0xFF006100), },
+                    new Fill(FillKind.Solid, 0xFFC6EFCE.ToColor()),
+                    Font.Default with { Color = 0xFF006100.ToColor(), },
                     26));
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace LanceC.SpreadsheetIO.Styling
                 "Neutral",
                 new Style(
                     Border.Default,
-                    new Fill(FillKind.Solid, CreateColor(0xFFFFEB9C)),
-                    Font.Default with { Color = CreateColor(0xFF9C5700), },
+                    new Fill(FillKind.Solid, 0xFFFFEB9C.ToColor()),
+                    Font.Default with { Color = 0xFF9C5700.ToColor(), },
                     28));
 
         /// <summary>
@@ -67,9 +67,9 @@ namespace LanceC.SpreadsheetIO.Styling
                 5,
                 "Calculation",
                 new Style(
-                    new Border(new BorderLine(CreateColor(0xFF7F7F7F), BorderLineKind.Thin)),
-                    new Fill(FillKind.Solid, CreateColor(0xFFF2F2F2)),
-                    Font.Default with { Color = CreateColor(0xFFFA7D00), IsBold = true, },
+                    new Border(new BorderLine(0xFF7F7F7F.ToColor(), BorderLineKind.Thin)),
+                    new Fill(FillKind.Solid, 0xFFF2F2F2.ToColor()),
+                    Font.Default with { Color = 0xFFFA7D00.ToColor(), IsBold = true, },
                     22));
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace LanceC.SpreadsheetIO.Styling
                 6,
                 "Check Cell",
                 new Style(
-                    new Border(new BorderLine(CreateColor(0xFF3F3F3F), BorderLineKind.Double)),
-                    new Fill(FillKind.Solid, CreateColor(0xFFA5A5A5)),
+                    new Border(new BorderLine(0xFF3F3F3F.ToColor(), BorderLineKind.Double)),
+                    new Fill(FillKind.Solid, 0xFFA5A5A5.ToColor()),
                     Font.Default with { Color = Color.White, IsBold = true, },
                     23));
 
@@ -95,7 +95,7 @@ namespace LanceC.SpreadsheetIO.Styling
                 new Style(
                     Border.Default,
                     Fill.Default,
-                    Font.Default with { Color = CreateColor(0xFF7F7F7F), IsItalic = true, },
+                    Font.Default with { Color = 0xFF7F7F7F.ToColor(), IsItalic = true, },
                     53));
 
         /// <summary>
@@ -106,9 +106,9 @@ namespace LanceC.SpreadsheetIO.Styling
                 8,
                 "Input",
                 new Style(
-                    new Border(new BorderLine(CreateColor(0xFF7F7F7F), BorderLineKind.Thin)),
-                    new Fill(FillKind.Solid, CreateColor(0xFFFFCC99)),
-                    Font.Default with { Color = CreateColor(0xFF3F3F76), },
+                    new Border(new BorderLine(0xFF7F7F7F.ToColor(), BorderLineKind.Thin)),
+                    new Fill(FillKind.Solid, 0xFFFFCC99.ToColor()),
+                    Font.Default with { Color = 0xFF3F3F76.ToColor(), },
                     20));
 
         /// <summary>
@@ -123,9 +123,9 @@ namespace LanceC.SpreadsheetIO.Styling
                         BorderLine.Default,
                         BorderLine.Default,
                         BorderLine.Default,
-                        new BorderLine(CreateColor(0xFFFF8001), BorderLineKind.Double)),
+                        new BorderLine(0xFFFF8001.ToColor(), BorderLineKind.Double)),
                     Fill.Default,
-                    Font.Default with { Color = CreateColor(0xFFFA7D00), },
+                    Font.Default with { Color = 0xFFFA7D00.ToColor(), },
                     24));
 
         /// <summary>
@@ -136,8 +136,8 @@ namespace LanceC.SpreadsheetIO.Styling
                 10,
                 "Note",
                 new Style(
-                    new Border(new BorderLine(CreateColor(0xFFB2B2B2), BorderLineKind.Thin)),
-                    new Fill(FillKind.Solid, CreateColor(0xFFFFFFCC)),
+                    new Border(new BorderLine(0xFFB2B2B2.ToColor(), BorderLineKind.Thin)),
+                    new Fill(FillKind.Solid, 0xFFFFFFCC.ToColor()),
                     Font.Default,
                     10));
 
@@ -149,9 +149,9 @@ namespace LanceC.SpreadsheetIO.Styling
                 11,
                 "Output",
                 new Style(
-                    new Border(new BorderLine(CreateColor(0xFF3F3F3F), BorderLineKind.Thin)),
-                    new Fill(FillKind.Solid, CreateColor(0xFFF2F2F2)),
-                    Font.Default with { Color = CreateColor(0xFF3F3F3F), IsBold = true, },
+                    new Border(new BorderLine(0xFF3F3F3F.ToColor(), BorderLineKind.Thin)),
+                    new Fill(FillKind.Solid, 0xFFF2F2F2.ToColor()),
+                    Font.Default with { Color = 0xFF3F3F3F.ToColor(), IsBold = true, },
                     21));
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace LanceC.SpreadsheetIO.Styling
                 new Style(
                     Border.Default,
                     Fill.Default,
-                    Font.Default with { Color = CreateColor(0xFFFF0000), },
+                    Font.Default with { Color = 0xFFFF0000.ToColor(), },
                     11));
 
         private BuiltInExcelStyle(int id, string name, Style style)
@@ -180,8 +180,5 @@ namespace LanceC.SpreadsheetIO.Styling
 
         internal IndexerKey IndexerKey
             => new IndexerKey(Name, IndexerKeyKind.Excel);
-
-        private static Color CreateColor(uint argb)
-            => Color.FromArgb((int)argb);
     }
 }
