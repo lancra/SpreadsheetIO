@@ -19,8 +19,8 @@ namespace LanceC.SpreadsheetIO.Styling.Internal
         /// Gets the index for a key.
         /// </summary>
         /// <param name="key">The indexer key.</param>
-        /// <returns>The underlying resource index.</returns>
-        uint this[IndexerKey key] { get; }
+        /// <returns>The indexed resource.</returns>
+        IndexedResource<TResource> this[IndexerKey key] { get; }
 
         /// <summary>
         /// Adds a resource tied to a key.

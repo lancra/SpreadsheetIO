@@ -21,7 +21,7 @@ namespace LanceC.SpreadsheetIO.Styling.Internal
         public IReadOnlyCollection<IndexerKey> Keys
             => _nameIndexer.Keys.AsReadOnly();
 
-        public uint this[IndexerKey key]
+        public IndexedResource<TResource> this[IndexerKey key]
         {
             get
             {
@@ -31,7 +31,8 @@ namespace LanceC.SpreadsheetIO.Styling.Internal
                 }
 
                 var index = _resourceIndexer[resource];
-                return index;
+                var indexedResource = new IndexedResource<TResource>(resource, index);
+                return indexedResource;
             }
         }
 

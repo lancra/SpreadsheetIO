@@ -49,17 +49,18 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal
         public class TheKeyIndexer : StyleIndexerFacts
         {
             [Fact]
-            public void ReturnsIndexForKey()
+            public void ReturnsIndexedResourceForKey()
             {
                 // Arrange
                 var sut = CreateSystemUnderTest();
                 var expectedIndex = sut.Add(Key, Style);
 
                 // Act
-                var actualIndex = sut[Key];
+                var actualIndexedResource = sut[Key];
 
                 // Assert
-                Assert.Equal(expectedIndex, actualIndex);
+                Assert.Equal(Style, actualIndexedResource.Resource);
+                Assert.Equal(expectedIndex, actualIndexedResource.Index);
             }
 
             [Fact]
