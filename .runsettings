@@ -11,10 +11,10 @@
 
             <ModulePaths>
               <Include>
-                <ModulePath>.*SpreadsheetIO\..*\.dll$</ModulePath>
+                <ModulePath>.*\\LanceC\.SpreadsheetIO.*\.dll$</ModulePath>
               </Include>
               <Exclude>
-                <ModulePath>.*tests\.dll$</ModulePath>
+                <ModulePath>.*Facts.dll</ModulePath>
               </Exclude>
             </ModulePaths>
 
