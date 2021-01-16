@@ -1,3 +1,4 @@
+using LanceC.SpreadsheetIO.Styling.Internal.Generators;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +16,10 @@ namespace LanceC.SpreadsheetIO
         /// <returns>The modified service collection.</returns>
         public static IServiceCollection AddSpreadsheetIO(this IServiceCollection services)
             => services
+            .AddSingleton<IStylesheetMutator, StylesheetBorderMutator>()
+            .AddSingleton<IStylesheetMutator, StylesheetFillMutator>()
+            .AddSingleton<IStylesheetMutator, StylesheetFontMutator>()
+            .AddSingleton<IStylesheetMutator, StylesheetStyleMutator>()
             .AddSingleton<IBorderIndexer, BorderIndexer>()
             .AddSingleton<IFillIndexer, FillIndexer>()
             .AddSingleton<IFontIndexer, FontIndexer>()
