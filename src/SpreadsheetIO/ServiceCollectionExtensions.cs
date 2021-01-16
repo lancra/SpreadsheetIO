@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Styling.Internal.Generators;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,7 @@ namespace LanceC.SpreadsheetIO
         /// </summary>
         /// <param name="services">The service collection to modify.</param>
         /// <returns>The modified service collection.</returns>
+        [ExcludeFromCodeCoverage]
         public static IServiceCollection AddSpreadsheetIO(this IServiceCollection services)
             => services
             .AddSingleton<IStylesheetMutator, StylesheetBorderMutator>()
