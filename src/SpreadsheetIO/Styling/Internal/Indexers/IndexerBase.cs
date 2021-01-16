@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using LanceC.SpreadsheetIO.Shared;
 
 namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
 {
@@ -20,7 +19,7 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
         }
 
         public IReadOnlyCollection<TResource> Resources
-            => _resourceIndexer.Keys.AsReadOnly();
+            => (IReadOnlyCollection<TResource>)_resourceIndexer.Keys;
 
         protected abstract IReadOnlyCollection<TResource> DefaultResources { get; }
 
