@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling.Internal.Generators;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,7 @@ namespace LanceC.SpreadsheetIO
             .AddSingleton<IBorderIndexer, BorderIndexer>()
             .AddSingleton<IFillIndexer, FillIndexer>()
             .AddSingleton<IFontIndexer, FontIndexer>()
+            .AddSingleton<IStringIndexer, StringIndexer>()
             .AddSingleton<IStyleIndexer, StyleIndexer>();
     }
 }

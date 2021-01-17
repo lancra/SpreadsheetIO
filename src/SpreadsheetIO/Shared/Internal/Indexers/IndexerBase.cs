@@ -23,7 +23,7 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
 
         protected abstract IReadOnlyCollection<TResource> DefaultResources { get; }
 
-        public uint this[TResource resource]
+        public virtual uint this[TResource resource]
         {
             get
             {
