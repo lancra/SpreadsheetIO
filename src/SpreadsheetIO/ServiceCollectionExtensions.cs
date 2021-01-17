@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
+using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using LanceC.SpreadsheetIO.Styling.Internal.Generators;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,7 @@ namespace LanceC.SpreadsheetIO
         [ExcludeFromCodeCoverage]
         public static IServiceCollection AddSpreadsheetIO(this IServiceCollection services)
             => services
+            .AddSingleton<ISpreadsheetDocumentWrapperFactory, SpreadsheetDocumentWrapperFactory>()
             .AddSingleton<IStylesheetMutator, StylesheetBorderMutator>()
             .AddSingleton<IStylesheetMutator, StylesheetFillMutator>()
             .AddSingleton<IStylesheetMutator, StylesheetFontMutator>()
