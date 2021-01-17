@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using LanceC.SpreadsheetIO.Shared;
-using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
+using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 
 namespace LanceC.SpreadsheetIO.Styling
 {

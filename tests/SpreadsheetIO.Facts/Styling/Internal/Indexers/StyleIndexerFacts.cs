@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using Moq.AutoMock;

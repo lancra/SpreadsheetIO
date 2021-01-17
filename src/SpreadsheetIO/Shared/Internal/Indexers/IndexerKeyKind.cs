@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Shared;
 
-namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
+namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
 {
     [ExcludeFromCodeCoverage]
     internal class IndexerKeyKind : Enumeration

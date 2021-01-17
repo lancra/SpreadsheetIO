@@ -1,3 +1,5 @@
+using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
+
 namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
 {
     internal class StyleIndexer : NamedIndexerBase<Style>, IStyleIndexer

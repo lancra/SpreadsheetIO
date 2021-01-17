@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Styling.Internal.Generators;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;

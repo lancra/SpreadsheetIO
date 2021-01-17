@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 
 namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
 {
