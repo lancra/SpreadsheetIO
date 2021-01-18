@@ -1,3 +1,4 @@
+using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 
@@ -10,15 +11,27 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
             Cell = cell;
         }
 
-        public OpenXml.Cell Cell { get; private set; }
+        internal OpenXml.Cell Cell { get; private set; }
 
-        public Style? Style { get; private set; }
+        internal IndexerKey? StyleKey { get; private set; }
 
-        public CellStringKind StringKind { get; private set; } = CellStringKind.SharedString;
+        internal CellStringKind StringKind { get; private set; } = CellStringKind.SharedString;
 
-        public ICellValueBuilder WithStyle(Style style)
+        public ICellValueBuilder WithStyle(string name)
         {
-            Style = style;
+            StyleKey = new IndexerKey(name, IndexerKeyKind.Custom);
+            return this;
+        }
+
+        public ICellValueBuilder WithStyle(BuiltInExcelStyle style)
+        {
+            StyleKey = style.IndexerKey;
+            return this;
+        }
+
+        public ICellValueBuilder WithStyle(BuiltInPackageStyle style)
+        {
+            StyleKey = style.IndexerKey;
             return this;
         }
 

@@ -1,3 +1,4 @@
+using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Writing;
 using LanceC.SpreadsheetIO.Writing.Internal;
@@ -17,20 +18,22 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
             return _mocker.CreateInstance<CellBuilderImpl>();
         }
 
-        public class TheWithStyleMethod : CellBuilderImplFacts
+        public class TheWithStyleMethodWithStringParameter : CellBuilderImplFacts
         {
             [Fact]
-            public void SetsStyleProperty()
+            public void SetsStyleKeyProperty()
             {
                 // Arrange
-                var style = BuiltInExcelStyle.Normal.Style;
+                var name = "Style";
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                sut.WithStyle(style);
+                sut.WithStyle(name);
 
                 // Assert
-                Assert.Equal(style, sut.Style);
+                Assert.NotNull(sut.StyleKey);
+                Assert.Equal(name, sut.StyleKey!.Name);
+                Assert.Equal(IndexerKeyKind.Custom, sut.StyleKey.Kind);
             }
 
             [Fact]
@@ -40,7 +43,71 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var cellValueBuilder = sut.WithStyle(BuiltInExcelStyle.Normal.Style);
+                var cellValueBuilder = sut.WithStyle("Style");
+
+                // Assert
+                Assert.Equal(sut, cellValueBuilder);
+            }
+        }
+
+        public class TheWithStyleMethodWithBuiltInExcelStyleParameter : CellBuilderImplFacts
+        {
+            [Fact]
+            public void SetsStyleKeyProperty()
+            {
+                // Arrange
+                var style = BuiltInExcelStyle.Normal;
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.WithStyle(style);
+
+                // Assert
+                Assert.NotNull(sut.StyleKey);
+                Assert.Equal(style.Name, sut.StyleKey!.Name);
+                Assert.Equal(IndexerKeyKind.Excel, sut.StyleKey.Kind);
+            }
+
+            [Fact]
+            public void ReturnsSelf()
+            {
+                // Arrange
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var cellValueBuilder = sut.WithStyle(BuiltInExcelStyle.Normal);
+
+                // Assert
+                Assert.Equal(sut, cellValueBuilder);
+            }
+        }
+
+        public class TheWithStyleMethodWithBuiltInPackageStyleParameter : CellBuilderImplFacts
+        {
+            [Fact]
+            public void SetsStyleKeyProperty()
+            {
+                // Arrange
+                var style = BuiltInPackageStyle.Bold;
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.WithStyle(style);
+
+                // Assert
+                Assert.NotNull(sut.StyleKey);
+                Assert.Equal(style.Name, sut.StyleKey!.Name);
+                Assert.Equal(IndexerKeyKind.Package, sut.StyleKey.Kind);
+            }
+
+            [Fact]
+            public void ReturnsSelf()
+            {
+                // Arrange
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var cellValueBuilder = sut.WithStyle(BuiltInPackageStyle.Bold);
 
                 // Assert
                 Assert.Equal(sut, cellValueBuilder);
