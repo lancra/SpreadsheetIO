@@ -357,8 +357,11 @@ namespace LanceC.SpreadsheetIO.Facts.Shared
             [Fact]
             public void ThrowsNotSupportedExceptionForNullValue()
             {
+                // Arrange
+                var name = default(string?);
+
                 // Act
-                var exception = Record.Exception(() => Enumeration.FromName<FakeEnumeration>(default));
+                var exception = Record.Exception(() => Enumeration.FromName<FakeEnumeration>(name!));
 
                 // Assert
                 Assert.NotNull(exception);
