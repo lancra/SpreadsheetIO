@@ -34,7 +34,7 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
                     SheetId = Convert.ToUInt32(sheets.Count() + 1),
                 });
 
-            var worksheetPartWrapper = new WorksheetPartWrapper(worksheetPart);
+            var worksheetPartWrapper = new WorksheetPartWrapper(worksheetPart, name);
             return worksheetPartWrapper;
         }
 

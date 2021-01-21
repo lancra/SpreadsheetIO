@@ -9,10 +9,13 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
     {
         private readonly WorksheetPart _worksheetPart;
 
-        public WorksheetPartWrapper(WorksheetPart worksheetPart)
+        public WorksheetPartWrapper(WorksheetPart worksheetPart, string name)
         {
             _worksheetPart = worksheetPart;
+            Name = name;
         }
+
+        public string Name { get; }
 
         public IOpenXmlWriterWrapper CreateWriter()
         {
