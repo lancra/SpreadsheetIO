@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
@@ -12,15 +14,18 @@ namespace LanceC.SpreadsheetIO.Shared.Internal
         private readonly ISpreadsheetDocumentWrapperFactory _spreadsheetDocumentFactory;
         private readonly IStyleIndexer _styleIndexer;
         private readonly IStringIndexer _stringIndexer;
+        private readonly IEnumerable<ISpreadsheetGenerator> _spreadsheetGenerators;
 
         public SpreadsheetFactory(
             ISpreadsheetDocumentWrapperFactory spreadsheetDocumentFactory,
             IStyleIndexer styleIndexer,
-            IStringIndexer stringIndexer)
+            IStringIndexer stringIndexer,
+            IEnumerable<ISpreadsheetGenerator> spreadsheetGenerators)
         {
             _spreadsheetDocumentFactory = spreadsheetDocumentFactory;
             _styleIndexer = styleIndexer;
             _stringIndexer = stringIndexer;
+            _spreadsheetGenerators = spreadsheetGenerators;
         }
 
         public IWritingSpreadsheet Create(string path)
@@ -30,7 +35,8 @@ namespace LanceC.SpreadsheetIO.Shared.Internal
                 spreadsheetDocument,
                 CreateSpreadsheetPageCollection(),
                 _styleIndexer,
-                _stringIndexer);
+                _stringIndexer,
+                _spreadsheetGenerators);
 
             return spreadsheet;
         }
@@ -42,7 +48,8 @@ namespace LanceC.SpreadsheetIO.Shared.Internal
                 spreadsheetDocument,
                 CreateSpreadsheetPageCollection(),
                 _styleIndexer,
-                _stringIndexer);
+                _stringIndexer,
+                _spreadsheetGenerators);
 
             return spreadsheet;
         }

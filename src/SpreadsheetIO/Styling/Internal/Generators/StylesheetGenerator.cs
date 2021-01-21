@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using LanceC.SpreadsheetIO.Shared.Internal.Generators;
+using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
 {
-    internal class StylesheetGenerator : IStylesheetGenerator
+    internal class StylesheetGenerator : ISpreadsheetGenerator
     {
         private readonly IEnumerable<IStylesheetMutator> _stylesheetMutators;
 
@@ -12,15 +14,16 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
             _stylesheetMutators = stylesheetMutators;
         }
 
-        public OpenXml.Stylesheet Generate()
+        public void Generate(ISpreadsheetDocumentWrapper spreadsheetDocument)
         {
+            var workbookStylesPart = spreadsheetDocument.AddWorkbookStylesPart();
             var stylesheet = new OpenXml.Stylesheet();
             foreach (var mutator in _stylesheetMutators)
             {
                 mutator.Mutate(stylesheet);
             }
 
-            return stylesheet;
+            workbookStylesPart.SetStylesheet(stylesheet);
         }
     }
 }

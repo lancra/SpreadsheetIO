@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Ardalis.GuardClauses;
+using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using LanceC.SpreadsheetIO.Styling;
@@ -13,17 +15,20 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
         private readonly IWritingSpreadsheetPageCollectionModifiable _spreadsheetPages;
         private readonly IStyleIndexer _styleIndexer;
         private readonly IStringIndexer _stringIndexer;
+        private readonly IEnumerable<ISpreadsheetGenerator> _spreadsheetGenerators;
 
         public WritingSpreadsheet(
             ISpreadsheetDocumentWrapper spreadsheetDocument,
             IWritingSpreadsheetPageCollectionModifiable spreadsheetPages,
             IStyleIndexer styleIndexer,
-            IStringIndexer stringIndexer)
+            IStringIndexer stringIndexer,
+            IEnumerable<ISpreadsheetGenerator> spreadsheetGenerators)
         {
             _spreadsheetDocument = spreadsheetDocument;
             _spreadsheetPages = spreadsheetPages;
             _styleIndexer = styleIndexer;
             _stringIndexer = stringIndexer;
+            _spreadsheetGenerators = spreadsheetGenerators;
         }
 
         public IWritingSpreadsheetPageCollection Pages
@@ -77,7 +82,17 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
         {
             if (disposing)
             {
+                ExecuteGenerators();
+                _spreadsheetPages.Dispose();
                 _spreadsheetDocument.Dispose();
+            }
+        }
+
+        private void ExecuteGenerators()
+        {
+            foreach (var spreadsheetGenerator in _spreadsheetGenerators)
+            {
+                spreadsheetGenerator.Generate(_spreadsheetDocument);
             }
         }
     }

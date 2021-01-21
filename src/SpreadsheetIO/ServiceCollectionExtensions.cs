@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Shared.Internal;
+using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using LanceC.SpreadsheetIO.Styling.Internal.Generators;
@@ -27,6 +28,8 @@ namespace LanceC.SpreadsheetIO
             .AddSingleton<IStylesheetMutator, StylesheetFillMutator>()
             .AddSingleton<IStylesheetMutator, StylesheetFontMutator>()
             .AddSingleton<IStylesheetMutator, StylesheetStyleMutator>()
+            .AddSingleton<ISpreadsheetGenerator, SharedStringTableGenerator>()
+            .AddSingleton<ISpreadsheetGenerator, StylesheetGenerator>()
             .AddSingleton<IBorderIndexer, BorderIndexer>()
             .AddSingleton<IFillIndexer, FillIndexer>()
             .AddSingleton<IFontIndexer, FontIndexer>()

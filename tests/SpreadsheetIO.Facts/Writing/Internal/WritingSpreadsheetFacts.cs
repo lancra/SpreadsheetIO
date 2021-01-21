@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
+using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
-using LanceC.SpreadsheetIO.Writing;
 using LanceC.SpreadsheetIO.Writing.Internal;
 using Moq;
 using Moq.AutoMock;
@@ -271,6 +272,43 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
 
         public class TheDisposeMethod : WritingSpreadsheetFacts
         {
+            [Fact]
+            public void ExecutesSpreadsheetGenerators()
+            {
+                // Arrange
+                var firstSpreadsheetGeneratorMock = new Mock<ISpreadsheetGenerator>();
+                var secondSpreadsheetGeneratorMock = new Mock<ISpreadsheetGenerator>();
+                _mocker.Use<IEnumerable<ISpreadsheetGenerator>>(
+                    new[] { firstSpreadsheetGeneratorMock.Object, secondSpreadsheetGeneratorMock.Object, });
+
+                var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.Dispose();
+
+                // Assert
+                firstSpreadsheetGeneratorMock
+                    .Verify(spreadsheetGenerator => spreadsheetGenerator.Generate(spreadsheetDocumentMock.Object));
+                secondSpreadsheetGeneratorMock
+                    .Verify(spreadsheetGenerator => spreadsheetGenerator.Generate(spreadsheetDocumentMock.Object));
+            }
+
+            [Fact]
+            public void DisposesSpreadsheetPageCollection()
+            {
+                // Arrange
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.Dispose();
+
+                // Assert
+                _mocker.GetMock<IWritingSpreadsheetPageCollectionModifiable>()
+                    .Verify(spreadsheetPages => spreadsheetPages.Dispose());
+            }
+
             [Fact]
             public void DisposesSpreadsheetDocument()
             {

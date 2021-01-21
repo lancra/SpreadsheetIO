@@ -20,6 +20,14 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
             _workbookPart.Workbook.AppendChild(new Sheets());
         }
 
+        public ISharedStringTablePartWrapper AddSharedStringTablePart()
+        {
+            var sharedStringTablePart = _workbookPart.AddNewPart<SharedStringTablePart>();
+
+            var sharedStringTablePartWrapper = new SharedStringTablePartWrapper(sharedStringTablePart);
+            return sharedStringTablePartWrapper;
+        }
+
         public IWorksheetPartWrapper AddWorksheetPart(string name)
         {
             var worksheetPart = _workbookPart.AddNewPart<WorksheetPart>();
@@ -36,6 +44,14 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
 
             var worksheetPartWrapper = new WorksheetPartWrapper(worksheetPart, name);
             return worksheetPartWrapper;
+        }
+
+        public IWorkbookStylesPartWrapper AddWorkbookStylesPart()
+        {
+            var workbookStylesPart = _workbookPart.AddNewPart<WorkbookStylesPart>();
+
+            var workbookStylesPartWrapper = new WorkbookStylesPartWrapper(workbookStylesPart);
+            return workbookStylesPartWrapper;
         }
 
         public void Dispose()
