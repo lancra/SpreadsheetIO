@@ -1,8 +1,8 @@
 using System.Drawing;
-using LanceC.SpreadsheetIO.Shared;
+using LanceC.SpreadsheetIO.Shared.Internal;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Shared
+namespace LanceC.SpreadsheetIO.Facts.Shared.Internal
 {
     public class ColorExtensionsFacts
     {

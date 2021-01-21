@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Text;
 
-namespace LanceC.SpreadsheetIO.Shared
+namespace LanceC.SpreadsheetIO.Shared.Internal
 {
     internal static class ColorExtensions
     {
