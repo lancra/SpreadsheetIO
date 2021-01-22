@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Styling.Internal.Generators;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
-using Moq;
 using Moq.AutoMock;
 using Xunit;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
@@ -13,82 +14,70 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 {
     public class StylesheetStyleMutatorFacts
     {
-        private static readonly IndexerKey ExcelIndexerKey = BuiltInExcelStyle.Normal.IndexerKey;
+        private static readonly FakeStyle ExcelStyleMock =
+            new FakeStyle(
+                BuiltInExcelStyle.Normal.IndexerKey,
+                new IndexedResource<Style>(BuiltInExcelStyle.Normal.Style, 0),
+                0,
+                0,
+                0);
 
-        private static readonly IndexedResource<Style> ExcelIndexedStyle =
-            new IndexedResource<Style>(BuiltInExcelStyle.Normal.Style, 0);
+        private static readonly FakeStyle PackageStyleMock =
+            new FakeStyle(
+                BuiltInPackageStyle.Bold.IndexerKey,
+                new IndexedResource<Style>(BuiltInPackageStyle.Bold.Style, 1),
+                0,
+                0,
+                1);
 
-        private static readonly IndexerKey PackageIndexerKey = BuiltInPackageStyle.Bold.IndexerKey;
-
-        private static readonly IndexedResource<Style> PackageIndexedStyle =
-            new IndexedResource<Style>(BuiltInPackageStyle.Bold.Style, 1);
-
-        private static readonly IndexerKey CustomIndexerKey = new IndexerKey("Custom", IndexerKeyKind.Custom);
-
-        private static readonly IndexedResource<Style> CustomIndexedStyle =
-            new IndexedResource<Style>(
-                new Style(
-                    new Border(new BorderLine(Color.White, BorderLineKind.Thick)),
-                    new Fill(FillKind.Solid, Color.Black),
-                    new Font("Arial", 20D, Color.Red)),
+        private static readonly FakeStyle CustomStyleMock =
+            new FakeStyle(
+                new IndexerKey("Custom", IndexerKeyKind.Custom),
+                new IndexedResource<Style>(
+                    new Style(
+                        new Border(new BorderLine(Color.White, BorderLineKind.Thick)),
+                        new Fill(FillKind.Solid, Color.Black),
+                        new Font("Arial", 20D, Color.Red)),
+                    2),
+                1,
+                1,
                 2);
 
         private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly IList<IndexerKey> _mockStyleKeys = new List<IndexerKey>();
 
         private StylesheetStyleMutator CreateSystemUnderTest()
             => _mocker.CreateInstance<StylesheetStyleMutator>();
 
-        private void MockBorderIndexer()
+        private void MockIndexers(FakeStyle styleMock)
         {
-            var borderIndexerMock = _mocker.GetMock<IBorderIndexer>();
-            borderIndexerMock.SetupGet(borderIndexer => borderIndexer[ExcelIndexedStyle.Resource.Border])
-                .Returns(0);
-            borderIndexerMock.SetupGet(borderIndexer => borderIndexer[PackageIndexedStyle.Resource.Border])
-                .Returns(0);
-            borderIndexerMock.SetupGet(borderIndexer => borderIndexer[CustomIndexedStyle.Resource.Border])
-                .Returns(1);
+            _mocker.GetMock<IBorderIndexer>()
+                .SetupGet(borderIndexer => borderIndexer[styleMock.Style.Resource.Border])
+                .Returns(styleMock.BorderId);
+
+            _mocker.GetMock<IFillIndexer>()
+                .SetupGet(fillIndexer => fillIndexer[styleMock.Style.Resource.Fill])
+                .Returns(styleMock.FillId);
+
+            _mocker.GetMock<IFontIndexer>()
+                .SetupGet(fontIndexer => fontIndexer[styleMock.Style.Resource.Font])
+                .Returns(styleMock.FontId);
+
+            _mocker.GetMock<IStyleIndexer>()
+                .SetupGet(styleIndexer => styleIndexer[styleMock.Key])
+                .Returns(styleMock.Style);
+
+            _mockStyleKeys.Add(styleMock.Key);
+            _mocker.GetMock<IStyleIndexer>()
+                .Setup(styleIndexer => styleIndexer.Keys)
+                .Returns(_mockStyleKeys.ToArray());
         }
 
-        private void MockFillIndexer()
+        private void MockIndexersForDefaultStyles()
         {
-            var fillIndexerMock = _mocker.GetMock<IFillIndexer>();
-            fillIndexerMock.SetupGet(fillIndexer => fillIndexer[ExcelIndexedStyle.Resource.Fill])
-                .Returns(0);
-            fillIndexerMock.SetupGet(fillIndexer => fillIndexer[PackageIndexedStyle.Resource.Fill])
-                .Returns(0);
-            fillIndexerMock.SetupGet(fillIndexer => fillIndexer[CustomIndexedStyle.Resource.Fill])
-                .Returns(1);
-        }
-
-        private void MockFontIndexer()
-        {
-            var fontIndexerMock = _mocker.GetMock<IFontIndexer>();
-            fontIndexerMock.SetupGet(fontIndexer => fontIndexer[ExcelIndexedStyle.Resource.Font])
-                .Returns(0);
-            fontIndexerMock.SetupGet(fontIndexer => fontIndexer[PackageIndexedStyle.Resource.Font])
-                .Returns(1);
-            fontIndexerMock.SetupGet(fontIndexer => fontIndexer[CustomIndexedStyle.Resource.Font])
-                .Returns(2);
-        }
-
-        private void MockStyleIndexer()
-        {
-            var styleIndexerMock = _mocker.GetMock<IStyleIndexer>();
-            styleIndexerMock.SetupGet(styleIndexer => styleIndexer.Keys)
-                .Returns(
-                    new[]
-                    {
-                        ExcelIndexerKey,
-                        PackageIndexerKey,
-                        CustomIndexerKey,
-                    });
-
-            styleIndexerMock.SetupGet(styleIndexer => styleIndexer[ExcelIndexerKey])
-                .Returns(ExcelIndexedStyle);
-            styleIndexerMock.SetupGet(styleIndexer => styleIndexer[PackageIndexerKey])
-                .Returns(PackageIndexedStyle);
-            styleIndexerMock.SetupGet(styleIndexer => styleIndexer[CustomIndexerKey])
-                .Returns(CustomIndexedStyle);
+            MockIndexers(ExcelStyleMock);
+            MockIndexers(PackageStyleMock);
+            MockIndexers(CustomStyleMock);
         }
 
         public class TheMutateMethod : StylesheetStyleMutatorFacts
@@ -99,10 +88,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 // Arrange
                 var stylesheet = new OpenXml.Stylesheet();
 
-                MockBorderIndexer();
-                MockFillIndexer();
-                MockFontIndexer();
-                MockStyleIndexer();
+                MockIndexersForDefaultStyles();
 
                 var sut = CreateSystemUnderTest();
 
@@ -160,10 +146,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 // Arrange
                 var stylesheet = new OpenXml.Stylesheet();
 
-                MockBorderIndexer();
-                MockFillIndexer();
-                MockFontIndexer();
-                MockStyleIndexer();
+                MockIndexersForDefaultStyles();
 
                 var sut = CreateSystemUnderTest();
 
@@ -194,10 +177,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 // Arrange
                 var stylesheet = new OpenXml.Stylesheet();
 
-                MockBorderIndexer();
-                MockFillIndexer();
-                MockFontIndexer();
-                MockStyleIndexer();
+                MockIndexersForDefaultStyles();
 
                 var sut = CreateSystemUnderTest();
 
@@ -210,9 +190,64 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 Assert.Equal(1, stylesheet.CellStyles.ChildElements.Count);
 
                 var cellStyle = Assert.IsType<OpenXml.CellStyle>(stylesheet.CellStyles.ChildElements[0]);
-                Assert.Equal(ExcelIndexerKey.Name, cellStyle.Name);
+                Assert.Equal(ExcelStyleMock.Key.Name, cellStyle.Name);
                 Assert.Equal(0U, cellStyle.FormatId.Value);
-                Assert.Equal(ExcelIndexedStyle.Resource.BuiltInId, cellStyle.BuiltinId.Value);
+                Assert.Equal(ExcelStyleMock.Style.Resource.BuiltInId, cellStyle.BuiltinId.Value);
+            }
+
+            [Fact]
+            public void SetsNonZeroFormatIdentifierForAdditionalExcelStyles()
+            {
+                // Arrange
+                var stylesheet = new OpenXml.Stylesheet();
+
+                MockIndexersForDefaultStyles();
+
+                var secondExcelStyleMock = new FakeStyle(
+                    BuiltInExcelStyle.Bad.IndexerKey,
+                    new IndexedResource<Style>(BuiltInExcelStyle.Bad.Style, 3),
+                    0,
+                    2,
+                    3);
+                MockIndexers(secondExcelStyleMock);
+
+                var thirdExcelStyleMock = new FakeStyle(
+                    BuiltInExcelStyle.Good.IndexerKey,
+                    new IndexedResource<Style>(BuiltInExcelStyle.Good.Style, 4),
+                    0,
+                    3,
+                    4);
+                MockIndexers(thirdExcelStyleMock);
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.Mutate(stylesheet);
+
+                // Assert
+                Assert.NotNull(stylesheet.CellFormats);
+                Assert.Equal(5, stylesheet.CellFormats.ChildElements.Count);
+
+                var firstCellFormat = Assert.IsType<OpenXml.CellFormat>(stylesheet.CellFormats.ChildElements[0]);
+                Assert.Equal(0U, firstCellFormat.FormatId.Value);
+                var secondCellFormat = Assert.IsType<OpenXml.CellFormat>(stylesheet.CellFormats.ChildElements[1]);
+                Assert.Equal(0U, secondCellFormat.FormatId.Value);
+                var thirdCellFormat = Assert.IsType<OpenXml.CellFormat>(stylesheet.CellFormats.ChildElements[2]);
+                Assert.Equal(0U, thirdCellFormat.FormatId.Value);
+                var fourthCellFormat = Assert.IsType<OpenXml.CellFormat>(stylesheet.CellFormats.ChildElements[3]);
+                Assert.Equal(1U, fourthCellFormat.FormatId.Value);
+                var fifthCellFormat = Assert.IsType<OpenXml.CellFormat>(stylesheet.CellFormats.ChildElements[4]);
+                Assert.Equal(2U, fifthCellFormat.FormatId.Value);
+
+                Assert.NotNull(stylesheet.CellStyles);
+                Assert.Equal(3, stylesheet.CellStyles.ChildElements.Count);
+
+                var firstCellStyle = Assert.IsType<OpenXml.CellStyle>(stylesheet.CellStyles.ChildElements[0]);
+                Assert.Equal(0U, firstCellStyle.FormatId.Value);
+                var secondCellStyle = Assert.IsType<OpenXml.CellStyle>(stylesheet.CellStyles.ChildElements[1]);
+                Assert.Equal(1U, secondCellStyle.FormatId.Value);
+                var thirdCellStyle = Assert.IsType<OpenXml.CellStyle>(stylesheet.CellStyles.ChildElements[2]);
+                Assert.Equal(2U, thirdCellStyle.FormatId.Value);
             }
 
             [Fact]
@@ -221,25 +256,15 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 // Arrange
                 var stylesheet = new OpenXml.Stylesheet();
 
-                _mocker.GetMock<IBorderIndexer>()
-                    .SetupGet(borderIndexer => borderIndexer[It.IsAny<Border>()])
-                    .Returns(0U);
-                _mocker.GetMock<IFillIndexer>()
-                    .SetupGet(fillIndexer => fillIndexer[It.IsAny<Fill>()])
-                    .Returns(0U);
-                _mocker.GetMock<IFontIndexer>()
-                    .SetupGet(fontIndexer => fontIndexer[It.IsAny<Font>()])
-                    .Returns(0U);
-
-                var indexerKey = new IndexerKey("Invalid Style", IndexerKeyKind.Excel);
-                var indexedStyle = new IndexedResource<Style>(
-                    new Style(Border.Default, Fill.Default, Font.Default),
-                    0U);
-                var styleIndexerMock = _mocker.GetMock<IStyleIndexer>();
-                styleIndexerMock.SetupGet(styleIndexer => styleIndexer.Keys)
-                    .Returns(new[] { indexerKey, });
-                styleIndexerMock.SetupGet(styleIndexer => styleIndexer[indexerKey])
-                    .Returns(indexedStyle);
+                var invalidExcelStyleMock = new FakeStyle(
+                    new IndexerKey("Invalid Style", IndexerKeyKind.Excel),
+                    new IndexedResource<Style>(
+                        new Style(Border.Default, Fill.Default, Font.Default),
+                        0),
+                    0,
+                    0,
+                    0);
+                MockIndexers(invalidExcelStyleMock);
 
                 var sut = CreateSystemUnderTest();
 
@@ -250,6 +275,28 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 Assert.NotNull(exception);
                 Assert.IsType<InvalidOperationException>(exception);
             }
+        }
+
+        private class FakeStyle
+        {
+            public FakeStyle(IndexerKey key, IndexedResource<Style> style, uint borderId, uint fillId, uint fontId)
+            {
+                Key = key;
+                Style = style;
+                BorderId = borderId;
+                FillId = fillId;
+                FontId = fontId;
+            }
+
+            public IndexerKey Key { get; }
+
+            public IndexedResource<Style> Style { get; }
+
+            public uint BorderId { get; }
+
+            public uint FillId { get; }
+
+            public uint FontId { get; }
         }
     }
 }
