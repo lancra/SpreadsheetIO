@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using LanceC.SpreadsheetIO.Writing;
 
@@ -13,7 +14,7 @@ namespace LanceC.SpreadsheetIO
         /// </summary>
         /// <param name="path">The file path of the spreadsheet to create.</param>
         /// <returns>The created spreadsheet.</returns>
-        IWritingSpreadsheet Create(string path);
+        IWritingSpreadsheet Create(Uri path);
 
         /// <summary>
         /// Creates a spreadsheet.

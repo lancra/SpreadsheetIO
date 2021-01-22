@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
@@ -28,9 +30,11 @@ namespace LanceC.SpreadsheetIO.Shared.Internal
             _spreadsheetGenerators = spreadsheetGenerators;
         }
 
-        public IWritingSpreadsheet Create(string path)
+        public IWritingSpreadsheet Create(Uri path)
         {
-            var spreadsheetDocument = _spreadsheetDocumentFactory.Create(path);
+            Guard.Against.Null(path, nameof(path));
+
+            var spreadsheetDocument = _spreadsheetDocumentFactory.Create(path.LocalPath);
             var spreadsheet = new WritingSpreadsheet(
                 spreadsheetDocument,
                 CreateSpreadsheetPageCollection(),

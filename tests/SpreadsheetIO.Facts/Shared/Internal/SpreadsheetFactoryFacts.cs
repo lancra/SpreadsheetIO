@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
@@ -20,11 +21,11 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal
             public void ReturnsWritingSpreadsheet()
             {
                 // Arrange
-                var path = @"C:\Test";
+                var path = new Uri(@"C:\Test");
 
                 var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
                 _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
-                    .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Create(path))
+                    .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Create(path.LocalPath))
                     .Returns(spreadsheetDocumentMock.Object);
 
                 var sut = CreateSystemUnderTest();
@@ -43,7 +44,7 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal
             public void ReturnsWritingSpreadsheet()
             {
                 // Arrange
-                var stream = MemoryStream.Null;
+                var stream = Stream.Null;
 
                 var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
                 _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
