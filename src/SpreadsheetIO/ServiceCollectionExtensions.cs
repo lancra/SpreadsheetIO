@@ -22,18 +22,18 @@ namespace LanceC.SpreadsheetIO
         [ExcludeFromCodeCoverage]
         public static IServiceCollection AddSpreadsheetIO(this IServiceCollection services)
             => services
-            .AddSingleton<ISpreadsheetDocumentWrapperFactory, SpreadsheetDocumentWrapperFactory>()
-            .AddSingleton<ISpreadsheetFactory, SpreadsheetFactory>()
-            .AddSingleton<IStylesheetMutator, StylesheetBorderMutator>()
-            .AddSingleton<IStylesheetMutator, StylesheetFillMutator>()
-            .AddSingleton<IStylesheetMutator, StylesheetFontMutator>()
-            .AddSingleton<IStylesheetMutator, StylesheetStyleMutator>()
-            .AddSingleton<ISpreadsheetGenerator, SharedStringTableGenerator>()
-            .AddSingleton<ISpreadsheetGenerator, StylesheetGenerator>()
-            .AddSingleton<IBorderIndexer, BorderIndexer>()
-            .AddSingleton<IFillIndexer, FillIndexer>()
-            .AddSingleton<IFontIndexer, FontIndexer>()
-            .AddSingleton<IStringIndexer, StringIndexer>()
-            .AddSingleton<IStyleIndexer, StyleIndexer>();
+            .AddScoped<ISpreadsheetDocumentWrapperFactory, SpreadsheetDocumentWrapperFactory>()
+            .AddScoped<ISpreadsheetFactory, SpreadsheetFactory>()
+            .AddScoped<IStylesheetMutator, StylesheetBorderMutator>()
+            .AddScoped<IStylesheetMutator, StylesheetFillMutator>()
+            .AddScoped<IStylesheetMutator, StylesheetFontMutator>()
+            .AddScoped<IStylesheetMutator, StylesheetStyleMutator>()
+            .AddScoped<ISpreadsheetGenerator, SharedStringTableGenerator>()
+            .AddScoped<ISpreadsheetGenerator, StylesheetGenerator>()
+            .AddScoped<IBorderIndexer, BorderIndexer>()
+            .AddScoped<IFillIndexer, FillIndexer>()
+            .AddScoped<IFontIndexer, FontIndexer>()
+            .AddScoped<IStringIndexer, StringIndexer>()
+            .AddScoped<IStyleIndexer, StyleIndexer>();
     }
 }
