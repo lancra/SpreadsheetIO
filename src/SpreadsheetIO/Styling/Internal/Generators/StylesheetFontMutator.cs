@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
@@ -19,7 +20,11 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
 
         private static OpenXml.Fonts GenerateFonts(IReadOnlyCollection<Font> fonts)
         {
-            var openXmlFonts = new OpenXml.Fonts();
+            var openXmlFonts = new OpenXml.Fonts
+            {
+                Count = Convert.ToUInt32(fonts.Count),
+            };
+
             foreach (var font in fonts)
             {
                 var openXmlFont = new OpenXml.Font

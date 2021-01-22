@@ -44,6 +44,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.Borders);
+                Assert.Equal(2U, stylesheet.Borders.Count.Value);
                 Assert.Equal(2, stylesheet.Borders.ChildElements.Count);
 
                 var firstBorder = Assert.IsType<OpenXml.Border>(stylesheet.Borders.ChildElements[0]);
@@ -84,6 +85,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.Borders);
+                Assert.Equal(0U, stylesheet.Borders.Count.Value);
                 Assert.Equal(0, stylesheet.Borders.ChildElements.Count);
             }
 
@@ -108,6 +110,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.Borders);
+                Assert.Equal(1U, stylesheet.Borders.Count.Value);
                 Assert.Equal(1, stylesheet.Borders.ChildElements.Count);
 
                 var border = Assert.IsType<OpenXml.Border>(stylesheet.Borders.ChildElements[0]);

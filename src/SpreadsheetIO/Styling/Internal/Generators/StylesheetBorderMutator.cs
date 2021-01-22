@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
@@ -19,7 +20,11 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
 
         private static OpenXml.Borders GenerateBorders(IReadOnlyCollection<Border> borders)
         {
-            var openXmlBorders = new OpenXml.Borders();
+            var openXmlBorders = new OpenXml.Borders
+            {
+                Count = Convert.ToUInt32(borders.Count),
+            };
+
             foreach (var border in borders)
             {
                 var openXmlBorder = new OpenXml.Border

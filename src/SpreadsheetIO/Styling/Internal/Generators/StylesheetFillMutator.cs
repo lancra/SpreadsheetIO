@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
@@ -19,7 +20,11 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
 
         private static OpenXml.Fills GenerateFills(IReadOnlyCollection<Fill> fills)
         {
-            var openXmlFills = new OpenXml.Fills();
+            var openXmlFills = new OpenXml.Fills
+            {
+                Count = Convert.ToUInt32(fills.Count),
+            };
+
             foreach (var fill in fills)
             {
                 var openXmlFill = new OpenXml.Fill

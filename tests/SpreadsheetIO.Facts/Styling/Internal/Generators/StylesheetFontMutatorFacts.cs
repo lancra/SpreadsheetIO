@@ -40,6 +40,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.Fonts);
+                Assert.Equal(2U, stylesheet.Fonts.Count.Value);
                 Assert.Equal(2, stylesheet.Fonts.ChildElements.Count);
 
                 var firstFont = Assert.IsType<OpenXml.Font>(stylesheet.Fonts.ChildElements[0]);
@@ -74,6 +75,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.Fonts);
+                Assert.Equal(0U, stylesheet.Fonts.Count.Value);
                 Assert.Equal(0, stylesheet.Fonts.ChildElements.Count);
             }
 
@@ -125,6 +127,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.Fonts);
+                Assert.Equal(1U, stylesheet.Fonts.Count.Value);
                 Assert.Equal(1, stylesheet.Fonts.ChildElements.Count);
 
                 var font = Assert.IsType<OpenXml.Font>(stylesheet.Fonts.ChildElements[0]);

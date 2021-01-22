@@ -111,6 +111,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.CellFormats);
+                Assert.Equal(3U, stylesheet.CellFormats.Count.Value);
                 Assert.Equal(3, stylesheet.CellFormats.ChildElements.Count);
 
                 var firstCellFormat = Assert.IsType<OpenXml.CellFormat>(stylesheet.CellFormats.ChildElements[0]);
@@ -118,6 +119,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 Assert.Equal(0U, firstCellFormat.FontId.Value);
                 Assert.Equal(0U, firstCellFormat.FillId.Value);
                 Assert.Equal(0U, firstCellFormat.BorderId.Value);
+                Assert.Equal(0U, firstCellFormat.FormatId.Value);
                 Assert.False(firstCellFormat.ApplyNumberFormat);
                 Assert.True(firstCellFormat.ApplyFont);
                 Assert.True(firstCellFormat.ApplyFill);
@@ -130,6 +132,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 Assert.Equal(1U, secondCellFormat.FontId.Value);
                 Assert.Equal(0U, secondCellFormat.FillId.Value);
                 Assert.Equal(0U, secondCellFormat.BorderId.Value);
+                Assert.Equal(0U, secondCellFormat.FormatId.Value);
                 Assert.False(secondCellFormat.ApplyNumberFormat);
                 Assert.True(secondCellFormat.ApplyFont);
                 Assert.True(secondCellFormat.ApplyFill);
@@ -142,6 +145,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 Assert.Equal(2U, thirdCellFormat.FontId.Value);
                 Assert.Equal(1U, thirdCellFormat.FillId.Value);
                 Assert.Equal(1U, thirdCellFormat.BorderId.Value);
+                Assert.Equal(0U, thirdCellFormat.FormatId.Value);
                 Assert.False(thirdCellFormat.ApplyNumberFormat);
                 Assert.True(thirdCellFormat.ApplyFont);
                 Assert.True(thirdCellFormat.ApplyFill);
@@ -168,6 +172,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.CellStyleFormats);
+                Assert.Equal(1U, stylesheet.CellStyleFormats.Count.Value);
                 Assert.Equal(1, stylesheet.CellStyleFormats.ChildElements.Count);
 
                 var cellFormat = Assert.IsType<OpenXml.CellFormat>(stylesheet.CellStyleFormats.ChildElements[0]);
@@ -201,6 +206,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.CellStyles);
+                Assert.Equal(1U, stylesheet.CellStyles.Count.Value);
                 Assert.Equal(1, stylesheet.CellStyles.ChildElements.Count);
 
                 var cellStyle = Assert.IsType<OpenXml.CellStyle>(stylesheet.CellStyles.ChildElements[0]);

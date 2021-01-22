@@ -40,6 +40,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.Fills);
+                Assert.Equal(2U, stylesheet.Fills.Count.Value);
                 Assert.Equal(2, stylesheet.Fills.ChildElements.Count);
 
                 var firstFill = Assert.IsType<OpenXml.Fill>(stylesheet.Fills.ChildElements[0]);
@@ -68,6 +69,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.Fills);
+                Assert.Equal(0U, stylesheet.Fills.Count.Value);
                 Assert.Equal(0, stylesheet.Fills.ChildElements.Count);
             }
 
@@ -92,6 +94,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.Fills);
+                Assert.Equal(1U, stylesheet.Fills.Count.Value);
                 Assert.Equal(1, stylesheet.Fills.ChildElements.Count);
 
                 var fill = Assert.IsType<OpenXml.Fill>(stylesheet.Fills.ChildElements[0]);

@@ -14,6 +14,9 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
         private readonly IFontIndexer _fontIndexer;
         private readonly IStyleIndexer _styleIndexer;
 
+        private readonly IDictionary<IndexerKey, uint> _excelFormatIdLookup = new Dictionary<IndexerKey, uint>();
+        private uint _excelFormatIdProvider = 0U;
+
         public StylesheetStyleMutator(
             IBorderIndexer borderIndexer,
             IFillIndexer fillIndexer,
@@ -31,41 +34,62 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
             var styleKeyValues = _styleIndexer.Keys
                 .Select(key => new IndexedKeyValue(key, _styleIndexer[key]))
                 .ToArray();
-            stylesheet.CellFormats = GenerateCellFormats(
-                GenerateCellFormatCollection(styleKeyValues));
-
             var excelStyleKeyValues = styleKeyValues.Where(styleKeyValue => styleKeyValue.Key.Kind == IndexerKeyKind.Excel)
                 .ToArray();
-            stylesheet.CellStyleFormats = GenerateCellStyleFormats(
-                GenerateCellFormatCollection(excelStyleKeyValues));
+
+            stylesheet.CellStyleFormats = GenerateCellStyleFormats(excelStyleKeyValues);
             stylesheet.CellStyles = GenerateCellStyles(excelStyleKeyValues);
+            stylesheet.CellFormats = GenerateCellFormats(styleKeyValues);
+
+            _excelFormatIdLookup.Clear();
+            _excelFormatIdProvider = 0U;
         }
 
-        private static OpenXml.CellStyleFormats GenerateCellStyleFormats(IReadOnlyCollection<OpenXml.CellFormat> cellFormatCollection)
+        private OpenXml.CellStyleFormats GenerateCellStyleFormats(IReadOnlyCollection<IndexedKeyValue> styleKeyValues)
         {
-            var cellStyleFormats = new OpenXml.CellStyleFormats();
-            foreach (var cellFormat in cellFormatCollection)
+            var cellStyleFormats = new OpenXml.CellStyleFormats
             {
+                Count = Convert.ToUInt32(styleKeyValues.Count),
+            };
+
+            foreach (var styleKeyValue in styleKeyValues)
+            {
+                var cellFormat = GenerateCellFormat(styleKeyValue);
                 cellStyleFormats.Append(cellFormat);
+
+                _excelFormatIdLookup.Add(styleKeyValue.Key, _excelFormatIdProvider);
+                _excelFormatIdProvider++;
             }
 
             return cellStyleFormats;
         }
 
-        private static OpenXml.CellFormats GenerateCellFormats(IReadOnlyCollection<OpenXml.CellFormat> cellFormatCollection)
+        private OpenXml.CellFormats GenerateCellFormats(IReadOnlyCollection<IndexedKeyValue> styleKeyValues)
         {
-            var cellFormats = new OpenXml.CellFormats();
-            foreach (var cellFormat in cellFormatCollection)
+            var cellFormats = new OpenXml.CellFormats
             {
+                Count = Convert.ToUInt32(styleKeyValues.Count),
+            };
+
+            foreach (var styleKeyValue in styleKeyValues)
+            {
+                var cellFormat = GenerateCellFormat(styleKeyValue);
+
+                _excelFormatIdLookup.TryGetValue(styleKeyValue.Key, out var formatId);
+                cellFormat.FormatId = formatId;
+
                 cellFormats.Append(cellFormat);
             }
 
             return cellFormats;
         }
 
-        private static OpenXml.CellStyles GenerateCellStyles(IReadOnlyCollection<IndexedKeyValue> styleKeyValues)
+        private OpenXml.CellStyles GenerateCellStyles(IReadOnlyCollection<IndexedKeyValue> styleKeyValues)
         {
-            var cellStyles = new OpenXml.CellStyles();
+            var cellStyles = new OpenXml.CellStyles
+            {
+                Count = Convert.ToUInt32(styleKeyValues.Count),
+            };
 
             foreach (var styleKeyValue in styleKeyValues)
             {
@@ -76,10 +100,11 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
                         "Please contact the package maintainer.");
                 }
 
+                var formatId = _excelFormatIdLookup[styleKeyValue.Key];
                 var cellStyle = new OpenXml.CellStyle
                 {
                     Name = styleKeyValue.Key.Name,
-                    FormatId = styleKeyValue.Value.Index,
+                    FormatId = formatId,
                     BuiltinId = styleKeyValue.Value.Resource.BuiltInId.Value,
                 };
 
@@ -89,31 +114,22 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
             return cellStyles;
         }
 
-        private IReadOnlyCollection<OpenXml.CellFormat> GenerateCellFormatCollection(
-            IReadOnlyCollection<IndexedKeyValue> styleKeyValues)
+        private OpenXml.CellFormat GenerateCellFormat(IndexedKeyValue styleKeyValue)
         {
-            var cellFormatCollection = new List<OpenXml.CellFormat>();
-
-            foreach (var styleKeyValue in styleKeyValues)
+            var cellFormat = new OpenXml.CellFormat
             {
-                var cellFormat = new OpenXml.CellFormat
-                {
-                    NumberFormatId = 0,
-                    FontId = _fontIndexer[styleKeyValue.Value.Resource.Font],
-                    FillId = _fillIndexer[styleKeyValue.Value.Resource.Fill],
-                    BorderId = _borderIndexer[styleKeyValue.Value.Resource.Border],
-                    ApplyNumberFormat = false,
-                    ApplyFont = true,
-                    ApplyFill = true,
-                    ApplyBorder = true,
-                    ApplyAlignment = false,
-                    ApplyProtection = false,
-                };
-
-                cellFormatCollection.Add(cellFormat);
-            }
-
-            return cellFormatCollection;
+                NumberFormatId = 0,
+                FontId = _fontIndexer[styleKeyValue.Value.Resource.Font],
+                FillId = _fillIndexer[styleKeyValue.Value.Resource.Fill],
+                BorderId = _borderIndexer[styleKeyValue.Value.Resource.Border],
+                ApplyNumberFormat = false,
+                ApplyFont = true,
+                ApplyFill = true,
+                ApplyBorder = true,
+                ApplyAlignment = false,
+                ApplyProtection = false,
+            };
+            return cellFormat;
         }
 
         private class IndexedKeyValue
