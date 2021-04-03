@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
 {
-    internal class StringIndexer : IndexerBase<string>, IStringIndexer
+    internal class StringIndexer : ReverseIndexerBase<string>, IStringIndexer
     {
         protected override IReadOnlyCollection<string> DefaultResources
             => Array.Empty<string>();

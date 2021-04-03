@@ -85,6 +85,39 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal.Indexers
             }
         }
 
+        public class TheReverseIndexer : StringIndexerFacts
+        {
+            [Fact]
+            public void ReturnsStringForIndex()
+            {
+                // Arrange
+                var expectedResource = "foo";
+                var sut = CreateSystemUnderTest();
+                var index = sut.Add(expectedResource);
+
+                // Act
+                var actualResource = sut[index];
+
+                // Assert
+                Assert.Equal(expectedResource, actualResource);
+            }
+
+            [Fact]
+            public void ThrowsKeyNotFoundExceptionWhenIndexDoesNotRepresentResource()
+            {
+                // Arrange
+                var index = 0U;
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var exception = Record.Exception(() => sut[index]);
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<KeyNotFoundException>(exception);
+            }
+        }
+
         public class TheAddMethod : StringIndexerFacts
         {
             [Fact]
@@ -100,6 +133,24 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal.Indexers
 
                 // Assert
                 Assert.Equal(expectedIndex, actualIndex);
+            }
+
+            [Fact]
+            public void SkipsReverseIndexingWhenStringIsAlreadyIndexed()
+            {
+                // Arrange
+                var resource = "foo";
+                var sut = CreateSystemUnderTest();
+
+                var firstIndex = sut.Add(resource);
+                var expectedResource = sut[firstIndex];
+                var secondIndex = sut.Add(resource);
+
+                // Act
+                var actualResource = sut[secondIndex];
+
+                // Assert
+                Assert.Equal(expectedResource, actualResource);
             }
         }
 
@@ -120,6 +171,27 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal.Indexers
                 sut.Clear();
                 var firstException = Record.Exception(() => sut[firstString]);
                 var secondException = Record.Exception(() => sut[secondString]);
+
+                // Assert
+                Assert.NotNull(firstException);
+                Assert.IsType<KeyNotFoundException>(firstException);
+                Assert.NotNull(secondException);
+                Assert.IsType<KeyNotFoundException>(secondException);
+            }
+
+            [Fact]
+            public void ClearsReverseIndexes()
+            {
+                // Arrange
+                var sut = CreateSystemUnderTest();
+
+                var firstIndex = sut.Add("foo");
+                var secondIndex = sut.Add("bar");
+
+                // Act
+                sut.Clear();
+                var firstException = Record.Exception(() => sut[firstIndex]);
+                var secondException = Record.Exception(() => sut[secondIndex]);
 
                 // Assert
                 Assert.NotNull(firstException);
