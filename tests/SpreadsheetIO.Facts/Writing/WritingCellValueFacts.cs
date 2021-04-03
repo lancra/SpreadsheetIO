@@ -1,4 +1,5 @@
 using System;
+using LanceC.SpreadsheetIO.Shared;
 using LanceC.SpreadsheetIO.Writing;
 using Xunit;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;

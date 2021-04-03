@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-using LanceC.SpreadsheetIO.Shared;
 
-namespace LanceC.SpreadsheetIO.Writing
+namespace LanceC.SpreadsheetIO.Shared
 {
     /// <summary>
     /// Represents the kind of cell date.

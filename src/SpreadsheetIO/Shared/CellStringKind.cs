@@ -1,8 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using DocumentFormat.OpenXml.Spreadsheet;
-using LanceC.SpreadsheetIO.Shared;
 
-namespace LanceC.SpreadsheetIO.Writing
+namespace LanceC.SpreadsheetIO.Shared
 {
     /// <summary>
     /// Represents the kind of cell string.

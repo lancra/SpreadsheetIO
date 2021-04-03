@@ -1,4 +1,5 @@
 using System;
+using LanceC.SpreadsheetIO.Shared;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace LanceC.SpreadsheetIO.Writing
