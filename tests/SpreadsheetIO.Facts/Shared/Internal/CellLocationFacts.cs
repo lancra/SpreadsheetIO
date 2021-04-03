@@ -136,6 +136,110 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal
             }
         }
 
+        public class TheConstructorWithCellReferenceParameter
+        {
+            [Theory]
+            [InlineData("A1", 1, "A")]
+            [InlineData("A10", 10, "A")]
+            [InlineData("B1", 1, "B")]
+            [InlineData("B10", 10, "B")]
+            [InlineData("AA500", 500, "AA")]
+            [InlineData("AAA5000", 5000, "AAA")]
+            public void SetsRowNumberAndColumnProperties(string cellReference, uint expectedRowNumber, string expectedColumnLetter)
+            {
+                // Act
+                var cellLocation = new CellLocation(cellReference);
+
+                // Assert
+                Assert.Equal(expectedRowNumber, cellLocation.RowNumber);
+                Assert.Equal(expectedColumnLetter, cellLocation.Column.Letter);
+            }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenCellReferenceIsEmpty()
+            {
+                // Arrange
+                var cellReference = string.Empty;
+
+                // Act
+                var exception = Record.Exception(() => new CellLocation(cellReference));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
+
+            [Theory]
+            [InlineData(",A1")]
+            [InlineData("A1()")]
+            [InlineData("*A1*")]
+            public void ThrowsArgumentExceptionWhenCellReferenceIsNonAlphanumeric(string cellReference)
+            {
+                // Act
+                var exception = Record.Exception(() => new CellLocation(cellReference));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenCellReferenceDoesNotHaveRowNumber()
+            {
+                // Arrange
+                var cellReference = "A";
+
+                // Act
+                var exception = Record.Exception(() => new CellLocation(cellReference));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenCellReferenceDoesNotHaveColumnLetter()
+            {
+                // Arrange
+                var cellReference = "1";
+
+                // Act
+                var exception = Record.Exception(() => new CellLocation(cellReference));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenCellReferenceHasLettersAfterRowNumber()
+            {
+                // Arrange
+                var cellReference = "A1A";
+
+                // Act
+                var exception = Record.Exception(() => new CellLocation(cellReference));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
+
+            [Fact]
+            public void ThrowsArgumentNullExceptionWhenCellReferenceIsNull()
+            {
+                // Arrange
+                var cellReference = default(string);
+
+                // Act
+                var exception = Record.Exception(() => new CellLocation(cellReference!));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentNullException>(exception);
+            }
+        }
+
         public class TheCellReferenceProperty
         {
             [Theory]
