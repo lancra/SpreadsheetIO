@@ -17,6 +17,13 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
 
         public string Name { get; }
 
+        public IOpenXmlReaderWrapper CreateReader()
+        {
+            var openXmlReader = OpenXmlReader.Create(_worksheetPart);
+            var openXmlReaderWrapper = new OpenXmlReaderWrapper(openXmlReader);
+            return openXmlReaderWrapper;
+        }
+
         public IOpenXmlWriterWrapper CreateWriter()
         {
             var openXmlWriter = OpenXmlWriter.Create(_worksheetPart);

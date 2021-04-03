@@ -14,6 +14,13 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
             _sharedStringTablePart = sharedStringTablePart;
         }
 
+        public IOpenXmlReaderWrapper CreateReader()
+        {
+            var openXmlReader = OpenXmlReader.Create(_sharedStringTablePart);
+            var openXmlReaderWrapper = new OpenXmlReaderWrapper(openXmlReader);
+            return openXmlReaderWrapper;
+        }
+
         public IOpenXmlWriterWrapper CreateWriter()
         {
             var openXmlWriter = OpenXmlWriter.Create(_sharedStringTablePart);

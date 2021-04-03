@@ -11,6 +11,12 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
         string Name { get; }
 
         /// <summary>
+        /// Creates an Open XML reader for the worksheet part.
+        /// </summary>
+        /// <returns>The created Open XML reader.</returns>
+        IOpenXmlReaderWrapper CreateReader();
+
+        /// <summary>
         /// Creates an Open XML writer for the worksheet part.
         /// </summary>
         /// <returns>The created Open XML writer.</returns>

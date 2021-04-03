@@ -20,5 +20,21 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
         /// <param name="stream">The stream of spreadsheet to create.</param>
         /// <returns>The created spreadsheet wrapper.</returns>
         ISpreadsheetDocumentWrapper Create(Stream stream);
+
+        /// <summary>
+        /// Opens a spreadsheet wrapper.
+        /// </summary>
+        /// <param name="path">The file path of the spreadsheet to open.</param>
+        /// <param name="isEditable">Whether the spreadsheet can be edited.</param>
+        /// <returns>The created spreadsheet wrapper.</returns>
+        ISpreadsheetDocumentWrapper Open(string path, bool isEditable);
+
+        /// <summary>
+        /// Opens a spreadsheet wrapper.
+        /// </summary>
+        /// <param name="stream">The stream of the spreadsheet to open.</param>
+        /// <param name="isEditable">Whether the spreadsheet can be edited.</param>
+        /// <returns>The created spreadsheet wrapper.</returns>
+        ISpreadsheetDocumentWrapper Open(Stream stream, bool isEditable);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
 {
@@ -7,6 +8,16 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
     /// </summary>
     internal interface ISpreadsheetDocumentWrapper : IDisposable
     {
+        /// <summary>
+        /// Gets the shared string table part wrapper.
+        /// </summary>
+        ISharedStringTablePartWrapper? SharedStringTablePart { get; }
+
+        /// <summary>
+        /// Gets the worksheet part wrappers.
+        /// </summary>
+        IReadOnlyCollection<IWorksheetPartWrapper> WorksheetParts { get; }
+
         /// <summary>
         /// Adds a shared string table part.
         /// </summary>

@@ -6,6 +6,12 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
     internal interface ISharedStringTablePartWrapper
     {
         /// <summary>
+        /// Creates an Open XML reader for the shared string table part.
+        /// </summary>
+        /// <returns>The created Open XML reader.</returns>
+        IOpenXmlReaderWrapper CreateReader();
+
+        /// <summary>
         /// Creates an Open XML writer for the shared string table part.
         /// </summary>
         /// <returns>The created Open XML writer.</returns>

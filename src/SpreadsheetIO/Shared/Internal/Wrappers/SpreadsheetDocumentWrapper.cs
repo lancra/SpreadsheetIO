@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
@@ -15,9 +16,41 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
         public SpreadsheetDocumentWrapper(SpreadsheetDocument spreadsheetDocument)
         {
             _spreadsheetDocument = spreadsheetDocument;
-            _workbookPart = _spreadsheetDocument.AddWorkbookPart();
-            _workbookPart.Workbook = new Workbook();
-            _workbookPart.Workbook.AppendChild(new Sheets());
+            _workbookPart = GetWorkbookPart(spreadsheetDocument);
+        }
+
+        public ISharedStringTablePartWrapper? SharedStringTablePart
+        {
+            get
+            {
+                var sharedStringTablePart = _workbookPart.SharedStringTablePart;
+                if (sharedStringTablePart is null)
+                {
+                    return default;
+                }
+
+                var sharedStringTablePartWrapper = new SharedStringTablePartWrapper(sharedStringTablePart);
+                return sharedStringTablePartWrapper;
+            }
+        }
+
+        public IReadOnlyCollection<IWorksheetPartWrapper> WorksheetParts
+        {
+            get
+            {
+                var worksheetPartWrappers = new List<WorksheetPartWrapper>();
+                foreach (var worksheetPart in _workbookPart.WorksheetParts)
+                {
+                    var worksheetPartId = _workbookPart.GetIdOfPart(worksheetPart);
+                    var sheet = _workbookPart.Workbook.Sheets.Cast<Sheet>()
+                        .First(sheet => sheet.Id == worksheetPartId);
+
+                    var worksheetPartWrapper = new WorksheetPartWrapper(worksheetPart, sheet.Name);
+                    worksheetPartWrappers.Add(worksheetPartWrapper);
+                }
+
+                return worksheetPartWrappers;
+            }
         }
 
         public ISharedStringTablePartWrapper AddSharedStringTablePart()
@@ -66,6 +99,19 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
             {
                 _spreadsheetDocument.Dispose();
             }
+        }
+
+        private static WorkbookPart GetWorkbookPart(SpreadsheetDocument spreadsheetDocument)
+        {
+            var workbookPart = spreadsheetDocument.WorkbookPart;
+            if (workbookPart is null)
+            {
+                workbookPart = spreadsheetDocument.AddWorkbookPart();
+                workbookPart.Workbook = new Workbook();
+                workbookPart.Workbook.AppendChild(new Sheets());
+            }
+
+            return workbookPart;
         }
     }
 }
