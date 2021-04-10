@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using LanceC.SpreadsheetIO.Mapping.Internal;
 using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
@@ -34,6 +35,7 @@ namespace LanceC.SpreadsheetIO
             .AddScoped<IFillIndexer, FillIndexer>()
             .AddScoped<IFontIndexer, FontIndexer>()
             .AddScoped<IStringIndexer, StringIndexer>()
-            .AddScoped<IStyleIndexer, StyleIndexer>();
+            .AddScoped<IStyleIndexer, StyleIndexer>()
+            .AddScoped<IResourceMapManager, ResourceMapManager>();
     }
 }
