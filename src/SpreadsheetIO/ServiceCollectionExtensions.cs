@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Mapping.Internal;
+using LanceC.SpreadsheetIO.Reading;
+using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
 using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
@@ -36,6 +38,23 @@ namespace LanceC.SpreadsheetIO
             .AddScoped<IFontIndexer, FontIndexer>()
             .AddScoped<IStringIndexer, StringIndexer>()
             .AddScoped<IStyleIndexer, StyleIndexer>()
-            .AddScoped<IResourceMapManager, ResourceMapManager>();
+            .AddScoped<IResourceMapManager, ResourceMapManager>()
+            .AddScoped<IResourcePropertyParser, ResourcePropertyParser>()
+            .AddScoped<IResourcePropertyParserStrategy, BooleanResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, ByteResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, CharacterResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, DateTimeOffsetResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, DateTimeResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, DecimalResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, DoubleResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, FloatResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, IntegerResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, LongResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, ShortResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, SignedByteResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, StringResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, UnsignedIntegerResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, UnsignedLongResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyParserStrategy, UnsignedShortResourcePropertyParserStrategy>();
     }
 }

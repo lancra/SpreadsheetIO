@@ -19,6 +19,6 @@ namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes
 
         public decimal Decimal { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public DateTime? DateTime { get; set; }
     }
 }
