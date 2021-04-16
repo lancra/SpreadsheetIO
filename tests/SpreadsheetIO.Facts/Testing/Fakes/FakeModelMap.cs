@@ -6,6 +6,13 @@ namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes
 {
     public class FakeModelMap : ResourceMap<FakeModel>
     {
+        private readonly Action<ResourceMapOptionsBuilder<FakeModel>>? _optionsBuilderAction;
+
+        public FakeModelMap(Action<ResourceMapOptionsBuilder<FakeModel>>? optionsBuilderAction = default)
+        {
+            _optionsBuilderAction = optionsBuilderAction;
+        }
+
         public new FakeModelMap Map<TProperty>(Expression<Func<FakeModel, TProperty>> property)
             => (FakeModelMap)base.Map(property);
 
@@ -24,5 +31,11 @@ namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes
             Action<PropertyMapKeyBuilder> keyAction,
             Action<PropertyMapOptionsBuilder<FakeModel, TProperty>> optionsAction)
             => (FakeModelMap)base.Map(property, keyAction, optionsAction);
+
+        protected override void Configure(ResourceMapOptionsBuilder<FakeModel> optionsBuilder)
+        {
+            _optionsBuilderAction?.Invoke(optionsBuilder);
+            base.Configure(optionsBuilder);
+        }
     }
 }

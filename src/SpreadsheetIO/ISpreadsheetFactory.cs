@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Writing;
 
 namespace LanceC.SpreadsheetIO
@@ -22,5 +23,19 @@ namespace LanceC.SpreadsheetIO
         /// <param name="stream">The stream of the spreadsheet to create.</param>
         /// <returns>The created spreadsheet.</returns>
         IWritingSpreadsheet Create(Stream stream);
+
+        /// <summary>
+        /// Opens a spreadsheet for reading.
+        /// </summary>
+        /// <param name="path">The file path of the spreadsheet to open.</param>
+        /// <returns>The opened spreadsheet.</returns>
+        IReadingSpreadsheet OpenRead(Uri path);
+
+        /// <summary>
+        /// Opens a spreadsheet for reading.
+        /// </summary>
+        /// <param name="stream">The stream of the spreadsheet to open.</param>
+        /// <returns>The opened spreadsheet.</returns>
+        IReadingSpreadsheet OpenRead(Stream stream);
     }
 }

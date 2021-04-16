@@ -1,7 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Mapping.Internal;
 using LanceC.SpreadsheetIO.Reading;
+using LanceC.SpreadsheetIO.Reading.Internal;
 using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
+using LanceC.SpreadsheetIO.Reading.Internal.Properties;
+using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
@@ -39,6 +42,8 @@ namespace LanceC.SpreadsheetIO
             .AddScoped<IStringIndexer, StringIndexer>()
             .AddScoped<IStyleIndexer, StyleIndexer>()
             .AddScoped<IResourceMapManager, ResourceMapManager>()
+            .AddScoped<IElementReaderFactory, ElementReaderFactory>()
+            .AddScoped<IResourceCreator, ResourceCreator>()
             .AddScoped<IResourcePropertyParser, ResourcePropertyParser>()
             .AddScoped<IResourcePropertyParserStrategy, BooleanResourcePropertyParserStrategy>()
             .AddScoped<IResourcePropertyParserStrategy, ByteResourcePropertyParserStrategy>()
@@ -55,6 +60,10 @@ namespace LanceC.SpreadsheetIO
             .AddScoped<IResourcePropertyParserStrategy, StringResourcePropertyParserStrategy>()
             .AddScoped<IResourcePropertyParserStrategy, UnsignedIntegerResourcePropertyParserStrategy>()
             .AddScoped<IResourcePropertyParserStrategy, UnsignedLongResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, UnsignedShortResourcePropertyParserStrategy>();
+            .AddScoped<IResourcePropertyParserStrategy, UnsignedShortResourcePropertyParserStrategy>()
+            .AddScoped<IResourcePropertyValueResolver, ResourcePropertyValueResolver>()
+            .AddScoped<IResourcePropertyDefaultValueResolver, ResourcePropertyDefaultValueResolver>()
+            .AddScoped<IResourcePropertyCollectionFactory, ResourcePropertyCollectionFactory>()
+            .AddScoped<ISpreadsheetPageReader, SpreadsheetPageReader>();
     }
 }

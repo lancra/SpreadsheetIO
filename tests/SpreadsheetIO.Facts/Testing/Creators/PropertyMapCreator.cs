@@ -9,13 +9,17 @@ namespace LanceC.SpreadsheetIO.Facts.Testing.Creators
 {
     public static class PropertyMapCreator
     {
-        public static PropertyMap<FakeModel> CreateForFakeModel<TProperty>(Expression<Func<FakeModel, TProperty>> expression)
+        public static PropertyMap<FakeModel> CreateForFakeModel<TProperty>(
+            Expression<Func<FakeModel, TProperty>> expression,
+            params IPropertyMapOptionsExtension[] extensions)
         {
             var propertyInfo = GetPropertyInfo(expression);
+            var extensionsLookup = extensions.ToDictionary(extension => extension.GetType(), extension => extension);
+
             var map = new PropertyMap<FakeModel>(
                 propertyInfo,
                 new PropertyMapKey(propertyInfo.Name, default, false),
-                new PropertyMapOptions<FakeModel, TProperty>());
+                new PropertyMapOptions<FakeModel, TProperty>(extensionsLookup));
             return map;
         }
 
