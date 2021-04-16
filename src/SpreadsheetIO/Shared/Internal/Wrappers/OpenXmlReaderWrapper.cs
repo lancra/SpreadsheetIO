@@ -21,9 +21,6 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
         public bool IsEndElement
             => _openXmlReader.IsEndElement;
 
-        public bool HasAttributes
-            => _openXmlReader.HasAttributes;
-
         public Type ElementType
             => _openXmlReader.ElementType;
 

@@ -20,11 +20,6 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
         bool IsEndElement { get; }
 
         /// <summary>
-        /// Gets the value that determines whether the current element has attributes.
-        /// </summary>
-        bool HasAttributes { get; }
-
-        /// <summary>
         /// Gets the current element type.
         /// </summary>
         Type ElementType { get; }
