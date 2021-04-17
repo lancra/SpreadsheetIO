@@ -5,6 +5,7 @@ using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Mapping.Extensions;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Shared;
+using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 using Xunit;
 
@@ -213,10 +214,31 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             }
         }
 
-        public class TheUseHeaderStyleMethod : PropertyMapOptionsBuilderFacts
+        public class TheUseHeaderStyleMethodWithStyleAndNameParameters : PropertyMapOptionsBuilderFacts
         {
             [Fact]
             public void AddsOptionsExtensionWithSpecifiedStyle()
+            {
+                // Arrange
+                var style = new Style(Border.Default, Fill.Default, Font.Default);
+                var name = "foo";
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                sut.UseHeaderStyle(style, name);
+
+                // Assert
+                var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
+                Assert.NotNull(extension);
+                Assert.Equal(name, extension!.Key.Name);
+                Assert.Equal(IndexerKeyKind.Custom, extension.Key.Kind);
+                Assert.Equal(style, extension.Style);
+            }
+
+            [Fact]
+            public void UsesGuidWhenNameNotProvided()
             {
                 // Arrange
                 var style = new Style(Border.Default, Fill.Default, Font.Default);
@@ -230,7 +252,30 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 // Assert
                 var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
                 Assert.NotNull(extension);
-                Assert.Equal(style, extension!.Style);
+                Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
+                Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
+                Assert.Equal(style, extension.Style);
+            }
+
+            [Fact]
+            public void UsesGuidWhenNameIsEmpty()
+            {
+                // Arrange
+                var style = new Style(Border.Default, Fill.Default, Font.Default);
+                var name = string.Empty;
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                sut.UseHeaderStyle(style, name);
+
+                // Assert
+                var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
+                Assert.NotNull(extension);
+                Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
+                Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
+                Assert.Equal(style, extension.Style);
             }
 
             [Fact]
@@ -238,6 +283,46 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             {
                 // Arrange
                 var style = default(Style);
+                var name = "foo";
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                var exception = Record.Exception(() => sut.UseHeaderStyle(style!, name));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentNullException>(exception);
+            }
+        }
+
+        public class TheUseHeaderStyleMethodWithBuiltInExcelStyleParameter : PropertyMapOptionsBuilderFacts
+        {
+            [Fact]
+            public void AddsOptionsExtensionWithSpecifiedStyle()
+            {
+                // Arrange
+                var style = BuiltInExcelStyle.Normal;
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                sut.UseHeaderStyle(style);
+
+                // Assert
+                var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
+                Assert.NotNull(extension);
+                Assert.Equal(style.IndexerKey, extension!.Key);
+                Assert.Equal(style.Style, extension.Style);
+            }
+
+            [Fact]
+            public void ThrowsArgumentNullExceptionWhenStyleIsNull()
+            {
+                // Arrange
+                var style = default(BuiltInExcelStyle);
 
                 var resourceOptions = new ResourceMapOptions<FakeModel>();
                 var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
@@ -251,10 +336,70 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             }
         }
 
-        public class TheUseBodyStyleMethod : PropertyMapOptionsBuilderFacts
+        public class TheUseHeaderStyleMethodWithBuiltInPackageStyleParameter : PropertyMapOptionsBuilderFacts
         {
             [Fact]
             public void AddsOptionsExtensionWithSpecifiedStyle()
+            {
+                // Arrange
+                var style = BuiltInPackageStyle.Bold;
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                sut.UseHeaderStyle(style);
+
+                // Assert
+                var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
+                Assert.NotNull(extension);
+                Assert.Equal(style.IndexerKey, extension!.Key);
+                Assert.Equal(style.Style, extension.Style);
+            }
+
+            [Fact]
+            public void ThrowsArgumentNullExceptionWhenStyleIsNull()
+            {
+                // Arrange
+                var style = default(BuiltInPackageStyle);
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                var exception = Record.Exception(() => sut.UseHeaderStyle(style!));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentNullException>(exception);
+            }
+        }
+
+        public class TheUseBodyStyleMethodWithStyleAndNameParameters : PropertyMapOptionsBuilderFacts
+        {
+            [Fact]
+            public void AddsOptionsExtensionWithSpecifiedStyle()
+            {
+                // Arrange
+                var style = new Style(Border.Default, Fill.Default, Font.Default);
+                var name = "foo";
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                sut.UseBodyStyle(style, name);
+
+                // Assert
+                var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
+                Assert.NotNull(extension);
+                Assert.Equal(name, extension!.Key.Name);
+                Assert.Equal(IndexerKeyKind.Custom, extension.Key.Kind);
+                Assert.Equal(style, extension.Style);
+            }
+
+            [Fact]
+            public void UsesGuidWhenNameNotProvided()
             {
                 // Arrange
                 var style = new Style(Border.Default, Fill.Default, Font.Default);
@@ -268,7 +413,30 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 // Assert
                 var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
                 Assert.NotNull(extension);
-                Assert.Equal(style, extension!.Style);
+                Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
+                Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
+                Assert.Equal(style, extension.Style);
+            }
+
+            [Fact]
+            public void UsesGuidWhenNameIsEmpty()
+            {
+                // Arrange
+                var style = new Style(Border.Default, Fill.Default, Font.Default);
+                var name = string.Empty;
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                sut.UseBodyStyle(style, name);
+
+                // Assert
+                var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
+                Assert.NotNull(extension);
+                Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
+                Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
+                Assert.Equal(style, extension.Style);
             }
 
             [Fact]
@@ -276,6 +444,85 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             {
                 // Arrange
                 var style = default(Style);
+                var name = "foo";
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                var exception = Record.Exception(() => sut.UseBodyStyle(style!, name));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentNullException>(exception);
+            }
+        }
+
+        public class TheUseBodyStyleMethodWithBuiltInExcelStyleParameter : PropertyMapOptionsBuilderFacts
+        {
+            [Fact]
+            public void AddsOptionsExtensionWithSpecifiedStyle()
+            {
+                // Arrange
+                var style = BuiltInExcelStyle.Normal;
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                sut.UseBodyStyle(style);
+
+                // Assert
+                var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
+                Assert.NotNull(extension);
+                Assert.Equal(style.IndexerKey, extension!.Key);
+                Assert.Equal(style.Style, extension.Style);
+            }
+
+            [Fact]
+            public void ThrowsArgumentNullExceptionWhenStyleIsNull()
+            {
+                // Arrange
+                var style = default(BuiltInExcelStyle);
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                var exception = Record.Exception(() => sut.UseBodyStyle(style!));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentNullException>(exception);
+            }
+        }
+
+        public class TheUseBodyStyleMethodWithBuiltInPackageStyleParameter : PropertyMapOptionsBuilderFacts
+        {
+            [Fact]
+            public void AddsOptionsExtensionWithSpecifiedStyle()
+            {
+                // Arrange
+                var style = BuiltInPackageStyle.Bold;
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+                // Act
+                sut.UseBodyStyle(style);
+
+                // Assert
+                var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
+                Assert.NotNull(extension);
+                Assert.Equal(style.IndexerKey, extension!.Key);
+                Assert.Equal(style.Style, extension.Style);
+            }
+
+            [Fact]
+            public void ThrowsArgumentNullExceptionWhenStyleIsNull()
+            {
+                // Arrange
+                var style = default(BuiltInPackageStyle);
 
                 var resourceOptions = new ResourceMapOptions<FakeModel>();
                 var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);

@@ -3,6 +3,7 @@ using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Mapping.Extensions;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Shared;
+using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 
 namespace LanceC.SpreadsheetIO.Mapping
@@ -79,12 +80,60 @@ namespace LanceC.SpreadsheetIO.Mapping
         /// Specifies a style to use for the header of all properties.
         /// </summary>
         /// <param name="style">The style to use.</param>
+        /// <param name="name">The unique name of the style to use.</param>
         /// <returns>The resulting resource map options builder.</returns>
-        public ResourceMapOptionsBuilder<TResource> UseHeaderStyle(Style style)
+        public ResourceMapOptionsBuilder<TResource> UseHeaderStyle(Style style, string name = "")
         {
             Guard.Against.Null(style, nameof(style));
 
-            return WithOption(new HeaderStyleMapOptionsExtension(style));
+            if (string.IsNullOrEmpty(name))
+            {
+                name = Guid.NewGuid().ToString();
+            }
+
+            return WithOption(new HeaderStyleMapOptionsExtension(new IndexerKey(name, IndexerKeyKind.Custom), style));
+        }
+
+        /// <summary>
+        /// Specifies a style to use for the header of all properties.
+        /// </summary>
+        /// <param name="style">The style to use.</param>
+        /// <returns>The resulting resource map options builder.</returns>
+        public ResourceMapOptionsBuilder<TResource> UseHeaderStyle(BuiltInExcelStyle style)
+        {
+            Guard.Against.Null(style, nameof(style));
+
+            return WithOption(new HeaderStyleMapOptionsExtension(style.IndexerKey, style.Style));
+        }
+
+        /// <summary>
+        /// Specifies a style to use for the header of all properties.
+        /// </summary>
+        /// <param name="style">The style to use.</param>
+        /// <returns>The resulting resource map options builder.</returns>
+        public ResourceMapOptionsBuilder<TResource> UseHeaderStyle(BuiltInPackageStyle style)
+        {
+            Guard.Against.Null(style, nameof(style));
+
+            return WithOption(new HeaderStyleMapOptionsExtension(style.IndexerKey, style.Style));
+        }
+
+        /// <summary>
+        /// Specifies a style to use for the body of all properties.
+        /// </summary>
+        /// <param name="style">The style to use.</param>
+        /// <param name="name">The unique name of the style to use.</param>
+        /// <returns>The resulting resource map options builder.</returns>
+        public ResourceMapOptionsBuilder<TResource> UseBodyStyle(Style style, string name = "")
+        {
+            Guard.Against.Null(style, nameof(style));
+
+            if (string.IsNullOrEmpty(name))
+            {
+                name = Guid.NewGuid().ToString();
+            }
+
+            return WithOption(new BodyStyleMapOptionsExtension(new IndexerKey(name, IndexerKeyKind.Custom), style));
         }
 
         /// <summary>
@@ -92,11 +141,23 @@ namespace LanceC.SpreadsheetIO.Mapping
         /// </summary>
         /// <param name="style">The style to use.</param>
         /// <returns>The resulting resource map options builder.</returns>
-        public ResourceMapOptionsBuilder<TResource> UseBodyStyle(Style style)
+        public ResourceMapOptionsBuilder<TResource> UseBodyStyle(BuiltInExcelStyle style)
         {
             Guard.Against.Null(style, nameof(style));
 
-            return WithOption(new BodyStyleMapOptionsExtension(style));
+            return WithOption(new BodyStyleMapOptionsExtension(style.IndexerKey, style.Style));
+        }
+
+        /// <summary>
+        /// Specifies a style to use for the body of all properties.
+        /// </summary>
+        /// <param name="style">The style to use.</param>
+        /// <returns>The resulting resource map options builder.</returns>
+        public ResourceMapOptionsBuilder<TResource> UseBodyStyle(BuiltInPackageStyle style)
+        {
+            Guard.Against.Null(style, nameof(style));
+
+            return WithOption(new BodyStyleMapOptionsExtension(style.IndexerKey, style.Style));
         }
 
         /// <summary>
