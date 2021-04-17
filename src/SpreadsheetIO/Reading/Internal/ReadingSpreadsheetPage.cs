@@ -14,18 +14,18 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
         private readonly IWorksheetPartWrapper _worksheetPart;
         private readonly IElementReaderFactory _elementReaderFactory;
         private readonly IResourceMapManager _resourceMapManager;
-        private readonly ISpreadsheetPageReader _spreadsheetPageReader;
+        private readonly ISpreadsheetPageMapReader _spreadsheetPageMapReader;
 
         public ReadingSpreadsheetPage(
             IWorksheetPartWrapper worksheetPart,
             IElementReaderFactory elementReaderFactory,
             IResourceMapManager resourceMapManager,
-            ISpreadsheetPageReader spreadsheetPageReader)
+            ISpreadsheetPageMapReader spreadsheetPageMapReader)
         {
             _worksheetPart = worksheetPart;
             _elementReaderFactory = elementReaderFactory;
             _resourceMapManager = resourceMapManager;
-            _spreadsheetPageReader = spreadsheetPageReader;
+            _spreadsheetPageMapReader = spreadsheetPageMapReader;
         }
 
         public ReadingResult<TResource> Read<TResource>()
@@ -50,7 +50,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
         {
             using var worksheetReader = _elementReaderFactory.CreateWorksheetReader(_worksheetPart);
 
-            var headerRowResult = _spreadsheetPageReader.ReadHeaderRow(worksheetReader, map);
+            var headerRowResult = _spreadsheetPageMapReader.ReadHeaderRow(worksheetReader, map);
             if (headerRowResult.Failure is not null)
             {
                 return new ReadingResult<TResource>(
@@ -67,7 +67,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
 
             while (worksheetReader.ReadNextRow())
             {
-                var bodyRowResult = _spreadsheetPageReader.ReadBodyRow(worksheetReader, map, headerRowResult.Headers);
+                var bodyRowResult = _spreadsheetPageMapReader.ReadBodyRow(worksheetReader, map, headerRowResult.Headers);
 
                 if (bodyRowResult.Resource is not null)
                 {

@@ -7,14 +7,14 @@ using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
 {
-    internal class SpreadsheetPageReader : ISpreadsheetPageReader
+    internal class SpreadsheetPageMapReader : ISpreadsheetPageMapReader
     {
         private readonly IResourcePropertyCollectionFactory _resourcePropertyCollectionFactory;
         private readonly IResourcePropertyValueResolver _resourcePropertyValueResolver;
         private readonly IResourcePropertyDefaultValueResolver _resourcePropertyDefaultValueResolver;
         private readonly IResourceCreator _resourceCreator;
 
-        public SpreadsheetPageReader(
+        public SpreadsheetPageMapReader(
             IResourcePropertyCollectionFactory resourcePropertyCollectionFactory,
             IResourcePropertyValueResolver resourcePropertyValueResolver,
             IResourcePropertyDefaultValueResolver resourcePropertyDefaultValueResolver,

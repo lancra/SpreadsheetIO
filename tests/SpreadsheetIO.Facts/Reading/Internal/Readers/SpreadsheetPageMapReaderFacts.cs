@@ -12,12 +12,12 @@ using Xunit;
 
 namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
 {
-    public class SpreadsheetPageReaderFacts
+    public class SpreadsheetPageMapReaderFacts
     {
         private readonly AutoMocker _mocker = new AutoMocker();
 
-        private SpreadsheetPageReader CreateSystemUnderTest()
-            => _mocker.CreateInstance<SpreadsheetPageReader>();
+        private SpreadsheetPageMapReader CreateSystemUnderTest()
+            => _mocker.CreateInstance<SpreadsheetPageMapReader>();
 
         private void MockWorksheetElementReaderCells(params FakeWorksheetCell[] cells)
         {
@@ -36,7 +36,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
             readNextSequence.Returns(false);
         }
 
-        public class TheReadHeaderRowMethod : SpreadsheetPageReaderFacts
+        public class TheReadHeaderRowMethod : SpreadsheetPageMapReaderFacts
         {
             [Fact]
             public void ReturnsReadingResultWithoutFailuresWhenAllRequiredPropertyMapsAreFound()
@@ -315,7 +315,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
             }
         }
 
-        public class TheReadBodyRowMethod : SpreadsheetPageReaderFacts
+        public class TheReadBodyRowMethod : SpreadsheetPageMapReaderFacts
         {
             [Fact]
             public void ReturnsReadingResultWithoutFailuresWhenAllRequiredPropertyMapsAreFound()

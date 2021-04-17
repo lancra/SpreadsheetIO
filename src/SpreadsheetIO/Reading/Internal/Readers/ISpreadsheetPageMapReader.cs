@@ -4,9 +4,9 @@ using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
 {
     /// <summary>
-    /// Defines the reader for a spreadsheet page.
+    /// Defines the reader for a spreadsheet page which uses a defined map.
     /// </summary>
-    internal interface ISpreadsheetPageReader
+    internal interface ISpreadsheetPageMapReader
     {
         /// <summary>
         /// Reads the header row from a spreadsheet page.

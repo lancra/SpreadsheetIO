@@ -64,6 +64,6 @@ namespace LanceC.SpreadsheetIO
             .AddScoped<IResourcePropertyValueResolver, ResourcePropertyValueResolver>()
             .AddScoped<IResourcePropertyDefaultValueResolver, ResourcePropertyDefaultValueResolver>()
             .AddScoped<IResourcePropertyCollectionFactory, ResourcePropertyCollectionFactory>()
-            .AddScoped<ISpreadsheetPageReader, SpreadsheetPageReader>();
+            .AddScoped<ISpreadsheetPageMapReader, SpreadsheetPageMapReader>();
     }
 }

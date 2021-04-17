@@ -58,8 +58,8 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal
                 .Returns(_mocker.GetMock<IElementReaderFactory>().Object);
             serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IResourceMapManager)))
                 .Returns(_mocker.GetMock<IResourceMapManager>().Object);
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ISpreadsheetPageReader)))
-                .Returns(_mocker.GetMock<ISpreadsheetPageReader>().Object);
+            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ISpreadsheetPageMapReader)))
+                .Returns(_mocker.GetMock<ISpreadsheetPageMapReader>().Object);
             serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IStringIndexer)))
                 .Returns(_mocker.GetMock<IStringIndexer>().Object);
         }
