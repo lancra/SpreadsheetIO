@@ -32,7 +32,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing
                 }
 
                 throw new InvalidOperationException(
-                    $"The ${typeof(ResourcePropertyParser).Name} cannot be constructed because there are multiple " +
+                    $"The {typeof(ResourcePropertyParser).Name} cannot be constructed because there are multiple " +
                     $"{typeof(IResourcePropertyParserStrategy).Name} instances registered for the {strategyGrouping.Key.Name} " +
                     "property type.");
             }

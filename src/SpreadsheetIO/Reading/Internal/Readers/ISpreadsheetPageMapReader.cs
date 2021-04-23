@@ -4,7 +4,7 @@ using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
 {
     /// <summary>
-    /// Defines the reader for a spreadsheet page which uses a defined map.
+    /// Defines the reader for a spreadsheet page which uses a defined resource map.
     /// </summary>
     internal interface ISpreadsheetPageMapReader
     {

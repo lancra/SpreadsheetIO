@@ -1,4 +1,3 @@
-using System;
 using LanceC.SpreadsheetIO.Mapping;
 
 namespace LanceC.SpreadsheetIO.Reading
@@ -20,7 +19,7 @@ namespace LanceC.SpreadsheetIO.Reading
         /// Reads the spreadsheet page as a collection of resources.
         /// </summary>
         /// <typeparam name="TResource">The type of resource to read.</typeparam>
-        /// <typeparam name="TResourceMap">The resource map.</typeparam>
+        /// <typeparam name="TResourceMap">The type of resource map to use for reading.</typeparam>
         /// <returns>The resulting resources and failures from reading from the spreadsheet page.</returns>
         ReadingResult<TResource> Read<TResource, TResourceMap>()
             where TResource : class
