@@ -68,21 +68,6 @@ namespace LanceC.SpreadsheetIO.Facts.Writing
                 Assert.NotNull(exception);
                 Assert.IsType<ArgumentNullException>(exception);
             }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenStyleIsNull()
-            {
-                // Arrange
-                var cellValue = new WritingCellValue(default(string?));
-                var cellStyle = default(WritingCellStyle);
-
-                // Act
-                var exception = Record.Exception(() => new WritingCell(cellValue, cellStyle!));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
         }
     }
 }

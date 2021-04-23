@@ -10,6 +10,14 @@ namespace LanceC.SpreadsheetIO.Writing
     public class WritingCellValue
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="WritingCellValue"/> class with no value.
+        /// </summary>
+        public WritingCellValue()
+            : this(default(Action<OpenXml.Cell>?))
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WritingCellValue"/> class with an integer value.
         /// </summary>
         /// <param name="value">The integer value.</param>
@@ -24,6 +32,60 @@ namespace LanceC.SpreadsheetIO.Writing
         /// <param name="value">The nullable integer value.</param>
         public WritingCellValue(int? value)
             : this(value.HasValue ? CreateCellModifier(value.Value) : default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WritingCellValue"/> class with an unsigned integer value.
+        /// </summary>
+        /// <param name="value">The unsigned integer value.</param>
+        public WritingCellValue(uint value)
+            : this(CreateCellModifier((double)value))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WritingCellValue"/> class with a nullable unsigned integer value.
+        /// </summary>
+        /// <param name="value">The nullable unsigned integer value.</param>
+        public WritingCellValue(uint? value)
+            : this(value.HasValue ? CreateCellModifier((double)value.Value) : default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WritingCellValue"/> class with a long value.
+        /// </summary>
+        /// <param name="value">The long value.</param>
+        public WritingCellValue(long value)
+            : this(CreateCellModifier((double)value))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WritingCellValue"/> class with a nullable long value.
+        /// </summary>
+        /// <param name="value">The nullable long value.</param>
+        public WritingCellValue(long? value)
+            : this(value.HasValue ? CreateCellModifier((double)value.Value) : default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WritingCellValue"/> class with an unsigned long value.
+        /// </summary>
+        /// <param name="value">The unsigned long value.</param>
+        public WritingCellValue(ulong value)
+            : this(CreateCellModifier((double)value))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WritingCellValue"/> class with a nullable unsigned long value.
+        /// </summary>
+        /// <param name="value">The nullable unsigned long value.</param>
+        public WritingCellValue(ulong? value)
+            : this(value.HasValue ? CreateCellModifier((double)value.Value) : default)
         {
         }
 

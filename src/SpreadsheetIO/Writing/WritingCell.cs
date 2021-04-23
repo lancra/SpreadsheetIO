@@ -23,11 +23,9 @@ namespace LanceC.SpreadsheetIO.Writing
         /// </summary>
         /// <param name="value">The cell value.</param>
         /// <param name="style">The cell style.</param>
-        public WritingCell(WritingCellValue value, WritingCellStyle style)
+        public WritingCell(WritingCellValue value, WritingCellStyle? style)
             : this(value)
         {
-            Guard.Against.Null(style, nameof(style));
-
             Style = style;
         }
 

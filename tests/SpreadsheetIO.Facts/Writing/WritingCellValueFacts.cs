@@ -59,6 +59,153 @@ namespace LanceC.SpreadsheetIO.Facts.Writing
             }
         }
 
+        public class TheConstructorWithUnsignedIntegerParameter : WritingCellValueFacts
+        {
+            [Fact]
+            public void SetsCellModifierProperty()
+            {
+                // Arrange
+                var value = 12U;
+
+                // Act
+                var cellValue = new WritingCellValue(value);
+
+                // Assert
+                Assert.NotNull(cellValue.CellModifier);
+                cellValue.CellModifier!(_cell);
+                Assert.Equal("12", _cell.CellValue.Text);
+            }
+        }
+
+        public class TheConstructorWithNullableUnsignedIntegerParameter : WritingCellValueFacts
+        {
+            [Fact]
+            public void SetsCellModifierPropertyWhenValueIsNotNull()
+            {
+                // Arrange
+                uint? value = 12U;
+
+                // Act
+                var cellValue = new WritingCellValue(value);
+
+                // Assert
+                Assert.NotNull(cellValue.CellModifier);
+                cellValue.CellModifier!(_cell);
+                Assert.Equal("12", _cell.CellValue.Text);
+            }
+
+            [Fact]
+            public void SetsCellModifierPropertyToNullWhenValueIsNull()
+            {
+                // Arrange
+                var value = default(uint?);
+
+                // Act
+                var cellValue = new WritingCellValue(value);
+
+                // Assert
+                Assert.Null(cellValue.CellModifier);
+            }
+        }
+
+        public class TheConstructorWithLongParameter : WritingCellValueFacts
+        {
+            [Fact]
+            public void SetsCellModifierProperty()
+            {
+                // Arrange
+                var value = 12L;
+
+                // Act
+                var cellValue = new WritingCellValue(value);
+
+                // Assert
+                Assert.NotNull(cellValue.CellModifier);
+                cellValue.CellModifier!(_cell);
+                Assert.Equal("12", _cell.CellValue.Text);
+            }
+        }
+
+        public class TheConstructorWithNullableLongParameter : WritingCellValueFacts
+        {
+            [Fact]
+            public void SetsCellModifierPropertyWhenValueIsNotNull()
+            {
+                // Arrange
+                long? value = 12L;
+
+                // Act
+                var cellValue = new WritingCellValue(value);
+
+                // Assert
+                Assert.NotNull(cellValue.CellModifier);
+                cellValue.CellModifier!(_cell);
+                Assert.Equal("12", _cell.CellValue.Text);
+            }
+
+            [Fact]
+            public void SetsCellModifierPropertyToNullWhenValueIsNull()
+            {
+                // Arrange
+                var value = default(long?);
+
+                // Act
+                var cellValue = new WritingCellValue(value);
+
+                // Assert
+                Assert.Null(cellValue.CellModifier);
+            }
+        }
+
+        public class TheConstructorWithUnsignedLongParameter : WritingCellValueFacts
+        {
+            [Fact]
+            public void SetsCellModifierProperty()
+            {
+                // Arrange
+                var value = 12UL;
+
+                // Act
+                var cellValue = new WritingCellValue(value);
+
+                // Assert
+                Assert.NotNull(cellValue.CellModifier);
+                cellValue.CellModifier!(_cell);
+                Assert.Equal("12", _cell.CellValue.Text);
+            }
+        }
+
+        public class TheConstructorWithNullableUnsignedLongParameter : WritingCellValueFacts
+        {
+            [Fact]
+            public void SetsCellModifierPropertyWhenValueIsNotNull()
+            {
+                // Arrange
+                ulong? value = 12UL;
+
+                // Act
+                var cellValue = new WritingCellValue(value);
+
+                // Assert
+                Assert.NotNull(cellValue.CellModifier);
+                cellValue.CellModifier!(_cell);
+                Assert.Equal("12", _cell.CellValue.Text);
+            }
+
+            [Fact]
+            public void SetsCellModifierPropertyToNullWhenValueIsNull()
+            {
+                // Arrange
+                var value = default(ulong?);
+
+                // Act
+                var cellValue = new WritingCellValue(value);
+
+                // Assert
+                Assert.Null(cellValue.CellModifier);
+            }
+        }
+
         public class TheConstructorWithDoubleParameter : WritingCellValueFacts
         {
             [Fact]

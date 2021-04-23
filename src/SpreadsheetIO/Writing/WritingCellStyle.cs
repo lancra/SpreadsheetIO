@@ -42,6 +42,13 @@ namespace LanceC.SpreadsheetIO.Writing
             Key = style.IndexerKey;
         }
 
+        internal WritingCellStyle(IndexerKey key)
+        {
+            Guard.Against.Null(key, nameof(key));
+
+            Key = key;
+        }
+
         internal IndexerKey Key { get; }
     }
 }
