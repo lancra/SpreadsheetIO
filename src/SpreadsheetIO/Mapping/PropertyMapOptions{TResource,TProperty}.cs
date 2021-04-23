@@ -79,7 +79,8 @@ namespace LanceC.SpreadsheetIO.Mapping
         }
 
         private static bool IsExtensionAllowed(IPropertyMapOptionsExtension extension)
-            => !extension.AllowedTypes.Any() || extension.AllowedTypes.Any(t => t == typeof(TProperty));
+            => !extension.AllowedTypes.Any() ||
+            extension.AllowedTypes.Any(t => t == typeof(TProperty) || t == Nullable.GetUnderlyingType(typeof(TProperty)));
 
         private void ThrowIfFrozen()
         {

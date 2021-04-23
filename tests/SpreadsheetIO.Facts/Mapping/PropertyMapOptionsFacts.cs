@@ -168,6 +168,20 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             }
 
             [Fact]
+            public void DoesNotThrowExceptionForNullableAllowedType()
+            {
+                // Arrange
+                var extension = new FakeDateTimePropertyMapOptionsExtension();
+                var sut = new PropertyMapOptions<FakeModel, DateTime?>();
+
+                // Act
+                var exception = Record.Exception(() => sut.WithExtension(extension));
+
+                // Assert
+                Assert.Null(exception);
+            }
+
+            [Fact]
             public void ThrowsArgumentNullExceptionWhenExtensionIsNull()
             {
                 // Arrange

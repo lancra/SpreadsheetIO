@@ -557,6 +557,24 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             }
 
             [Fact]
+            public void AllowsNullableDateTime()
+            {
+                // Arrange
+                var dateKind = CellDateKind.Text;
+
+                var resourceOptions = new ResourceMapOptions<FakeModel>();
+                var sut = new PropertyMapOptionsBuilder<FakeModel, DateTime?>(resourceOptions);
+
+                // Act
+                sut.UseDateKind(dateKind);
+
+                // Assert
+                var extension = sut.Options.FindExtension<DateKindMapOptionsExtension>();
+                Assert.NotNull(extension);
+                Assert.Equal(dateKind, extension!.DateKind);
+            }
+
+            [Fact]
             public void ThrowsArgumentNullExceptionWhenDateKindIsNull()
             {
                 // Arrange
