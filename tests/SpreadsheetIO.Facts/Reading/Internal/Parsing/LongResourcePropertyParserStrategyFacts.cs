@@ -21,7 +21,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.LongNullable);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.LongNullable);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -38,7 +38,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.Long);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Long);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -53,7 +53,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsInvalidParseResultWhenCellValueIsNotLong()
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.Long);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Long);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -69,7 +69,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var expectedValue = 1L;
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.Long);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Long);
                 var sut = CreateSystemUnderTest();
 
                 // Act

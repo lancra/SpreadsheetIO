@@ -21,7 +21,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.UnsignedIntegerNullable);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedIntegerNullable);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -38,7 +38,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.UnsignedInteger);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedInteger);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -53,7 +53,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsInvalidParseResultWhenCellValueIsNotUnsignedInteger()
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.UnsignedInteger);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedInteger);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -69,7 +69,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var expectedValue = 1U;
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.UnsignedInteger);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedInteger);
                 var sut = CreateSystemUnderTest();
 
                 // Act

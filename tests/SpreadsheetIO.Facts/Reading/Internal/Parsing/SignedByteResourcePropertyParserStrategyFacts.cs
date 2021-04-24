@@ -21,7 +21,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.SignedByteNullable);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByteNullable);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -38,7 +38,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.SignedByte);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -53,7 +53,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsInvalidParseResultWhenCellValueIsNotSignedByte()
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.SignedByte);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -69,7 +69,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 sbyte expectedValue = 1;
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.SignedByte);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
                 var sut = CreateSystemUnderTest();
 
                 // Act

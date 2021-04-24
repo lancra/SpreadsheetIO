@@ -23,17 +23,17 @@ namespace LanceC.SpreadsheetIO.Facts.Testing.Creators
             return map;
         }
 
-        public static PropertyMap<FakeParserStrategyModel> CreateForFakeParserStrategyModel<TProperty>(
-            Expression<Func<FakeParserStrategyModel, TProperty>> expression,
+        public static PropertyMap<FakeResourcePropertyStrategyModel> CreateForFakeResourcePropertyStrategyModel<TProperty>(
+            Expression<Func<FakeResourcePropertyStrategyModel, TProperty>> expression,
             params IPropertyMapOptionsExtension[] extensions)
         {
             var propertyInfo = GetPropertyInfo(expression);
             var extensionsLookup = extensions.ToDictionary(extension => extension.GetType(), extension => extension);
 
-            var map = new PropertyMap<FakeParserStrategyModel>(
+            var map = new PropertyMap<FakeResourcePropertyStrategyModel>(
                 propertyInfo,
                 new PropertyMapKey(propertyInfo.Name, default, false),
-                new PropertyMapOptions<FakeParserStrategyModel, TProperty>(extensionsLookup));
+                new PropertyMapOptions<FakeResourcePropertyStrategyModel, TProperty>(extensionsLookup));
             return map;
         }
 

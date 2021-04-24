@@ -2,7 +2,7 @@ using System;
 
 namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes
 {
-    public class FakeParserStrategyModel
+    public class FakeResourcePropertyStrategyModel
     {
         public bool Boolean { get; set; }
 

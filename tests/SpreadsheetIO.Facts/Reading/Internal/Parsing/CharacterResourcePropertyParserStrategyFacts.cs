@@ -21,7 +21,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.CharacterNullable);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.CharacterNullable);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -38,7 +38,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.Character);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -53,7 +53,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsInvalidParseResultWhenCellValueIsNotCharacter()
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.Character);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -69,7 +69,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var expectedValue = 'A';
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.Character);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
                 var sut = CreateSystemUnderTest();
 
                 // Act

@@ -21,7 +21,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmpty(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.String);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.String);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -38,7 +38,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
                 // Arrange
                 var cellValue = "foo";
 
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.String);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.String);
                 var sut = CreateSystemUnderTest();
 
                 // Act

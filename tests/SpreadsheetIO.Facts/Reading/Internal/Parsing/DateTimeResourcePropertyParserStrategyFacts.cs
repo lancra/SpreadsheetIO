@@ -24,7 +24,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.DateTimeNullable);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeNullable);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -41,7 +41,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.DateTime);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTime);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -56,7 +56,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsInvalidParseResultWhenNoDateKindIsSpecifiedAndCellValueIsNotDouble()
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.DateTime);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTime);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -71,7 +71,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsInvalidParseResultWhenNoDateKindIsSpecifiedAndCellValueIsNotOADate()
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.DateTime);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTime);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -86,7 +86,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsSuccessParseResultWhenNoDateKindIsSpecifiedAndCellValueIsOADate()
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.DateTime);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTime);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -102,7 +102,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var map = PropertyMapCreator
-                    .CreateForFakeParserStrategyModel(model => model.DateTime, new DateKindMapOptionsExtension(CellDateKind.Number));
+                    .CreateForFakeResourcePropertyStrategyModel(model => model.DateTime, new DateKindMapOptionsExtension(CellDateKind.Number));
 
                 var sut = CreateSystemUnderTest();
 
@@ -119,7 +119,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var map = PropertyMapCreator
-                    .CreateForFakeParserStrategyModel(model => model.DateTime, new DateKindMapOptionsExtension(CellDateKind.Number));
+                    .CreateForFakeResourcePropertyStrategyModel(model => model.DateTime, new DateKindMapOptionsExtension(CellDateKind.Number));
 
                 var sut = CreateSystemUnderTest();
 
@@ -136,7 +136,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var map = PropertyMapCreator
-                    .CreateForFakeParserStrategyModel(model => model.DateTime, new DateKindMapOptionsExtension(CellDateKind.Number));
+                    .CreateForFakeResourcePropertyStrategyModel(model => model.DateTime, new DateKindMapOptionsExtension(CellDateKind.Number));
 
                 var sut = CreateSystemUnderTest();
 
@@ -153,7 +153,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var map = PropertyMapCreator
-                    .CreateForFakeParserStrategyModel(model => model.DateTime, new DateKindMapOptionsExtension(CellDateKind.Text));
+                    .CreateForFakeResourcePropertyStrategyModel(model => model.DateTime, new DateKindMapOptionsExtension(CellDateKind.Text));
 
                 var sut = CreateSystemUnderTest();
 
@@ -170,7 +170,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var map = PropertyMapCreator
-                    .CreateForFakeParserStrategyModel(model => model.DateTime, new DateKindMapOptionsExtension(CellDateKind.Text));
+                    .CreateForFakeResourcePropertyStrategyModel(model => model.DateTime, new DateKindMapOptionsExtension(CellDateKind.Text));
 
                 var sut = CreateSystemUnderTest();
 

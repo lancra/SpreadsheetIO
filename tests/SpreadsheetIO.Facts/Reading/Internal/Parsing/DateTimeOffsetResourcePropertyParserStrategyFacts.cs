@@ -24,7 +24,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.DateTimeOffsetNullable);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffsetNullable);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -41,7 +41,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.DateTimeOffset);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -56,7 +56,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsInvalidParseResultWhenNoDateKindIsSpecifiedAndCellValueIsNotDouble()
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.DateTimeOffset);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -71,7 +71,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsInvalidParseResultWhenNoDateKindIsSpecifiedAndCellValueIsNotOADate()
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.DateTimeOffset);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -86,7 +86,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             public void ReturnsSuccessParseResultWhenNoDateKindIsSpecifiedAndCellValueIsOADate()
             {
                 // Arrange
-                var map = PropertyMapCreator.CreateForFakeParserStrategyModel(model => model.DateTimeOffset);
+                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
                 var sut = CreateSystemUnderTest();
 
                 // Act
@@ -104,7 +104,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var map = PropertyMapCreator
-                    .CreateForFakeParserStrategyModel(
+                    .CreateForFakeResourcePropertyStrategyModel(
                         model => model.DateTimeOffset,
                         new DateKindMapOptionsExtension(CellDateKind.Number));
 
@@ -123,7 +123,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var map = PropertyMapCreator
-                    .CreateForFakeParserStrategyModel(
+                    .CreateForFakeResourcePropertyStrategyModel(
                         model => model.DateTimeOffset,
                         new DateKindMapOptionsExtension(CellDateKind.Number));
 
@@ -142,7 +142,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var map = PropertyMapCreator
-                    .CreateForFakeParserStrategyModel(
+                    .CreateForFakeResourcePropertyStrategyModel(
                         model => model.DateTimeOffset,
                         new DateKindMapOptionsExtension(CellDateKind.Number));
 
@@ -163,7 +163,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var map = PropertyMapCreator
-                    .CreateForFakeParserStrategyModel(
+                    .CreateForFakeResourcePropertyStrategyModel(
                         model => model.DateTimeOffset,
                         new DateKindMapOptionsExtension(CellDateKind.Text));
 
@@ -182,7 +182,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
             {
                 // Arrange
                 var map = PropertyMapCreator
-                    .CreateForFakeParserStrategyModel(
+                    .CreateForFakeResourcePropertyStrategyModel(
                         model => model.DateTimeOffset,
                         new DateKindMapOptionsExtension(CellDateKind.Text));
 
