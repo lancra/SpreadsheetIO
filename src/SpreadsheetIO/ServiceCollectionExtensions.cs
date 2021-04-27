@@ -30,23 +30,22 @@ namespace LanceC.SpreadsheetIO
         /// <returns>The modified service collection.</returns>
         [ExcludeFromCodeCoverage]
         public static IServiceCollection AddSpreadsheetIO(this IServiceCollection services)
+            => services.AddScoped<ISpreadsheetFactory, SpreadsheetFactory>()
+            .AddSpreadsheetIOMapping()
+            .AddSpreadsheetIOReading()
+            .AddSpreadsheetIOShared()
+            .AddSpreadsheetIOStyling()
+            .AddSpreadsheetIOWriting();
+
+        private static IServiceCollection AddSpreadsheetIOMapping(this IServiceCollection services)
             => services
-            .AddScoped<ISpreadsheetDocumentWrapperFactory, SpreadsheetDocumentWrapperFactory>()
-            .AddScoped<ISpreadsheetFactory, SpreadsheetFactory>()
-            .AddScoped<IStylesheetMutator, StylesheetBorderMutator>()
-            .AddScoped<IStylesheetMutator, StylesheetFillMutator>()
-            .AddScoped<IStylesheetMutator, StylesheetFontMutator>()
-            .AddScoped<IStylesheetMutator, StylesheetStyleMutator>()
-            .AddScoped<ISpreadsheetGenerator, SharedStringTableGenerator>()
-            .AddScoped<ISpreadsheetGenerator, StylesheetGenerator>()
-            .AddScoped<IBorderIndexer, BorderIndexer>()
-            .AddScoped<IFillIndexer, FillIndexer>()
-            .AddScoped<IFontIndexer, FontIndexer>()
-            .AddScoped<IStringIndexer, StringIndexer>()
-            .AddScoped<IStyleIndexer, StyleIndexer>()
-            .AddScoped<IResourceMapManager, ResourceMapManager>()
-            .AddScoped<IElementReaderFactory, ElementReaderFactory>()
+            .AddScoped<IResourceMapManager, ResourceMapManager>();
+
+        private static IServiceCollection AddSpreadsheetIOReading(this IServiceCollection services)
+            => services
             .AddScoped<IResourceCreator, ResourceCreator>()
+            .AddScoped<IResourcePropertyDefaultValueResolver, ResourcePropertyDefaultValueResolver>()
+            .AddScoped<IResourcePropertyValueResolver, ResourcePropertyValueResolver>()
             .AddScoped<IResourcePropertyParser, ResourcePropertyParser>()
             .AddScoped<IResourcePropertyParserStrategy, BooleanResourcePropertyParserStrategy>()
             .AddScoped<IResourcePropertyParserStrategy, ByteResourcePropertyParserStrategy>()
@@ -64,10 +63,30 @@ namespace LanceC.SpreadsheetIO
             .AddScoped<IResourcePropertyParserStrategy, UnsignedIntegerResourcePropertyParserStrategy>()
             .AddScoped<IResourcePropertyParserStrategy, UnsignedLongResourcePropertyParserStrategy>()
             .AddScoped<IResourcePropertyParserStrategy, UnsignedShortResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyValueResolver, ResourcePropertyValueResolver>()
-            .AddScoped<IResourcePropertyDefaultValueResolver, ResourcePropertyDefaultValueResolver>()
             .AddScoped<IResourcePropertyCollectionFactory, ResourcePropertyCollectionFactory>()
-            .AddScoped<ISpreadsheetPageMapReader, SpreadsheetPageMapReader>()
+            .AddScoped<IElementReaderFactory, ElementReaderFactory>()
+            .AddScoped<ISpreadsheetPageMapReader, SpreadsheetPageMapReader>();
+
+        private static IServiceCollection AddSpreadsheetIOShared(this IServiceCollection services)
+            => services
+            .AddScoped<ISpreadsheetDocumentWrapperFactory, SpreadsheetDocumentWrapperFactory>()
+            .AddScoped<ISpreadsheetGenerator, SharedStringTableGenerator>()
+            .AddScoped<ISpreadsheetGenerator, StylesheetGenerator>()
+            .AddScoped<IStringIndexer, StringIndexer>();
+
+        private static IServiceCollection AddSpreadsheetIOStyling(this IServiceCollection services)
+            => services
+            .AddScoped<IStylesheetMutator, StylesheetBorderMutator>()
+            .AddScoped<IStylesheetMutator, StylesheetFillMutator>()
+            .AddScoped<IStylesheetMutator, StylesheetFontMutator>()
+            .AddScoped<IStylesheetMutator, StylesheetStyleMutator>()
+            .AddScoped<IBorderIndexer, BorderIndexer>()
+            .AddScoped<IFillIndexer, FillIndexer>()
+            .AddScoped<IFontIndexer, FontIndexer>()
+            .AddScoped<IStyleIndexer, StyleIndexer>();
+
+        private static IServiceCollection AddSpreadsheetIOWriting(this IServiceCollection services)
+            => services
             .AddScoped<IResourcePropertySerializer, ResourcePropertySerializer>()
             .AddScoped<IResourcePropertySerializerStrategy, BooleanResourcePropertySerializerStrategy>()
             .AddScoped<IResourcePropertySerializerStrategy, CharacterResourcePropertySerializerStrategy>()
