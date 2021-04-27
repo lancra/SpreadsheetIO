@@ -11,6 +11,9 @@ using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using LanceC.SpreadsheetIO.Styling.Internal.Generators;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
+using LanceC.SpreadsheetIO.Writing;
+using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
+using LanceC.SpreadsheetIO.Writing.Internal.Writers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LanceC.SpreadsheetIO
@@ -64,6 +67,16 @@ namespace LanceC.SpreadsheetIO
             .AddScoped<IResourcePropertyValueResolver, ResourcePropertyValueResolver>()
             .AddScoped<IResourcePropertyDefaultValueResolver, ResourcePropertyDefaultValueResolver>()
             .AddScoped<IResourcePropertyCollectionFactory, ResourcePropertyCollectionFactory>()
-            .AddScoped<ISpreadsheetPageMapReader, SpreadsheetPageMapReader>();
+            .AddScoped<ISpreadsheetPageMapReader, SpreadsheetPageMapReader>()
+            .AddScoped<IResourcePropertySerializer, ResourcePropertySerializer>()
+            .AddScoped<IResourcePropertySerializerStrategy, BooleanResourcePropertySerializerStrategy>()
+            .AddScoped<IResourcePropertySerializerStrategy, CharacterResourcePropertySerializerStrategy>()
+            .AddScoped<IResourcePropertySerializerStrategy, DateTimeResourcePropertySerializerStrategy>()
+            .AddScoped<IResourcePropertySerializerStrategy, DateTimeOffsetResourcePropertySerializerStrategy>()
+            .AddScoped<IResourcePropertySerializerStrategy, DecimalResourcePropertySerializerStrategy>()
+            .AddScoped<IResourcePropertySerializerStrategy, DoubleResourcePropertySerializerStrategy>()
+            .AddScoped<IResourcePropertySerializerStrategy, IntegerResourcePropertySerializerStrategy>()
+            .AddScoped<IResourcePropertySerializerStrategy, StringResourcePropertySerializerStrategy>()
+            .AddScoped<ISpreadsheetPageMapWriter, SpreadsheetPageMapWriter>();
     }
 }

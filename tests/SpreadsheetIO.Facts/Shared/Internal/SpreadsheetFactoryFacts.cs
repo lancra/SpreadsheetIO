@@ -10,6 +10,7 @@ using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using LanceC.SpreadsheetIO.Writing.Internal;
+using LanceC.SpreadsheetIO.Writing.Internal.Writers;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Moq.AutoMock;
@@ -50,6 +51,10 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal
                 .Returns(_mocker.GetMock<IStringIndexer>().Object);
             serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IEnumerable<ISpreadsheetGenerator>)))
                 .Returns(new[] { _mocker.GetMock<ISpreadsheetGenerator>().Object, });
+            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ISpreadsheetPageMapWriter)))
+                .Returns(_mocker.GetMock<ISpreadsheetPageMapWriter>().Object);
+            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IResourceMapManager)))
+                .Returns(_mocker.GetMock<IResourceMapManager>().Object);
         }
 
         private void MockForOpenRead(Mock<IServiceProvider> serviceProviderMock)

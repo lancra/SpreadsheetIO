@@ -12,6 +12,7 @@ using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using LanceC.SpreadsheetIO.Writing;
 using LanceC.SpreadsheetIO.Writing.Internal;
+using LanceC.SpreadsheetIO.Writing.Internal.Writers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LanceC.SpreadsheetIO.Shared.Internal
@@ -74,13 +75,17 @@ namespace LanceC.SpreadsheetIO.Shared.Internal
             var styleIndexer = scope.ServiceProvider.GetRequiredService<IStyleIndexer>();
             var stringIndexer = scope.ServiceProvider.GetRequiredService<IStringIndexer>();
             var spreadsheetGenerators = scope.ServiceProvider.GetRequiredService<IEnumerable<ISpreadsheetGenerator>>();
+            var spreadsheetPageMapWriter = scope.ServiceProvider.GetRequiredService<ISpreadsheetPageMapWriter>();
+            var resourceMapManager = scope.ServiceProvider.GetRequiredService<IResourceMapManager>();
 
             var spreadsheet = new WritingSpreadsheet(
                 spreadsheetDocument,
                 new WritingSpreadsheetPageCollection(),
                 styleIndexer,
                 stringIndexer,
-                spreadsheetGenerators);
+                spreadsheetGenerators,
+                spreadsheetPageMapWriter,
+                resourceMapManager);
             return spreadsheet;
         }
 

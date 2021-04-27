@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
+using LanceC.SpreadsheetIO.Mapping.Internal;
 using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
+using LanceC.SpreadsheetIO.Writing;
 using LanceC.SpreadsheetIO.Writing.Internal;
+using LanceC.SpreadsheetIO.Writing.Internal.Writers;
 using Moq;
 using Moq.AutoMock;
 using Xunit;
@@ -128,6 +133,306 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                 // Assert
                 Assert.NotNull(exception);
                 Assert.IsType<ArgumentNullException>(exception);
+            }
+        }
+
+        public class TheWritePageMethodWithResourceGenericParameter : WritingSpreadsheetFacts
+        {
+            [Fact]
+            public void CallsMapWriterForAddedPage()
+            {
+                // Arrange
+                var name = "Name";
+                var resources = new[]
+                {
+                    new FakeModel { Id = 1, Name = "One", Display = "Uno", },
+                    new FakeModel { Id = 2, Name = "Two", Display = "Dos", },
+                    new FakeModel { Id = 3, Name = "Three", Display = "Tres", },
+                };
+
+                var map = new FakeModelMap()
+                    .Map(model => model.Id)
+                    .Map(model => model.Name)
+                    .Map(model => model.Display);
+                _mocker.GetMock<IResourceMapManager>()
+                    .Setup(resourceMapManager => resourceMapManager.Single<FakeModel>())
+                    .Returns(map);
+
+                var worksheetPartMock = _mocker.GetMock<IWorksheetPartWrapper>();
+                _mocker.GetMock<ISpreadsheetDocumentWrapper>()
+                    .Setup(spreadsheetDocument => spreadsheetDocument.AddWorksheetPart(name))
+                    .Returns(worksheetPartMock.Object);
+
+                var spreadsheetPageMapWriterMock = _mocker.GetMock<ISpreadsheetPageMapWriter>();
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var spreadsheetPage = sut.WritePage(name, resources);
+
+                // Assert
+                Assert.IsType<WritingSpreadsheetPage>(spreadsheetPage);
+                spreadsheetPageMapWriterMock
+                    .Verify(spreadsheetPageMapWriter => spreadsheetPageMapWriter.Write(
+                        spreadsheetPage,
+                        resources,
+                        map));
+            }
+
+            [Fact]
+            public void IndexesHeaderStylesFromPropertyMaps()
+            {
+                // Arrange
+                var name = "Name";
+                var resources = new[]
+                {
+                    new FakeModel { Id = 1, Name = "One", Display = "Uno", },
+                    new FakeModel { Id = 2, Name = "Two", Display = "Dos", },
+                    new FakeModel { Id = 3, Name = "Three", Display = "Tres", },
+                };
+
+                var customStyle = new Style(
+                    new Border(
+                        new BorderLine(Color.Black, BorderLineKind.Double),
+                        BorderLine.Default,
+                        BorderLine.Default,
+                        BorderLine.Default),
+                    Fill.Default,
+                    Font.Default);
+                var excelStyle = BuiltInExcelStyle.Bad;
+                var packageStyle = BuiltInPackageStyle.Bold;
+                var map = new FakeModelMap()
+                    .Map(model => model.Id, optionsAction => optionsAction.UseHeaderStyle(customStyle, "foo"))
+                    .Map(model => model.Name, optionsAction => optionsAction.UseHeaderStyle(excelStyle))
+                    .Map(model => model.Display, optionsAction => optionsAction.UseHeaderStyle(packageStyle));
+                _mocker.GetMock<IResourceMapManager>()
+                    .Setup(resourceMapManager => resourceMapManager.Single<FakeModel>())
+                    .Returns(map);
+
+                var worksheetPartMock = _mocker.GetMock<IWorksheetPartWrapper>();
+                _mocker.GetMock<ISpreadsheetDocumentWrapper>()
+                    .Setup(spreadsheetDocument => spreadsheetDocument.AddWorksheetPart(name))
+                    .Returns(worksheetPartMock.Object);
+
+                var spreadsheetPageMapWriterMock = _mocker.GetMock<ISpreadsheetPageMapWriter>();
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.WritePage(name, resources);
+
+                // Assert
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(
+                        It.Is<IndexerKey>(styleKey => styleKey.Name == "foo" && styleKey.Kind == IndexerKeyKind.Custom),
+                        customStyle));
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(excelStyle.IndexerKey, excelStyle.Style));
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(packageStyle.IndexerKey, packageStyle.Style));
+            }
+
+            [Fact]
+            public void IndexesBodyStylesFromPropertyMaps()
+            {
+                // Arrange
+                var name = "Name";
+                var resources = new[]
+                {
+                    new FakeModel { Id = 1, Name = "One", Display = "Uno", },
+                    new FakeModel { Id = 2, Name = "Two", Display = "Dos", },
+                    new FakeModel { Id = 3, Name = "Three", Display = "Tres", },
+                };
+
+                var customStyle = new Style(
+                    new Border(
+                        new BorderLine(Color.Black, BorderLineKind.Double),
+                        BorderLine.Default,
+                        BorderLine.Default,
+                        BorderLine.Default),
+                    Fill.Default,
+                    Font.Default);
+                var excelStyle = BuiltInExcelStyle.Bad;
+                var packageStyle = BuiltInPackageStyle.Bold;
+                var map = new FakeModelMap()
+                    .Map(model => model.Id, optionsAction => optionsAction.UseBodyStyle(customStyle, "foo"))
+                    .Map(model => model.Name, optionsAction => optionsAction.UseBodyStyle(excelStyle))
+                    .Map(model => model.Display, optionsAction => optionsAction.UseBodyStyle(packageStyle));
+                _mocker.GetMock<IResourceMapManager>()
+                    .Setup(resourceMapManager => resourceMapManager.Single<FakeModel>())
+                    .Returns(map);
+
+                var worksheetPartMock = _mocker.GetMock<IWorksheetPartWrapper>();
+                _mocker.GetMock<ISpreadsheetDocumentWrapper>()
+                    .Setup(spreadsheetDocument => spreadsheetDocument.AddWorksheetPart(name))
+                    .Returns(worksheetPartMock.Object);
+
+                var spreadsheetPageMapWriterMock = _mocker.GetMock<ISpreadsheetPageMapWriter>();
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.WritePage(name, resources);
+
+                // Assert
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(
+                        It.Is<IndexerKey>(styleKey => styleKey.Name == "foo" && styleKey.Kind == IndexerKeyKind.Custom),
+                        customStyle));
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(excelStyle.IndexerKey, excelStyle.Style));
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(packageStyle.IndexerKey, packageStyle.Style));
+            }
+        }
+
+        public class TheWritePageMethodWithResourceAndResourceMapGenericParameters : WritingSpreadsheetFacts
+        {
+            [Fact]
+            public void CallsMapWriterForAddedPage()
+            {
+                // Arrange
+                var name = "Name";
+                var resources = new[]
+                {
+                    new FakeModel { Id = 1, Name = "One", Display = "Uno", },
+                    new FakeModel { Id = 2, Name = "Two", Display = "Dos", },
+                    new FakeModel { Id = 3, Name = "Three", Display = "Tres", },
+                };
+
+                var map = new FakeModelMap()
+                    .Map(model => model.Id)
+                    .Map(model => model.Name)
+                    .Map(model => model.Display);
+                _mocker.GetMock<IResourceMapManager>()
+                    .Setup(resourceMapManager => resourceMapManager.Single<FakeModel, FakeModelMap>())
+                    .Returns(map);
+
+                var worksheetPartMock = _mocker.GetMock<IWorksheetPartWrapper>();
+                _mocker.GetMock<ISpreadsheetDocumentWrapper>()
+                    .Setup(spreadsheetDocument => spreadsheetDocument.AddWorksheetPart(name))
+                    .Returns(worksheetPartMock.Object);
+
+                var spreadsheetPageMapWriterMock = _mocker.GetMock<ISpreadsheetPageMapWriter>();
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var spreadsheetPage = sut.WritePage<FakeModel, FakeModelMap>(name, resources);
+
+                // Assert
+                Assert.IsType<WritingSpreadsheetPage>(spreadsheetPage);
+                spreadsheetPageMapWriterMock
+                    .Verify(spreadsheetPageMapWriter => spreadsheetPageMapWriter.Write(
+                        spreadsheetPage,
+                        resources,
+                        map));
+            }
+
+            [Fact]
+            public void IndexesHeaderStylesFromPropertyMaps()
+            {
+                // Arrange
+                var name = "Name";
+                var resources = new[]
+                {
+                    new FakeModel { Id = 1, Name = "One", Display = "Uno", },
+                    new FakeModel { Id = 2, Name = "Two", Display = "Dos", },
+                    new FakeModel { Id = 3, Name = "Three", Display = "Tres", },
+                };
+
+                var customStyle = new Style(
+                    new Border(
+                        new BorderLine(Color.Black, BorderLineKind.Double),
+                        BorderLine.Default,
+                        BorderLine.Default,
+                        BorderLine.Default),
+                    Fill.Default,
+                    Font.Default);
+                var excelStyle = BuiltInExcelStyle.Bad;
+                var packageStyle = BuiltInPackageStyle.Bold;
+                var map = new FakeModelMap()
+                    .Map(model => model.Id, optionsAction => optionsAction.UseHeaderStyle(customStyle, "foo"))
+                    .Map(model => model.Name, optionsAction => optionsAction.UseHeaderStyle(excelStyle))
+                    .Map(model => model.Display, optionsAction => optionsAction.UseHeaderStyle(packageStyle));
+                _mocker.GetMock<IResourceMapManager>()
+                    .Setup(resourceMapManager => resourceMapManager.Single<FakeModel, FakeModelMap>())
+                    .Returns(map);
+
+                var worksheetPartMock = _mocker.GetMock<IWorksheetPartWrapper>();
+                _mocker.GetMock<ISpreadsheetDocumentWrapper>()
+                    .Setup(spreadsheetDocument => spreadsheetDocument.AddWorksheetPart(name))
+                    .Returns(worksheetPartMock.Object);
+
+                var spreadsheetPageMapWriterMock = _mocker.GetMock<ISpreadsheetPageMapWriter>();
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.WritePage<FakeModel, FakeModelMap>(name, resources);
+
+                // Assert
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(
+                        It.Is<IndexerKey>(styleKey => styleKey.Name == "foo" && styleKey.Kind == IndexerKeyKind.Custom),
+                        customStyle));
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(excelStyle.IndexerKey, excelStyle.Style));
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(packageStyle.IndexerKey, packageStyle.Style));
+            }
+
+            [Fact]
+            public void IndexesBodyStylesFromPropertyMaps()
+            {
+                // Arrange
+                var name = "Name";
+                var resources = new[]
+                {
+                    new FakeModel { Id = 1, Name = "One", Display = "Uno", },
+                    new FakeModel { Id = 2, Name = "Two", Display = "Dos", },
+                    new FakeModel { Id = 3, Name = "Three", Display = "Tres", },
+                };
+
+                var customStyle = new Style(
+                    new Border(
+                        new BorderLine(Color.Black, BorderLineKind.Double),
+                        BorderLine.Default,
+                        BorderLine.Default,
+                        BorderLine.Default),
+                    Fill.Default,
+                    Font.Default);
+                var excelStyle = BuiltInExcelStyle.Bad;
+                var packageStyle = BuiltInPackageStyle.Bold;
+                var map = new FakeModelMap()
+                    .Map(model => model.Id, optionsAction => optionsAction.UseBodyStyle(customStyle, "foo"))
+                    .Map(model => model.Name, optionsAction => optionsAction.UseBodyStyle(excelStyle))
+                    .Map(model => model.Display, optionsAction => optionsAction.UseBodyStyle(packageStyle));
+                _mocker.GetMock<IResourceMapManager>()
+                    .Setup(resourceMapManager => resourceMapManager.Single<FakeModel, FakeModelMap>())
+                    .Returns(map);
+
+                var worksheetPartMock = _mocker.GetMock<IWorksheetPartWrapper>();
+                _mocker.GetMock<ISpreadsheetDocumentWrapper>()
+                    .Setup(spreadsheetDocument => spreadsheetDocument.AddWorksheetPart(name))
+                    .Returns(worksheetPartMock.Object);
+
+                var spreadsheetPageMapWriterMock = _mocker.GetMock<ISpreadsheetPageMapWriter>();
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.WritePage<FakeModel, FakeModelMap>(name, resources);
+
+                // Assert
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(
+                        It.Is<IndexerKey>(styleKey => styleKey.Name == "foo" && styleKey.Kind == IndexerKeyKind.Custom),
+                        customStyle));
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(excelStyle.IndexerKey, excelStyle.Style));
+                _mocker.GetMock<IStyleIndexer>()
+                    .Verify(styleIndexer => styleIndexer.Add(packageStyle.IndexerKey, packageStyle.Style));
             }
         }
 

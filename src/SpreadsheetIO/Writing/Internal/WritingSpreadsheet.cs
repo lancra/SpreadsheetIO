@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using Ardalis.GuardClauses;
+using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Internal;
 using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
+using LanceC.SpreadsheetIO.Writing.Internal.Writers;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal
 {
@@ -16,19 +20,25 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
         private readonly IStyleIndexer _styleIndexer;
         private readonly IStringIndexer _stringIndexer;
         private readonly IEnumerable<ISpreadsheetGenerator> _spreadsheetGenerators;
+        private readonly ISpreadsheetPageMapWriter _spreadsheetPageMapWriter;
+        private readonly IResourceMapManager _resourceMapManager;
 
         public WritingSpreadsheet(
             ISpreadsheetDocumentWrapper spreadsheetDocument,
             IWritingSpreadsheetPageCollectionModifiable spreadsheetPages,
             IStyleIndexer styleIndexer,
             IStringIndexer stringIndexer,
-            IEnumerable<ISpreadsheetGenerator> spreadsheetGenerators)
+            IEnumerable<ISpreadsheetGenerator> spreadsheetGenerators,
+            ISpreadsheetPageMapWriter spreadsheetPageMapWriter,
+            IResourceMapManager resourceMapManager)
         {
             _spreadsheetDocument = spreadsheetDocument;
             _spreadsheetPages = spreadsheetPages;
             _styleIndexer = styleIndexer;
             _stringIndexer = stringIndexer;
             _spreadsheetGenerators = spreadsheetGenerators;
+            _spreadsheetPageMapWriter = spreadsheetPageMapWriter;
+            _resourceMapManager = resourceMapManager;
         }
 
         public IWritingSpreadsheetPageCollection Pages
@@ -44,6 +54,21 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
             _spreadsheetPages.Add(spreadsheetPage);
 
             return spreadsheetPage;
+        }
+
+        public IWritingSpreadsheetPage WritePage<TResource>(string name, IEnumerable<TResource> resources)
+            where TResource : class
+        {
+            var map = _resourceMapManager.Single<TResource>();
+            return WritePageImpl(name, resources, map);
+        }
+
+        public IWritingSpreadsheetPage WritePage<TResource, TResourceMap>(string name, IEnumerable<TResource> resources)
+            where TResource : class
+            where TResourceMap : ResourceMap<TResource>
+        {
+            var map = _resourceMapManager.Single<TResource, TResourceMap>();
+            return WritePageImpl(name, resources, map);
         }
 
         public IWritingSpreadsheet AddStyle(string name, Style style)
@@ -94,6 +119,34 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
             {
                 spreadsheetGenerator.Generate(_spreadsheetDocument);
             }
+        }
+
+        private IWritingSpreadsheetPage WritePageImpl<TResource>(
+            string name,
+            IEnumerable<TResource> resources,
+            ResourceMap<TResource> map)
+            where TResource : class
+        {
+            var spreadsheetPage = AddPage(name);
+
+            foreach (var propertyMap in map.Properties)
+            {
+                var headerStyleExtension = propertyMap.Options.FindExtension<HeaderStyleMapOptionsExtension>();
+                if (headerStyleExtension is not null)
+                {
+                    _styleIndexer.Add(headerStyleExtension.Key, headerStyleExtension.Style);
+                }
+
+                var bodyStyleExtension = propertyMap.Options.FindExtension<BodyStyleMapOptionsExtension>();
+                if (bodyStyleExtension is not null)
+                {
+                    _styleIndexer.Add(bodyStyleExtension.Key, bodyStyleExtension.Style);
+                }
+            }
+
+            _spreadsheetPageMapWriter.Write(spreadsheetPage, resources, map);
+
+            return spreadsheetPage;
         }
     }
 }
