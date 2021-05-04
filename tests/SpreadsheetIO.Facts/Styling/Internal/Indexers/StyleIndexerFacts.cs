@@ -17,7 +17,8 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
             new Style(
                 new Border(new BorderLine(Color.White, BorderLineKind.Thick)),
                 new Fill(FillKind.Solid, Color.Black),
-                new Font("Arial", 20D, Color.White, true, true));
+                new Font("Arial", 20D, Color.White, true, true),
+                new NumericFormat("#,##0.0000"));
 
         private readonly AutoMocker _mocker = new AutoMocker();
 
@@ -133,6 +134,23 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
             }
 
             [Fact]
+            public void AddsNumericFormatToIndexer()
+            {
+                // Arrange
+                var numericFormatIndexerMock = _mocker.GetMock<INumericFormatIndexer>();
+                numericFormatIndexerMock.Setup(numericFormatIndexer => numericFormatIndexer.Add(Style.NumericFormat))
+                    .Verifiable();
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.Add(Key, Style);
+
+                // Assert
+                numericFormatIndexerMock.Verify();
+            }
+
+            [Fact]
             public void SkipsIndexingWhenStyleIsAlreadyIndexedForKey()
             {
                 // Arrange
@@ -168,7 +186,8 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
                 var differentStyle = new Style(
                     Border.Default,
                     new Fill(FillKind.Solid, Color.Brown),
-                    Font.Default);
+                    Font.Default,
+                    NumericFormat.Default);
                 var sut = CreateSystemUnderTest();
                 sut.Add(Key, differentStyle);
 
@@ -232,6 +251,23 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
 
                 // Assert
                 fontIndexerMock.Verify();
+            }
+
+            [Fact]
+            public void ClearsNumericFormatIndexer()
+            {
+                // Arrange
+                var numericFormatIndexerMock = _mocker.GetMock<INumericFormatIndexer>();
+                numericFormatIndexerMock.Setup(numericFormatIndexer => numericFormatIndexer.Clear())
+                    .Verifiable();
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.Clear();
+
+                // Assert
+                numericFormatIndexerMock.Verify();
             }
 
             [Fact]

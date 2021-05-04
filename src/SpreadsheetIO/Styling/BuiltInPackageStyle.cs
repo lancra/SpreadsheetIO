@@ -20,7 +20,8 @@ namespace LanceC.SpreadsheetIO.Styling
                 new Style(
                     Border.Default,
                     Fill.Default,
-                    Font.Default with { IsBold = true, }));
+                    Font.Default with { IsBold = true, },
+                    NumericFormat.Default));
 
         private BuiltInPackageStyle(int id, string name, Style style)
             : base(id, name)

@@ -12,6 +12,7 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
         private readonly IBorderIndexer _borderIndexer;
         private readonly IFillIndexer _fillIndexer;
         private readonly IFontIndexer _fontIndexer;
+        private readonly INumericFormatIndexer _numericFormatIndexer;
         private readonly IStyleIndexer _styleIndexer;
 
         private readonly IDictionary<IndexerKey, uint> _excelFormatIdLookup = new Dictionary<IndexerKey, uint>();
@@ -21,11 +22,13 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
             IBorderIndexer borderIndexer,
             IFillIndexer fillIndexer,
             IFontIndexer fontIndexer,
+            INumericFormatIndexer numericFormatIndexer,
             IStyleIndexer styleIndexer)
         {
             _borderIndexer = borderIndexer;
             _fillIndexer = fillIndexer;
             _fontIndexer = fontIndexer;
+            _numericFormatIndexer = numericFormatIndexer;
             _styleIndexer = styleIndexer;
         }
 
@@ -116,18 +119,21 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
 
         private OpenXml.CellFormat GenerateCellFormat(IndexedKeyValue styleKeyValue)
         {
+            var numericFormatId = _numericFormatIndexer[styleKeyValue.Value.Resource.NumericFormat];
+            var fontId = _fontIndexer[styleKeyValue.Value.Resource.Font];
+            var fillId = _fillIndexer[styleKeyValue.Value.Resource.Fill];
+            var borderId = _borderIndexer[styleKeyValue.Value.Resource.Border];
+
             var cellFormat = new OpenXml.CellFormat
             {
-                NumberFormatId = 0,
+                NumberFormatId = _numericFormatIndexer[styleKeyValue.Value.Resource.NumericFormat],
                 FontId = _fontIndexer[styleKeyValue.Value.Resource.Font],
                 FillId = _fillIndexer[styleKeyValue.Value.Resource.Fill],
                 BorderId = _borderIndexer[styleKeyValue.Value.Resource.Border],
-                ApplyNumberFormat = false,
-                ApplyFont = true,
-                ApplyFill = true,
-                ApplyBorder = true,
-                ApplyAlignment = false,
-                ApplyProtection = false,
+                ApplyNumberFormat = numericFormatId != 0U ? true : null,
+                ApplyFont = fontId != 0U ? true : null,
+                ApplyFill = fillId != 0U ? true : null,
+                ApplyBorder = borderId != 0U ? true : null,
             };
             return cellFormat;
         }

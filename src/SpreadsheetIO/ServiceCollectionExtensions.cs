@@ -9,6 +9,7 @@ using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
+using LanceC.SpreadsheetIO.Styling.Internal;
 using LanceC.SpreadsheetIO.Styling.Internal.Generators;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using LanceC.SpreadsheetIO.Writing;
@@ -21,6 +22,7 @@ namespace LanceC.SpreadsheetIO
     /// <summary>
     /// Provides extensions for service descriptor registration.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
         /// <summary>
@@ -28,7 +30,6 @@ namespace LanceC.SpreadsheetIO
         /// </summary>
         /// <param name="services">The service collection to modify.</param>
         /// <returns>The modified service collection.</returns>
-        [ExcludeFromCodeCoverage]
         public static IServiceCollection AddSpreadsheetIO(this IServiceCollection services)
             => services.AddScoped<ISpreadsheetFactory, SpreadsheetFactory>()
             .AddSpreadsheetIOMapping()
@@ -79,10 +80,13 @@ namespace LanceC.SpreadsheetIO
             .AddScoped<IStylesheetMutator, StylesheetBorderMutator>()
             .AddScoped<IStylesheetMutator, StylesheetFillMutator>()
             .AddScoped<IStylesheetMutator, StylesheetFontMutator>()
+            .AddScoped<IStylesheetMutator, StylesheetNumericFormatMutator>()
             .AddScoped<IStylesheetMutator, StylesheetStyleMutator>()
             .AddScoped<IBorderIndexer, BorderIndexer>()
             .AddScoped<IFillIndexer, FillIndexer>()
             .AddScoped<IFontIndexer, FontIndexer>()
+            .AddScoped<BuiltInNumericFormats>()
+            .AddScoped<INumericFormatIndexer, NumericFormatIndexer>()
             .AddScoped<IStyleIndexer, StyleIndexer>();
 
         private static IServiceCollection AddSpreadsheetIOWriting(this IServiceCollection services)

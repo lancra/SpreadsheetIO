@@ -20,6 +20,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 new IndexedResource<Style>(BuiltInExcelStyle.Normal.Style, 0),
                 0,
                 0,
+                0,
                 0);
 
         private static readonly FakeStyle PackageStyleMock =
@@ -28,7 +29,8 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 new IndexedResource<Style>(BuiltInPackageStyle.Bold.Style, 1),
                 0,
                 0,
-                1);
+                1,
+                0);
 
         private static readonly FakeStyle CustomStyleMock =
             new FakeStyle(
@@ -37,11 +39,13 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                     new Style(
                         new Border(new BorderLine(Color.White, BorderLineKind.Thick)),
                         new Fill(FillKind.Solid, Color.Black),
-                        new Font("Arial", 20D, Color.Red)),
+                        new Font("Arial", 20D, Color.Red),
+                        new NumericFormat("@")),
                     2),
                 1,
                 1,
-                2);
+                2,
+                49);
 
         private readonly AutoMocker _mocker = new AutoMocker();
         private readonly IList<IndexerKey> _mockStyleKeys = new List<IndexerKey>();
@@ -62,6 +66,10 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
             _mocker.GetMock<IFontIndexer>()
                 .SetupGet(fontIndexer => fontIndexer[styleMock.Style.Resource.Font])
                 .Returns(styleMock.FontId);
+
+            _mocker.GetMock<INumericFormatIndexer>()
+                .SetupGet(numericFormatIndexer => numericFormatIndexer[styleMock.Style.Resource.NumericFormat])
+                .Returns(styleMock.NumericFormatId);
 
             _mocker.GetMock<IStyleIndexer>()
                 .SetupGet(styleIndexer => styleIndexer[styleMock.Key])
@@ -106,12 +114,10 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 Assert.Equal(0U, firstCellFormat.FillId.Value);
                 Assert.Equal(0U, firstCellFormat.BorderId.Value);
                 Assert.Equal(0U, firstCellFormat.FormatId.Value);
-                Assert.False(firstCellFormat.ApplyNumberFormat);
-                Assert.True(firstCellFormat.ApplyFont);
-                Assert.True(firstCellFormat.ApplyFill);
-                Assert.True(firstCellFormat.ApplyBorder);
-                Assert.False(firstCellFormat.ApplyAlignment);
-                Assert.False(firstCellFormat.ApplyProtection);
+                Assert.Null(firstCellFormat.ApplyNumberFormat);
+                Assert.Null(firstCellFormat.ApplyFont);
+                Assert.Null(firstCellFormat.ApplyFill);
+                Assert.Null(firstCellFormat.ApplyBorder);
 
                 var secondCellFormat = Assert.IsType<OpenXml.CellFormat>(stylesheet.CellFormats.ChildElements[1]);
                 Assert.Equal(0U, secondCellFormat.NumberFormatId.Value);
@@ -119,25 +125,21 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 Assert.Equal(0U, secondCellFormat.FillId.Value);
                 Assert.Equal(0U, secondCellFormat.BorderId.Value);
                 Assert.Equal(0U, secondCellFormat.FormatId.Value);
-                Assert.False(secondCellFormat.ApplyNumberFormat);
+                Assert.Null(secondCellFormat.ApplyNumberFormat);
                 Assert.True(secondCellFormat.ApplyFont);
-                Assert.True(secondCellFormat.ApplyFill);
-                Assert.True(secondCellFormat.ApplyBorder);
-                Assert.False(secondCellFormat.ApplyAlignment);
-                Assert.False(secondCellFormat.ApplyProtection);
+                Assert.Null(secondCellFormat.ApplyFill);
+                Assert.Null(secondCellFormat.ApplyBorder);
 
                 var thirdCellFormat = Assert.IsType<OpenXml.CellFormat>(stylesheet.CellFormats.ChildElements[2]);
-                Assert.Equal(0U, thirdCellFormat.NumberFormatId.Value);
+                Assert.Equal(49U, thirdCellFormat.NumberFormatId.Value);
                 Assert.Equal(2U, thirdCellFormat.FontId.Value);
                 Assert.Equal(1U, thirdCellFormat.FillId.Value);
                 Assert.Equal(1U, thirdCellFormat.BorderId.Value);
                 Assert.Equal(0U, thirdCellFormat.FormatId.Value);
-                Assert.False(thirdCellFormat.ApplyNumberFormat);
+                Assert.True(thirdCellFormat.ApplyNumberFormat);
                 Assert.True(thirdCellFormat.ApplyFont);
                 Assert.True(thirdCellFormat.ApplyFill);
                 Assert.True(thirdCellFormat.ApplyBorder);
-                Assert.False(thirdCellFormat.ApplyAlignment);
-                Assert.False(thirdCellFormat.ApplyProtection);
             }
 
             [Fact]
@@ -163,12 +165,10 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 Assert.Equal(0U, cellFormat.FontId.Value);
                 Assert.Equal(0U, cellFormat.FillId.Value);
                 Assert.Equal(0U, cellFormat.BorderId.Value);
-                Assert.False(cellFormat.ApplyNumberFormat);
-                Assert.True(cellFormat.ApplyFont);
-                Assert.True(cellFormat.ApplyFill);
-                Assert.True(cellFormat.ApplyBorder);
-                Assert.False(cellFormat.ApplyAlignment);
-                Assert.False(cellFormat.ApplyProtection);
+                Assert.Null(cellFormat.ApplyNumberFormat);
+                Assert.Null(cellFormat.ApplyFont);
+                Assert.Null(cellFormat.ApplyFill);
+                Assert.Null(cellFormat.ApplyBorder);
             }
 
             [Fact]
@@ -208,7 +208,8 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                     new IndexedResource<Style>(BuiltInExcelStyle.Bad.Style, 3),
                     0,
                     2,
-                    3);
+                    3,
+                    0);
                 MockIndexers(secondExcelStyleMock);
 
                 var thirdExcelStyleMock = new FakeStyle(
@@ -216,7 +217,8 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                     new IndexedResource<Style>(BuiltInExcelStyle.Good.Style, 4),
                     0,
                     3,
-                    4);
+                    4,
+                    0);
                 MockIndexers(thirdExcelStyleMock);
 
                 var sut = CreateSystemUnderTest();
@@ -259,8 +261,9 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 var invalidExcelStyleMock = new FakeStyle(
                     new IndexerKey("Invalid Style", IndexerKeyKind.Excel),
                     new IndexedResource<Style>(
-                        new Style(Border.Default, Fill.Default, Font.Default),
+                        new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default),
                         0),
+                    0,
                     0,
                     0,
                     0);
@@ -279,13 +282,20 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
         private class FakeStyle
         {
-            public FakeStyle(IndexerKey key, IndexedResource<Style> style, uint borderId, uint fillId, uint fontId)
+            public FakeStyle(
+                IndexerKey key,
+                IndexedResource<Style> style,
+                uint borderId,
+                uint fillId,
+                uint fontId,
+                uint numericFormatId)
             {
                 Key = key;
                 Style = style;
                 BorderId = borderId;
                 FillId = fillId;
                 FontId = fontId;
+                NumericFormatId = numericFormatId;
             }
 
             public IndexerKey Key { get; }
@@ -297,6 +307,8 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
             public uint FillId { get; }
 
             public uint FontId { get; }
+
+            public uint NumericFormatId { get; }
         }
     }
 }

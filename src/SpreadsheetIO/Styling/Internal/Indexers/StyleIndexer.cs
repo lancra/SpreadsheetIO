@@ -7,12 +7,18 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
         private readonly IBorderIndexer _borderIndexer;
         private readonly IFillIndexer _fillIndexer;
         private readonly IFontIndexer _fontIndexer;
+        private readonly INumericFormatIndexer _numericFormatIndexer;
 
-        public StyleIndexer(IBorderIndexer borderIndexer, IFillIndexer fillIndexer, IFontIndexer fontIndexer)
+        public StyleIndexer(
+            IBorderIndexer borderIndexer,
+            IFillIndexer fillIndexer,
+            IFontIndexer fontIndexer,
+            INumericFormatIndexer numericFormatIndexer)
         {
             _borderIndexer = borderIndexer;
             _fillIndexer = fillIndexer;
             _fontIndexer = fontIndexer;
+            _numericFormatIndexer = numericFormatIndexer;
 
             AddDefaultStyle();
         }
@@ -22,6 +28,7 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
             _borderIndexer.Add(style.Border);
             _fillIndexer.Add(style.Fill);
             _fontIndexer.Add(style.Font);
+            _numericFormatIndexer.Add(style.NumericFormat);
 
             var index = base.Add(key, style);
             return index;
@@ -32,6 +39,7 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
             _borderIndexer.Clear();
             _fillIndexer.Clear();
             _fontIndexer.Clear();
+            _numericFormatIndexer.Clear();
             base.Clear();
 
             AddDefaultStyle();

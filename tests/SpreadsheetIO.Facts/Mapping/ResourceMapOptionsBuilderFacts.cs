@@ -151,7 +151,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             public void AddsOptionsExtensionWithSpecifiedStyle()
             {
                 // Arrange
-                var style = new Style(Border.Default, Fill.Default, Font.Default);
+                var style = new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default);
                 var name = "foo";
 
                 var resourceOptions = new ResourceMapOptions<FakeModel>();
@@ -172,7 +172,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             public void UsesGuidWhenNameNotProvided()
             {
                 // Arrange
-                var style = new Style(Border.Default, Fill.Default, Font.Default);
+                var style = new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default);
 
                 var resourceOptions = new ResourceMapOptions<FakeModel>();
                 var sut = new ResourceMapOptionsBuilder<FakeModel>(resourceOptions);
@@ -192,7 +192,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             public void UsesGuidWhenNameIsEmpty()
             {
                 // Arrange
-                var style = new Style(Border.Default, Fill.Default, Font.Default);
+                var style = new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default);
                 var name = string.Empty;
 
                 var resourceOptions = new ResourceMapOptions<FakeModel>();
@@ -312,7 +312,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             public void AddsOptionsExtensionWithSpecifiedStyle()
             {
                 // Arrange
-                var style = new Style(Border.Default, Fill.Default, Font.Default);
+                var style = new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default);
                 var name = "foo";
 
                 var resourceOptions = new ResourceMapOptions<FakeModel>();
@@ -333,7 +333,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             public void UsesGuidWhenNameNotProvided()
             {
                 // Arrange
-                var style = new Style(Border.Default, Fill.Default, Font.Default);
+                var style = new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default);
 
                 var resourceOptions = new ResourceMapOptions<FakeModel>();
                 var sut = new ResourceMapOptionsBuilder<FakeModel>(resourceOptions);
@@ -353,7 +353,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             public void UsesGuidWhenNameIsEmpty()
             {
                 // Arrange
-                var style = new Style(Border.Default, Fill.Default, Font.Default);
+                var style = new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default);
                 var name = string.Empty;
 
                 var resourceOptions = new ResourceMapOptions<FakeModel>();
