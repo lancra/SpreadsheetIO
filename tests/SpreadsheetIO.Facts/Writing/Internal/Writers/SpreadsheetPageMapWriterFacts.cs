@@ -118,7 +118,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Writers
                 var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
                 var resources = Array.Empty<FakeModel>();
 
-                var idStyle = new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default);
+                var idStyle = Style.Default;
                 var idStyleName = "foo";
                 var nameStyle = BuiltInExcelStyle.Bad;
                 var displayStyle = BuiltInPackageStyle.Bold;
@@ -147,7 +147,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Writers
                 var resource = new FakeModel { Id = 1, Name = "One", Display = "Uno", };
                 var resources = new[] { resource, };
 
-                var idStyle = new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default);
+                var idStyle = Style.Default;
                 var idStyleName = "foo";
                 var nameStyle = BuiltInExcelStyle.Bad;
                 var displayStyle = BuiltInPackageStyle.Bold;

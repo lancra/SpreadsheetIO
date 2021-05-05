@@ -48,6 +48,29 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
             _excelFormatIdProvider = 0U;
         }
 
+        private static void SetCellFormatAlignment(OpenXml.CellFormat cellFormat, Alignment alignment)
+        {
+            if (!alignment.HorizontalKind.IsDefault || !alignment.VerticalKind.IsDefault)
+            {
+                cellFormat.ApplyAlignment = true;
+                cellFormat.Alignment = new();
+
+                if (!alignment.HorizontalKind.IsDefault)
+                {
+                    cellFormat.Alignment.Horizontal = alignment.HorizontalKind.OpenXmlValue;
+                    if (alignment.HorizontalKind == HorizontalAlignmentKind.JustifyDistributed)
+                    {
+                        cellFormat.Alignment.JustifyLastLine = true;
+                    }
+                }
+
+                if (!alignment.VerticalKind.IsDefault)
+                {
+                    cellFormat.Alignment.Vertical = alignment.VerticalKind.OpenXmlValue;
+                }
+            }
+        }
+
         private OpenXml.CellStyleFormats GenerateCellStyleFormats(IReadOnlyCollection<IndexedKeyValue> styleKeyValues)
         {
             var cellStyleFormats = new OpenXml.CellStyleFormats
@@ -57,7 +80,8 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
 
             foreach (var styleKeyValue in styleKeyValues)
             {
-                var cellFormat = GenerateCellFormat(styleKeyValue);
+                var style = styleKeyValue.Value.Resource;
+                var cellFormat = GenerateCellFormat(style);
                 cellStyleFormats.Append(cellFormat);
 
                 _excelFormatIdLookup.Add(styleKeyValue.Key, _excelFormatIdProvider);
@@ -76,10 +100,13 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
 
             foreach (var styleKeyValue in styleKeyValues)
             {
-                var cellFormat = GenerateCellFormat(styleKeyValue);
+                var style = styleKeyValue.Value.Resource;
+                var cellFormat = GenerateCellFormat(style);
 
                 _excelFormatIdLookup.TryGetValue(styleKeyValue.Key, out var formatId);
                 cellFormat.FormatId = formatId;
+
+                SetCellFormatAlignment(cellFormat, style.Alignment);
 
                 cellFormats.Append(cellFormat);
             }
@@ -117,19 +144,19 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
             return cellStyles;
         }
 
-        private OpenXml.CellFormat GenerateCellFormat(IndexedKeyValue styleKeyValue)
+        private OpenXml.CellFormat GenerateCellFormat(Style style)
         {
-            var numericFormatId = _numericFormatIndexer[styleKeyValue.Value.Resource.NumericFormat];
-            var fontId = _fontIndexer[styleKeyValue.Value.Resource.Font];
-            var fillId = _fillIndexer[styleKeyValue.Value.Resource.Fill];
-            var borderId = _borderIndexer[styleKeyValue.Value.Resource.Border];
+            var numericFormatId = _numericFormatIndexer[style.NumericFormat];
+            var fontId = _fontIndexer[style.Font];
+            var fillId = _fillIndexer[style.Fill];
+            var borderId = _borderIndexer[style.Border];
 
             var cellFormat = new OpenXml.CellFormat
             {
-                NumberFormatId = _numericFormatIndexer[styleKeyValue.Value.Resource.NumericFormat],
-                FontId = _fontIndexer[styleKeyValue.Value.Resource.Font],
-                FillId = _fillIndexer[styleKeyValue.Value.Resource.Fill],
-                BorderId = _borderIndexer[styleKeyValue.Value.Resource.Border],
+                NumberFormatId = _numericFormatIndexer[style.NumericFormat],
+                FontId = _fontIndexer[style.Font],
+                FillId = _fillIndexer[style.Fill],
+                BorderId = _borderIndexer[style.Border],
                 ApplyNumberFormat = numericFormatId != 0U ? true : null,
                 ApplyFont = fontId != 0U ? true : null,
                 ApplyFill = fillId != 0U ? true : null,

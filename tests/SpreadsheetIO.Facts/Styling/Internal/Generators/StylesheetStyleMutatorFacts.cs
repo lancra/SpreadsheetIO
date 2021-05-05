@@ -15,7 +15,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
     public class StylesheetStyleMutatorFacts
     {
         private static readonly FakeStyle ExcelStyleMock =
-            new FakeStyle(
+            new(
                 BuiltInExcelStyle.Normal.IndexerKey,
                 new IndexedResource<Style>(BuiltInExcelStyle.Normal.Style, 0),
                 0,
@@ -24,7 +24,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 0);
 
         private static readonly FakeStyle PackageStyleMock =
-            new FakeStyle(
+            new(
                 BuiltInPackageStyle.Bold.IndexerKey,
                 new IndexedResource<Style>(BuiltInPackageStyle.Bold.Style, 1),
                 0,
@@ -33,14 +33,15 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 0);
 
         private static readonly FakeStyle CustomStyleMock =
-            new FakeStyle(
+            new(
                 new IndexerKey("Custom", IndexerKeyKind.Custom),
                 new IndexedResource<Style>(
                     new Style(
                         new Border(new BorderLine(Color.White, BorderLineKind.Thick)),
                         new Fill(FillKind.Solid, Color.Black),
                         new Font("Arial", 20D, Color.Red),
-                        new NumericFormat("@")),
+                        new NumericFormat("@"),
+                        new Alignment(HorizontalAlignmentKind.Right, VerticalAlignmentKind.Top)),
                     2),
                 1,
                 1,
@@ -90,6 +91,61 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
         public class TheMutateMethod : StylesheetStyleMutatorFacts
         {
+            public static TheoryData<Alignment, OpenXml.CellFormat> DataForSetsCellFormatAlignmentFromIndexedStyle
+                => new()
+                {
+                    {
+                        Alignment.Default,
+                        new OpenXml.CellFormat()
+                    },
+                    {
+                        new Alignment(HorizontalAlignmentKind.General, VerticalAlignmentKind.Top),
+                        new OpenXml.CellFormat
+                        {
+                            ApplyAlignment = true,
+                            Alignment = new OpenXml.Alignment
+                            {
+                                Vertical = OpenXml.VerticalAlignmentValues.Top,
+                            },
+                        }
+                    },
+                    {
+                        new Alignment(HorizontalAlignmentKind.Left, VerticalAlignmentKind.Bottom),
+                        new OpenXml.CellFormat
+                        {
+                            ApplyAlignment = true,
+                            Alignment = new OpenXml.Alignment
+                            {
+                                Horizontal = OpenXml.HorizontalAlignmentValues.Left,
+                            },
+                        }
+                    },
+                    {
+                        new Alignment(HorizontalAlignmentKind.Left, VerticalAlignmentKind.Top),
+                        new OpenXml.CellFormat
+                        {
+                            ApplyAlignment = true,
+                            Alignment = new OpenXml.Alignment
+                            {
+                                Horizontal = OpenXml.HorizontalAlignmentValues.Left,
+                                Vertical = OpenXml.VerticalAlignmentValues.Top,
+                            },
+                        }
+                    },
+                    {
+                        new Alignment(HorizontalAlignmentKind.JustifyDistributed, VerticalAlignmentKind.Bottom),
+                        new OpenXml.CellFormat
+                        {
+                            ApplyAlignment = true,
+                            Alignment = new OpenXml.Alignment
+                            {
+                                Horizontal = OpenXml.HorizontalAlignmentValues.Distributed,
+                                JustifyLastLine = true,
+                            },
+                        }
+                    },
+                };
+
             [Fact]
             public void ModifiesSpreadsheetCellFormatsWithIndexedStyles()
             {
@@ -252,6 +308,39 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 Assert.Equal(2U, thirdCellStyle.FormatId.Value);
             }
 
+            [Theory]
+            [MemberData(nameof(DataForSetsCellFormatAlignmentFromIndexedStyle))]
+            public void SetsCellFormatAlignmentFromIndexedStyle(Alignment alignment, OpenXml.CellFormat expectedCellFormat)
+            {
+                // Arrange
+                var stylesheet = new OpenXml.Stylesheet();
+
+                var styleMock = new FakeStyle(
+                    new IndexerKey("Custom", IndexerKeyKind.Custom),
+                    new IndexedResource<Style>(Style.Default with { Alignment = alignment, }, 0),
+                    0,
+                    0,
+                    0,
+                    0);
+                MockIndexers(styleMock);
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.Mutate(stylesheet);
+
+                // Assert
+                Assert.NotNull(stylesheet.CellFormats);
+                Assert.Equal(1U, stylesheet.CellFormats.Count.Value);
+                Assert.Equal(1, stylesheet.CellFormats.ChildElements.Count);
+
+                var actualCellFormat = Assert.IsType<OpenXml.CellFormat>(stylesheet.CellFormats.ChildElements[0]);
+                Assert.Equal(expectedCellFormat.ApplyAlignment, actualCellFormat.ApplyAlignment);
+                Assert.Equal(expectedCellFormat.Alignment?.Horizontal, actualCellFormat.Alignment?.Horizontal);
+                Assert.Equal(expectedCellFormat.Alignment?.JustifyLastLine, actualCellFormat.Alignment?.JustifyLastLine);
+                Assert.Equal(expectedCellFormat.Alignment?.Vertical, actualCellFormat.Alignment?.Vertical);
+            }
+
             [Fact]
             public void ThrowsInvalidOperationExceptionWhenIndexedExcelStyleDoesNotHaveBuiltInId()
             {
@@ -261,7 +350,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 var invalidExcelStyleMock = new FakeStyle(
                     new IndexerKey("Invalid Style", IndexerKeyKind.Excel),
                     new IndexedResource<Style>(
-                        new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default),
+                        Style.Default,
                         0),
                     0,
                     0,

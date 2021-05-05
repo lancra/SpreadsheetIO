@@ -14,14 +14,15 @@ namespace LanceC.SpreadsheetIO.Styling
         /// Specifies the bold style.
         /// </summary>
         public static readonly BuiltInPackageStyle Bold =
-            new BuiltInPackageStyle(
+            new(
                 1,
                 "Bold",
                 new Style(
                     Border.Default,
                     Fill.Default,
                     Font.Default with { IsBold = true, },
-                    NumericFormat.Default));
+                    NumericFormat.Default,
+                    Alignment.Default));
 
         private BuiltInPackageStyle(int id, string name, Style style)
             : base(id, name)

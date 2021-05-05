@@ -289,8 +289,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                         It.Is<IndexerKey>(styleKey =>
                             styleKey.Name == styleName &&
                             styleKey.Kind == IndexerKeyKind.Custom)])
-                    .Returns(
-                        new IndexedResource<Style>(new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default), 10U));
+                    .Returns(new IndexedResource<Style>(Style.Default, 10U));
 
                 var sut = CreateSystemUnderTest();
 
@@ -316,10 +315,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                         It.Is<IndexerKey>(styleKey =>
                             styleKey.Name == styleName &&
                             styleKey.Kind == IndexerKeyKind.Custom)])
-                    .Returns(
-                        new IndexedResource<Style>(
-                            new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default),
-                            styleIndex));
+                    .Returns(new IndexedResource<Style>(Style.Default, styleIndex));
 
                 var sut = CreateSystemUnderTest();
 
@@ -345,8 +341,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                         It.Is<IndexerKey>(styleKey =>
                             styleKey.Name == styleName &&
                             styleKey.Kind == IndexerKeyKind.Custom)])
-                    .Returns(
-                        new IndexedResource<Style>(new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default), 10U));
+                    .Returns(new IndexedResource<Style>(Style.Default, 10U));
 
                 _mocker.GetMock<IStringIndexer>()
                     .Setup(stringIndexer => stringIndexer.Add(value))
@@ -375,8 +370,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                         It.Is<IndexerKey>(styleKey =>
                             styleKey.Name == styleName &&
                             styleKey.Kind == IndexerKeyKind.Custom)])
-                    .Returns(
-                        new IndexedResource<Style>(new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default), 10U));
+                    .Returns(new IndexedResource<Style>(Style.Default, 10U));
 
                 var sut = CreateSystemUnderTest();
                 sut.AdvanceRow();
@@ -402,8 +396,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                         It.Is<IndexerKey>(styleKey =>
                             styleKey.Name == styleName &&
                             styleKey.Kind == IndexerKeyKind.Custom)])
-                    .Returns(
-                        new IndexedResource<Style>(new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default), 10U));
+                    .Returns(new IndexedResource<Style>(Style.Default, 10U));
 
                 var sut = CreateSystemUnderTest();
 

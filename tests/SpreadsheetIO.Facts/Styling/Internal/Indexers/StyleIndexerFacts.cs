@@ -18,7 +18,8 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
                 new Border(new BorderLine(Color.White, BorderLineKind.Thick)),
                 new Fill(FillKind.Solid, Color.Black),
                 new Font("Arial", 20D, Color.White, true, true),
-                new NumericFormat("#,##0.0000"));
+                new NumericFormat("#,##0.0000"),
+                new Alignment(HorizontalAlignmentKind.Right, VerticalAlignmentKind.Top));
 
         private readonly AutoMocker _mocker = new AutoMocker();
 
@@ -187,7 +188,8 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
                     Border.Default,
                     new Fill(FillKind.Solid, Color.Brown),
                     Font.Default,
-                    NumericFormat.Default);
+                    NumericFormat.Default,
+                    Alignment.Default);
                 var sut = CreateSystemUnderTest();
                 sut.Add(Key, differentStyle);
 

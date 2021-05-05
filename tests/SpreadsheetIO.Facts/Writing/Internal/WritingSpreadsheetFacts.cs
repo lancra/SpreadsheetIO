@@ -199,7 +199,8 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                         BorderLine.Default),
                     Fill.Default,
                     Font.Default,
-                    NumericFormat.Default);
+                    NumericFormat.Default,
+                    Alignment.Default);
                 var excelStyle = BuiltInExcelStyle.Bad;
                 var packageStyle = BuiltInPackageStyle.Bold;
                 var map = new FakeModelMap()
@@ -253,7 +254,8 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                         BorderLine.Default),
                     Fill.Default,
                     Font.Default,
-                    NumericFormat.Default);
+                    NumericFormat.Default,
+                    Alignment.Default);
                 var excelStyle = BuiltInExcelStyle.Bad;
                 var packageStyle = BuiltInPackageStyle.Bold;
                 var map = new FakeModelMap()
@@ -351,7 +353,8 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                         BorderLine.Default),
                     Fill.Default,
                     Font.Default,
-                    NumericFormat.Default);
+                    NumericFormat.Default,
+                    Alignment.Default);
                 var excelStyle = BuiltInExcelStyle.Bad;
                 var packageStyle = BuiltInPackageStyle.Bold;
                 var map = new FakeModelMap()
@@ -405,7 +408,8 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                         BorderLine.Default),
                     Fill.Default,
                     Font.Default,
-                    NumericFormat.Default);
+                    NumericFormat.Default,
+                    Alignment.Default);
                 var excelStyle = BuiltInExcelStyle.Bad;
                 var packageStyle = BuiltInPackageStyle.Bold;
                 var map = new FakeModelMap()
@@ -447,7 +451,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
             {
                 // Arrange
                 var name = "Style";
-                var style = new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default);
+                var style = Style.Default;
 
                 var sut = CreateSystemUnderTest();
 
@@ -466,7 +470,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
             {
                 // Arrange
                 var name = string.Empty;
-                var style = new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default);
+                var style = Style.Default;
 
                 var sut = CreateSystemUnderTest();
 
@@ -483,7 +487,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
             {
                 // Arrange
                 var name = default(string?);
-                var style = new Style(Border.Default, Fill.Default, Font.Default, NumericFormat.Default);
+                var style = Style.Default;
 
                 var sut = CreateSystemUnderTest();
 
