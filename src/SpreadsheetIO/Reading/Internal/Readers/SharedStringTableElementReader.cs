@@ -1,4 +1,5 @@
 using System;
+using LanceC.SpreadsheetIO.Properties;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 
@@ -20,7 +21,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
         {
             if (!_reader.IsStartElementOfType(typeof(OpenXml.SharedStringItem)))
             {
-                throw new InvalidOperationException("Cannot retrieve item value from the unrecognized element type.");
+                throw new InvalidOperationException(Messages.InvalidElementForValue("shared string item value"));
             }
 
             _reader.ReadNextElement(typeof(OpenXml.Text), typeof(OpenXml.SharedStringItem));

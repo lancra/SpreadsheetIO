@@ -36,4 +36,20 @@ Initial prerelease.
     <InternalsVisibleTo Include="LanceC.SpreadsheetIO.Facts" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Properties\Messages.Designer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Update="Properties\Messages.Designer.cs">
+      <AutoGen>true</AutoGen>
+      <DependentUpon>Messages.Designer.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
 </Project>

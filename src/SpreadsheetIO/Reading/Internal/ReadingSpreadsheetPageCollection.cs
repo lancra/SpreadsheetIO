@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal
 {
@@ -21,7 +22,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
             {
                 if (!_nameIndexes.TryGetValue(name, out var index))
                 {
-                    throw new KeyNotFoundException($"No spreadsheet page was found for the name '{name}'.");
+                    throw new KeyNotFoundException(Messages.MissingSpreadsheetPageForName(name));
                 }
 
                 return this[index];

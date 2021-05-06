@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Ardalis.GuardClauses;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Mapping
 {
@@ -52,7 +53,7 @@ namespace LanceC.SpreadsheetIO.Mapping
         {
             if (IsFrozen)
             {
-                throw new InvalidOperationException("The resource map options are frozen and cannot be modified.");
+                throw new InvalidOperationException(Messages.FrozenMapOptions);
             }
         }
     }

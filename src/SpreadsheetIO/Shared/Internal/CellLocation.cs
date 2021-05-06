@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Ardalis.GuardClauses;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Shared.Internal
 {
@@ -33,20 +34,20 @@ namespace LanceC.SpreadsheetIO.Shared.Internal
             var firstDigit = cellReference.FirstOrDefault(cr => char.IsDigit(cr));
             if (firstDigit == default)
             {
-                throw new ArgumentException($"The cell reference '{cellReference}' is not valid.");
+                throw new ArgumentException(Messages.InvalidCellReference(cellReference), nameof(cellReference));
             }
 
             var firstDigitIndex = cellReference.IndexOf(firstDigit, StringComparison.OrdinalIgnoreCase);
             if (firstDigitIndex == 0)
             {
-                throw new ArgumentException($"The cell reference '{cellReference}' is not valid.");
+                throw new ArgumentException(Messages.InvalidCellReference(cellReference), nameof(cellReference));
             }
 
             var rowNumberText = cellReference[firstDigitIndex..];
             var validRowNumber = uint.TryParse(rowNumberText, out var rowNumber);
             if (!validRowNumber)
             {
-                throw new ArgumentException($"The cell reference row number '{rowNumberText}' is not valid.");
+                throw new ArgumentException(Messages.InvalidCellReferenceRowNumber(rowNumberText), nameof(cellReference));
             }
 
             RowNumber = rowNumber;

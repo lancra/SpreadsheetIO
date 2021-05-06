@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
 {
@@ -27,7 +28,7 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
             {
                 if (!_resourceIndexer.TryGetValue(resource, out var index))
                 {
-                    throw new KeyNotFoundException("The numeric format has not been indexed.");
+                    throw new KeyNotFoundException(Messages.UnindexedResource);
                 }
 
                 return index;

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace Ardalis.GuardClauses
 {
@@ -15,7 +16,7 @@ namespace Ardalis.GuardClauses
             var regex = new Regex("^[a-zA-Z]*$");
             if (!regex.IsMatch(input))
             {
-                throw new ArgumentException($"Required input {parameterName} was not alphabetic.", parameterName);
+                throw new ArgumentException(Messages.NonAlphabeticInput(parameterName), parameterName);
             }
         }
 
@@ -24,7 +25,7 @@ namespace Ardalis.GuardClauses
             var regex = new Regex("^[a-zA-Z0-9]*$");
             if (!regex.IsMatch(input))
             {
-                throw new ArgumentException($"Required input {parameterName} was not alphanumeric.", parameterName);
+                throw new ArgumentException(Messages.NonAlphanumericInput(parameterName), parameterName);
             }
         }
 
@@ -33,7 +34,7 @@ namespace Ardalis.GuardClauses
             var regex = new Regex("^[0-9]*$");
             if (!regex.IsMatch(input))
             {
-                throw new ArgumentException($"Required input {parameterName} was not numeric.", parameterName);
+                throw new ArgumentException(Messages.NonNumericInput(parameterName), parameterName);
             }
         }
     }

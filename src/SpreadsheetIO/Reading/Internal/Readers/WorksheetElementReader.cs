@@ -1,4 +1,5 @@
 using System;
+using LanceC.SpreadsheetIO.Properties;
 using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
@@ -38,7 +39,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
         {
             if (!_reader.IsStartElementOfType(typeof(OpenXml.Row)))
             {
-                throw new InvalidOperationException("Cannot retrieve row number from the unrecognized element type.");
+                throw new InvalidOperationException(Messages.InvalidElementForValue("row number"));
             }
 
             var rowNumberAttribute = _reader.GetAttribute(ElementAttributeKind.RowNumber);
@@ -53,7 +54,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
         {
             if (!_reader.IsStartElementOfType(typeof(OpenXml.Cell)))
             {
-                throw new InvalidOperationException("Cannot retrieve cell location from the unrecognized element type.");
+                throw new InvalidOperationException(Messages.InvalidElementForValue("cell location"));
             }
 
             var cellReferenceAttribute = _reader.GetAttribute(ElementAttributeKind.CellReference);
@@ -65,7 +66,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
         {
             if (!_reader.IsStartElementOfType(typeof(OpenXml.Cell)))
             {
-                throw new InvalidOperationException("Cannot retrieve cell value from the unrecognized element type.");
+                throw new InvalidOperationException(Messages.InvalidElementForValue("cell value"));
             }
 
             var valueTypeAttribute = _reader.GetAttribute(ElementAttributeKind.CellValueType);

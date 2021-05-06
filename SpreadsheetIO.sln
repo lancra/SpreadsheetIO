@@ -27,6 +27,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{026063D8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LanceC.SpreadsheetIO.Facts", "tests\SpreadsheetIO.Facts\LanceC.SpreadsheetIO.Facts.csproj", "{6006DE60-66D0-4C20-9F2F-6A6BBB887390}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{5ACB49D3-72F1-4CFE-9947-BF8D9B0066AA}"
+	ProjectSection(SolutionItems) = preProject
+		tools\Resources.tt = tools\Resources.tt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

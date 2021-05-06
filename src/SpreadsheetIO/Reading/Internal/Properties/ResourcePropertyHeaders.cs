@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Properties
 {
@@ -29,7 +30,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Properties
             var hasMap = TryGetMap(columnNumber, out var map);
             if (!hasMap)
             {
-                throw new KeyNotFoundException($"No header was found at column {columnNumber}.");
+                throw new KeyNotFoundException(Messages.MissingHeaderForColumnNumber(columnNumber));
             }
 
             return map!;

@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Ardalis.GuardClauses;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Shared
 {
@@ -244,7 +245,7 @@ namespace LanceC.SpreadsheetIO.Shared
 
             if (!typeof(Enumeration).IsAssignableFrom(enumerationType))
             {
-                throw new NotSupportedException($"{enumerationType.Name} is not an Enumeration type.");
+                throw new NotSupportedException(Messages.UnsupportedEnumerationType(enumerationType.Name));
             }
 
             var fields = enumerationType.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Static);
@@ -265,8 +266,7 @@ namespace LanceC.SpreadsheetIO.Shared
 
             if (matchingItem is null)
             {
-                var message = $"'{value}' is not a valid {description} in {typeof(TEnumeration)}";
-                throw new NotSupportedException(message);
+                throw new NotSupportedException(Messages.InvalidEnumerationValue(value, description, typeof(TEnumeration).Name));
             }
 
             return matchingItem;

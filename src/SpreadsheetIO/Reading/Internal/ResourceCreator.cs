@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Properties;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal
@@ -41,9 +42,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
                 var propertyMap = map.Properties.SingleOrDefault(p => p.Property.Name == propertyName);
                 if (propertyMap is null)
                 {
-                    throw new ArgumentException(
-                        $"The {propertyName} property is designated as a constructor parameter but is not defined as a resource " +
-                        "property.");
+                    throw new ArgumentException(Messages.MissingResourcePropertyForConstructorParameter(propertyName));
                 }
 
                 if (!values.TryGetValue(propertyMap, out var value))
@@ -58,7 +57,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
             var constructor = typeof(TResource).GetConstructor(constructorParameterTypes.ToArray());
             if (constructor is null)
             {
-                throw new ArgumentException($"The explicit ${typeof(TResource).Name} constructor could not be found.");
+                throw new ArgumentException(Messages.MissingResourceConstructor(typeof(TResource).Name));
             }
 
             var resource = (TResource)constructor.Invoke(constructorParameters.ToArray());
@@ -87,7 +86,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
             var constructor = typeof(TResource).GetConstructor(constructorParameterTypes.ToArray());
             if (constructor is null)
             {
-                throw new ArgumentException($"The implicit ${typeof(TResource).Name} constructor could not be found.");
+                throw new ArgumentException(Messages.MissingResourceConstructor(typeof(TResource).Name));
             }
 
             var resource = (TResource)constructor.Invoke(constructorParameters.ToArray());

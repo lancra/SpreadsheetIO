@@ -1,0 +1,5 @@
+<#
+    Session["AccessModifier"] = "internal";
+    Session["ResourceFile"] = "Messages.resx";
+#>
+<#@ include file="..\..\..\tools\Resources.tt" #>

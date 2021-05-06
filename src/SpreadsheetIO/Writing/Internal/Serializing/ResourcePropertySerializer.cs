@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing
 {
@@ -36,9 +37,10 @@ namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing
                 }
 
                 throw new InvalidOperationException(
-                    $"The {typeof(ResourcePropertySerializer).Name} cannot be constructed because there are multiple " +
-                    $"{typeof(IResourcePropertySerializerStrategy).Name} instances registered for the {strategyPropertyType} " +
-                    "property type.");
+                    Messages.DuplicateStrategy(
+                        "resource property serializer",
+                        typeof(IResourcePropertySerializerStrategy).Name,
+                        strategyPropertyType.Name));
             }
         }
 
@@ -51,7 +53,7 @@ namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing
             if (!hasStrategy)
             {
                 throw new InvalidOperationException(
-                    $"No {typeof(IResourcePropertySerializerStrategy).Name} was defined for the {propertyType.Name} property type.");
+                    Messages.MissingStrategy(typeof(IResourcePropertySerializerStrategy).Name, propertyType.Name));
             }
 
             var propertyValue = map.Property.GetValue(resource);

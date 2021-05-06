@@ -1,4 +1,5 @@
 using System;
+using LanceC.SpreadsheetIO.Properties;
 using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
@@ -95,7 +96,7 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
         {
             if (count == 0)
             {
-                throw new ArgumentException("Cannot advance zero rows.");
+                throw new ArgumentException(Messages.CannotAdvanceZeroRows, nameof(count));
             }
 
             ThrowWhenUnwritable();
@@ -111,7 +112,7 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
         {
             if (rowNumber < CurrentRowNumber)
             {
-                throw new ArgumentException($"Cannot to advance backwards from row {CurrentRowNumber} to {rowNumber}.");
+                throw new ArgumentException(Messages.CannotAdvanceRowsBackwards(CurrentRowNumber, rowNumber), nameof(rowNumber));
             }
 
             var count = rowNumber - CurrentRowNumber;
@@ -125,7 +126,7 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
         {
             if (count == 0)
             {
-                throw new ArgumentException("Cannot advance zero columns.");
+                throw new ArgumentException(Messages.CannotAdvanceZeroColumns, nameof(count));
             }
 
             ThrowWhenUnwritable();
@@ -139,7 +140,8 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
         {
             if (columnNumber < CurrentColumnNumber)
             {
-                throw new ArgumentException($"Unable to advance backwards from column {CurrentColumnNumber} to {columnNumber}");
+                throw new ArgumentException(
+                    Messages.CannotAdvanceColumnsBackwards(CurrentColumnNumber, columnNumber), nameof(columnNumber));
             }
 
             var count = columnNumber - CurrentColumnNumber;
@@ -209,7 +211,7 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
         {
             if (!CanWrite)
             {
-                throw new InvalidOperationException("This operation cannot be performed since writing has been closed.");
+                throw new InvalidOperationException(Messages.FinishedWriting);
             }
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LanceC.SpreadsheetIO.Properties;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
@@ -125,9 +126,7 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
             {
                 if (!styleKeyValue.Value.Resource.BuiltInId.HasValue)
                 {
-                    throw new InvalidOperationException(
-                        $"The {styleKeyValue.Key.Name} Excel style has not been set up with an identifier. " +
-                        "Please contact the package maintainer.");
+                    throw new InvalidOperationException(Messages.InvalidExcelStyleSetup(styleKeyValue.Key.Name));
                 }
 
                 var formatId = _excelFormatIdLookup[styleKeyValue.Key];

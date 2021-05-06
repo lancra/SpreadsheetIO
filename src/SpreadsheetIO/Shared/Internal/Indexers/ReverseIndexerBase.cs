@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
 {
@@ -14,7 +15,7 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
             {
                 if (!_reverseResourceIndexer.TryGetValue(index, out var resource))
                 {
-                    throw new KeyNotFoundException("The index does not match a valid resource.");
+                    throw new KeyNotFoundException(Messages.MissingResourceForIndex);
                 }
 
                 return resource;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing
 {
@@ -32,9 +33,10 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing
                 }
 
                 throw new InvalidOperationException(
-                    $"The {typeof(ResourcePropertyParser).Name} cannot be constructed because there are multiple " +
-                    $"{typeof(IResourcePropertyParserStrategy).Name} instances registered for the {strategyGrouping.Key.Name} " +
-                    "property type.");
+                    Messages.DuplicateStrategy(
+                        "resource property parser",
+                        typeof(IResourcePropertyParserStrategy).Name,
+                        strategyGrouping.Key.Name));
             }
         }
 
@@ -47,7 +49,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing
             if (!hasStrategy)
             {
                 throw new InvalidOperationException(
-                    $"No {typeof(IResourcePropertyParserStrategy).Name} was defined for the {propertyType.Name} property type.");
+                    Messages.MissingStrategy(typeof(IResourcePropertyParserStrategy).Name, propertyType.Name));
             }
 
             return strategy!.TryParse(cellValue, map, out value);

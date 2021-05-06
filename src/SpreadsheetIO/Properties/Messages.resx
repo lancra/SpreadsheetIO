@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AlreadyIndexedResourceForKey" xml:space="preserve">
+    <value>Another resource is already indexed for {key}.</value>
+  </data>
+  <data name="CannotAdvanceColumnsBackwards" xml:space="preserve">
+    <value>Cannot to advance backwards from column {currentColumnNumber} to {columnNumber}.</value>
+  </data>
+  <data name="CannotAdvanceRowsBackwards" xml:space="preserve">
+    <value>Cannot to advance backwards from row {currentRowNumber} to {rowNumber}.</value>
+  </data>
+  <data name="CannotAdvanceZeroColumns" xml:space="preserve">
+    <value>Cannot advance zero columns.</value>
+  </data>
+  <data name="CannotAdvanceZeroRows" xml:space="preserve">
+    <value>Cannot advance zero rows.</value>
+  </data>
+  <data name="DuplicateMapForResourceType" xml:space="preserve">
+    <value>Multiple maps are defined for the {resourceType} resource.</value>
+  </data>
+  <data name="DuplicateSpreadsheetPageForName" xml:space="preserve">
+    <value>A spreadsheet page has already been added with the name '{name}'.</value>
+  </data>
+  <data name="DuplicateStrategy" xml:space="preserve">
+    <value>The {parentName} cannot be constructed because there are multiple {strategyType} instances registered for the {propertyType} property type.</value>
+  </data>
+  <data name="FinishedWriting" xml:space="preserve">
+    <value>This operation cannot be performed since writing has been closed.</value>
+  </data>
+  <data name="FrozenMapOptions" xml:space="preserve">
+    <value>The map options are frozen and cannot be modified.</value>
+  </data>
+  <data name="InvalidCellReference" xml:space="preserve">
+    <value>The cell reference '{cellReference}' is not valid.</value>
+  </data>
+  <data name="InvalidCellReferenceRowNumber" xml:space="preserve">
+    <value>The cell reference row number '{rowNumberText}' is not valid.</value>
+  </data>
+  <data name="InvalidElementForValue" xml:space="preserve">
+    <value>Cannot retrieve {value} from the unrecognized element type.</value>
+  </data>
+  <data name="InvalidEnumerationValue" xml:space="preserve">
+    <value>'{value}' is not a valid {description} in {enumerationType}.</value>
+  </data>
+  <data name="InvalidExcelStyleSetup" xml:space="preserve">
+    <value>The {styleName} Excel style has not been set up with an identifier. Please contact the package maintainer.</value>
+  </data>
+  <data name="InvalidResourcePropertyExpression" xml:space="preserve">
+    <value>The provided expression does not represent a resource property.</value>
+  </data>
+  <data name="InvalidStringForIndexing" xml:space="preserve">
+    <value>A null or empty string cannot be indexed.</value>
+  </data>
+  <data name="MissingHeaderForColumnNumber" xml:space="preserve">
+    <value>No header was found at column {columnNumber}.</value>
+  </data>
+  <data name="MissingMapForResourceMapType" xml:space="preserve">
+    <value>The {resourceMapType} map is not defined for the {resourceType} resource.</value>
+  </data>
+  <data name="MissingMapForResourceType" xml:space="preserve">
+    <value>No map is defined for the {resourceType} resource.</value>
+  </data>
+  <data name="MissingResourceConstructor" xml:space="preserve">
+    <value>The {resourceType} constructor could not be found.</value>
+  </data>
+  <data name="MissingResourceForIndex" xml:space="preserve">
+    <value>The index does not match a valid resource.</value>
+  </data>
+  <data name="MissingResourcePropertyForConstructorParameter" xml:space="preserve">
+    <value>The {propertyName} property is designated as a constructor parameter but is not defined as a resource property.</value>
+  </data>
+  <data name="MissingSpreadsheetPageForName" xml:space="preserve">
+    <value>No spreadsheet page was found for the name '{name}'.</value>
+  </data>
+  <data name="MissingStrategy" xml:space="preserve">
+    <value>No {strategyType} was defined for the {propertyType} property type.</value>
+  </data>
+  <data name="NonAlphabeticInput" xml:space="preserve">
+    <value>Required input {parameterName} was not alphabetic.</value>
+  </data>
+  <data name="NonAlphanumericInput" xml:space="preserve">
+    <value>Required input {parameterName} was not alphanumeric.</value>
+  </data>
+  <data name="NonNumericInput" xml:space="preserve">
+    <value>Required input {parameterName} was not numeric.</value>
+  </data>
+  <data name="OptionsExtensionNotAllowedForType" xml:space="preserve">
+    <value>The {extensionType} option is not allowed for a {propertyType} property.</value>
+  </data>
+  <data name="UnindexedResource" xml:space="preserve">
+    <value>The resource has not been indexed.</value>
+  </data>
+  <data name="UnindexedResourceForKey" xml:space="preserve">
+    <value>No resource is indexed for {key}.</value>
+  </data>
+  <data name="UnsupportedEnumerationType" xml:space="preserve">
+    <value>{enumerationType} is not an Enumeration type.</value>
+  </data>
+</root>

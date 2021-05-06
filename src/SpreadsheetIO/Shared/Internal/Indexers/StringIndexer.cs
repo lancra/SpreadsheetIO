@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
 {
@@ -27,7 +28,7 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
         {
             if (string.IsNullOrEmpty(resource))
             {
-                throw new ArgumentException("A null or empty string cannot be indexed.");
+                throw new ArgumentException(Messages.InvalidStringForIndexing);
             }
         }
     }

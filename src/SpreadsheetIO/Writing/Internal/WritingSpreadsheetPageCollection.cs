@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal
 {
@@ -22,7 +23,7 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
             {
                 if (!_nameIndexes.TryGetValue(name, out var index))
                 {
-                    throw new ArgumentException($"No spreadsheet page was found for the name '{name}'.");
+                    throw new ArgumentException(Messages.MissingSpreadsheetPageForName(name), nameof(name));
                 }
 
                 return this[index];
@@ -33,7 +34,7 @@ namespace LanceC.SpreadsheetIO.Writing.Internal
         {
             if (_nameIndexes.TryGetValue(spreadsheetPage.Name, out var _))
             {
-                throw new ArgumentException($"A spreadsheet page has already been added with the name '{spreadsheetPage.Name}'.");
+                throw new ArgumentException(Messages.DuplicateSpreadsheetPageForName(spreadsheetPage.Name), nameof(spreadsheetPage));
             }
 
             var index = Count;

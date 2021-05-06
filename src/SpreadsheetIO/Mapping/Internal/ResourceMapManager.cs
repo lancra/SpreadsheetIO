@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Mapping.Internal
 {
@@ -21,11 +22,11 @@ namespace LanceC.SpreadsheetIO.Mapping.Internal
             var resourceMaps = All<TResource>();
             if (resourceMaps.Count == 0)
             {
-                throw new KeyNotFoundException($"No map is defined for the '{typeof(TResource)}' resource.");
+                throw new KeyNotFoundException(Messages.MissingMapForResourceType(typeof(TResource).Name));
             }
             else if (resourceMaps.Count > 1)
             {
-                throw new InvalidOperationException($"Multiple maps are defined for the '{typeof(TResource)}' resource.");
+                throw new InvalidOperationException(Messages.DuplicateMapForResourceType(typeof(TResource).Name));
             }
 
             return resourceMaps.Single();
@@ -40,7 +41,7 @@ namespace LanceC.SpreadsheetIO.Mapping.Internal
             if (resourceMap is null)
             {
                 throw new KeyNotFoundException(
-                    $"The '{typeof(TResourceMap)}' map is not defined for the '{typeof(TResource)}' resource.");
+                    Messages.MissingMapForResourceMapType(typeof(TResourceMap).Name, typeof(TResource).Name));
             }
 
             return resourceMap;

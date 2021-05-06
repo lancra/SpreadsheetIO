@@ -48,7 +48,7 @@ namespace LanceC.SpreadsheetIO.Facts.Testing.Creators
                 }
             }
 
-            throw new ArgumentException("The provided expression does not represent a resource property.");
+            throw new ArgumentException();
         }
     }
 }

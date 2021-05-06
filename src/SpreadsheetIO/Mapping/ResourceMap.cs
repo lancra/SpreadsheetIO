@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Ardalis.GuardClauses;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Mapping
 {
@@ -125,7 +126,7 @@ namespace LanceC.SpreadsheetIO.Mapping
                 }
             }
 
-            throw new ArgumentException("The provided expression does not represent a resource property.");
+            throw new ArgumentException(Messages.InvalidResourcePropertyExpression, nameof(property));
         }
     }
 }

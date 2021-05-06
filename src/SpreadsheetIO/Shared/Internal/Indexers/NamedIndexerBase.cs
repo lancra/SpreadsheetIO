@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
 {
@@ -26,7 +27,7 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
             {
                 if (!_nameIndexer.TryGetValue(key, out var resource))
                 {
-                    throw new KeyNotFoundException($"No resource is indexed for {key.Display}.");
+                    throw new KeyNotFoundException(Messages.UnindexedResourceForKey(key.Display));
                 }
 
                 var index = _resourceIndexer[resource];
@@ -41,7 +42,7 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
             {
                 if (!resource.Equals(storedResource))
                 {
-                    throw new ArgumentException($"Another resource is already indexed for {key.Display}.");
+                    throw new ArgumentException(Messages.AlreadyIndexedResourceForKey(key.Display));
                 }
 
                 var index = _resourceIndexer[resource];

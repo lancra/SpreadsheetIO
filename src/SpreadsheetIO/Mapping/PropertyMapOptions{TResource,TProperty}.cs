@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Ardalis.GuardClauses;
+using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Mapping
 {
@@ -48,7 +49,7 @@ namespace LanceC.SpreadsheetIO.Mapping
             if (!IsExtensionAllowed(extension))
             {
                 throw new InvalidOperationException(
-                    $"A '{typeof(TProperty).Name}' property is not allowed for the {extension.GetType().Name} option.");
+                    Messages.OptionsExtensionNotAllowedForType(extension.GetType().Name, typeof(TProperty).Name));
             }
 
             var extensions = Extensions.ToDictionary(e => e.GetType(), e => e);
@@ -86,7 +87,7 @@ namespace LanceC.SpreadsheetIO.Mapping
         {
             if (IsFrozen)
             {
-                throw new InvalidOperationException("The property map options are frozen and cannot be modified.");
+                throw new InvalidOperationException(Messages.FrozenMapOptions);
             }
         }
     }
