@@ -57,48 +57,48 @@ namespace LanceC.SpreadsheetIO.Mapping
         /// </summary>
         /// <typeparam name="TProperty">The type of property to map.</typeparam>
         /// <param name="property">The property to map.</param>
-        /// <param name="keyAction">The callback used to modify the map key.</param>
+        /// <param name="key">The callback used to modify the map key.</param>
         /// <returns>The resulting resource map.</returns>
         protected ResourceMap<TResource> Map<TProperty>(
             Expression<Func<TResource, TProperty>> property,
-            Action<PropertyMapKeyBuilder> keyAction)
-            => Map(property, keyAction, options => { });
+            Action<PropertyMapKeyBuilder> key)
+            => Map(property, key, options => { });
 
         /// <summary>
         /// Defines a property map within the resource.
         /// </summary>
         /// <typeparam name="TProperty">The type of property to map.</typeparam>
         /// <param name="property">The property to map.</param>
-        /// <param name="optionsAction">The callback used to modify the map options.</param>
+        /// <param name="options">The callback used to modify the map options.</param>
         /// <returns>The resulting resource map.</returns>
         protected ResourceMap<TResource> Map<TProperty>(
             Expression<Func<TResource, TProperty>> property,
-            Action<PropertyMapOptionsBuilder<TResource, TProperty>> optionsAction)
-            => Map(property, key => { }, optionsAction);
+            Action<PropertyMapOptionsBuilder<TResource, TProperty>> options)
+            => Map(property, key => { }, options);
 
         /// <summary>
         /// Defines a property map within the resource.
         /// </summary>
         /// <typeparam name="TProperty">The type of property to map.</typeparam>
         /// <param name="property">The property to map.</param>
-        /// <param name="keyAction">The callback used to modify the map key.</param>
-        /// <param name="optionsAction">The callback used to modify the map options.</param>
+        /// <param name="key">The callback used to modify the map key.</param>
+        /// <param name="options">The callback used to modify the map options.</param>
         /// <returns>The resulting resource map.</returns>
         protected ResourceMap<TResource> Map<TProperty>(
             Expression<Func<TResource, TProperty>> property,
-            Action<PropertyMapKeyBuilder> keyAction,
-            Action<PropertyMapOptionsBuilder<TResource, TProperty>> optionsAction)
+            Action<PropertyMapKeyBuilder> key,
+            Action<PropertyMapOptionsBuilder<TResource, TProperty>> options)
         {
             Guard.Against.Null(property, nameof(property));
 
             var propertyInfo = GetPropertyInfo(property);
 
             var keyBuilder = new PropertyMapKeyBuilder(propertyInfo);
-            keyAction?.Invoke(keyBuilder);
+            key?.Invoke(keyBuilder);
 
             var optionsBuilder = new PropertyMapOptionsBuilder<TResource, TProperty>(Options)
                 .ApplyResourceMapOptions();
-            optionsAction?.Invoke(optionsBuilder);
+            options?.Invoke(optionsBuilder);
 
             optionsBuilder.Options.Freeze();
 
