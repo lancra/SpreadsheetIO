@@ -8,7 +8,7 @@
     <PackageVersion>0.0.1</PackageVersion>
     <Authors>Lance Craig</Authors>
     <Title>Spreadsheet IO</Title>
-    <Description>Provides simple input and output for Excel spreadsheets.</Description>
+    <Description>Provides reading and writing for Excel spreadsheets using model mappings.</Description>
     <PackageReleaseNotes>
 Initial prerelease.
     </PackageReleaseNotes>
@@ -16,8 +16,9 @@ Initial prerelease.
     <RepositoryUrl>https://github.com/lanceccraig/SpreadsheetIO.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Copyright>Copyright @ Lance Craig</Copyright>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageIcon>icon.png</PackageIcon>
     <NeutralLanguage>en-US</NeutralLanguage>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DebugType>portable</DebugType>
@@ -46,6 +47,10 @@ Initial prerelease.
       <DependentUpon>Messages.Designer.tt</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
