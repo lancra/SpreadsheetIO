@@ -9,6 +9,7 @@
     <Authors>Lance Craig</Authors>
     <Title>Spreadsheet IO</Title>
     <Description>Provides reading and writing for Excel spreadsheets using model mappings.</Description>
+    <Summary>Provides reading and writing for Excel spreadsheets using model mappings.</Summary>
     <PackageReleaseNotes>
 Initial prerelease.
     </PackageReleaseNotes>
