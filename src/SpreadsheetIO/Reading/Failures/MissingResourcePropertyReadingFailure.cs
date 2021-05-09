@@ -6,16 +6,11 @@ namespace LanceC.SpreadsheetIO.Reading.Failures
     /// Represents a defined property that is not found in the spreadsheet.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class MissingResourcePropertyReadingFailure
+    public record MissingResourcePropertyReadingFailure(uint ColumnNumber)
     {
-        internal MissingResourcePropertyReadingFailure(uint columnNumber)
-        {
-            ColumnNumber = columnNumber;
-        }
-
         /// <summary>
         /// Gets the column number for the expected property.
         /// </summary>
-        public uint ColumnNumber { get; }
+        public uint ColumnNumber { get; init; } = ColumnNumber;
     }
 }

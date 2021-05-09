@@ -7,31 +7,24 @@ namespace LanceC.SpreadsheetIO.Reading.Failures
     /// Represents a resource mismatch between the defined map and the spreadsheet.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class ResourceReadingFailure
+    public record ResourceReadingFailure(
+        uint RowNumber,
+        IReadOnlyCollection<MissingResourcePropertyReadingFailure> MissingProperties,
+        IReadOnlyCollection<InvalidResourcePropertyReadingFailure> InvalidProperties)
     {
-        internal ResourceReadingFailure(
-            uint rowNumber,
-            IReadOnlyCollection<MissingResourcePropertyReadingFailure> missingProperties,
-            IReadOnlyCollection<InvalidResourcePropertyReadingFailure> invalidProperties)
-        {
-            RowNumber = rowNumber;
-            MissingProperties = missingProperties;
-            InvalidProperties = invalidProperties;
-        }
-
         /// <summary>
         /// Gets the row number in the spreadsheet.
         /// </summary>
-        public uint RowNumber { get; }
+        public uint RowNumber { get; init; } = RowNumber;
 
         /// <summary>
         /// Gets the collection of properties that are not found.
         /// </summary>
-        public IReadOnlyCollection<MissingResourcePropertyReadingFailure> MissingProperties { get; }
+        public IReadOnlyCollection<MissingResourcePropertyReadingFailure> MissingProperties { get; init; } = MissingProperties;
 
         /// <summary>
         /// Gets the collection of properties that do not match the map.
         /// </summary>
-        public IReadOnlyCollection<InvalidResourcePropertyReadingFailure> InvalidProperties { get; }
+        public IReadOnlyCollection<InvalidResourcePropertyReadingFailure> InvalidProperties { get; init; } = InvalidProperties;
     }
 }

@@ -6,22 +6,16 @@ namespace LanceC.SpreadsheetIO.Reading.Failures
     /// Represents a defined property that the spreadsheet does not match.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class InvalidResourcePropertyReadingFailure
+    public record InvalidResourcePropertyReadingFailure(uint ColumnNumber, string Value)
     {
-        internal InvalidResourcePropertyReadingFailure(uint columnNumber, string value)
-        {
-            ColumnNumber = columnNumber;
-            Value = value;
-        }
-
         /// <summary>
         /// Gets the column number for the invalid property.
         /// </summary>
-        public uint ColumnNumber { get; }
+        public uint ColumnNumber { get; init; } = ColumnNumber;
 
         /// <summary>
         /// Gets the spreadsheet value present for the property.
         /// </summary>
-        public string Value { get; }
+        public string Value { get; init; } = Value;
     }
 }

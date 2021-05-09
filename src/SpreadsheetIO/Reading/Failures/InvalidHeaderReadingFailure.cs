@@ -7,24 +7,16 @@ namespace LanceC.SpreadsheetIO.Reading.Failures
     /// Represents a defined header that the spreadsheet does not match.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class InvalidHeaderReadingFailure
+    public record InvalidHeaderReadingFailure(PropertyMapKey NumberMapKey, PropertyMapKey NameMapKey)
     {
-        internal InvalidHeaderReadingFailure(
-            PropertyMapKey numberMapKey,
-            PropertyMapKey nameMapKey)
-        {
-            NumberMapKey = numberMapKey;
-            NameMapKey = nameMapKey;
-        }
-
         /// <summary>
         /// Gets the property map key defined for the spreadsheet column number.
         /// </summary>
-        public PropertyMapKey NumberMapKey { get; }
+        public PropertyMapKey NumberMapKey { get; init; } = NumberMapKey;
 
         /// <summary>
         /// Gets the property map key defined for the spreadsheet text.
         /// </summary>
-        public PropertyMapKey NameMapKey { get; }
+        public PropertyMapKey NameMapKey { get; init; } = NameMapKey;
     }
 }

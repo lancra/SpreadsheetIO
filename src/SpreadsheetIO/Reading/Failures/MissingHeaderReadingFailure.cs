@@ -7,16 +7,11 @@ namespace LanceC.SpreadsheetIO.Reading.Failures
     /// Represents a defined header that is not found in the spreadsheet.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class MissingHeaderReadingFailure
+    public record MissingHeaderReadingFailure(PropertyMapKey MapKey)
     {
-        internal MissingHeaderReadingFailure(PropertyMapKey mapKey)
-        {
-            MapKey = mapKey;
-        }
-
         /// <summary>
         /// Gets the property map key that is missing.
         /// </summary>
-        public PropertyMapKey MapKey { get; }
+        public PropertyMapKey MapKey { get; init; } = MapKey;
     }
 }

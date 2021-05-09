@@ -1,17 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageVersion>0.0.2</PackageVersion>
+    <PackageVersion>0.0.3</PackageVersion>
     <Authors>Lance Craig</Authors>
     <Title>Spreadsheet IO</Title>
     <Description>Provides reading and writing for Excel spreadsheets using model mappings.</Description>
     <Summary>Provides reading and writing for Excel spreadsheets using model mappings.</Summary>
     <PackageReleaseNotes>
-Use lowest version for dependencies.
+Use record types for reading results to allow for easier mocking in consumer code.
     </PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/lanceccraig/SpreadsheetIO</PackageProjectUrl>
     <RepositoryUrl>https://github.com/lanceccraig/SpreadsheetIO.git</RepositoryUrl>

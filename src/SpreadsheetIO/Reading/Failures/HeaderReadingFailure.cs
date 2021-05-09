@@ -7,31 +7,24 @@ namespace LanceC.SpreadsheetIO.Reading.Failures
     /// Represents a header mismatch between the defined map and the spreadsheet.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class HeaderReadingFailure
+    public record HeaderReadingFailure(
+        bool MissingHeaderRow,
+        IReadOnlyCollection<MissingHeaderReadingFailure> MissingHeaders,
+        IReadOnlyCollection<InvalidHeaderReadingFailure> InvalidHeaders)
     {
-        internal HeaderReadingFailure(
-            bool missingHeaderRow,
-            IReadOnlyCollection<MissingHeaderReadingFailure> missingHeaders,
-            IReadOnlyCollection<InvalidHeaderReadingFailure> invalidHeaders)
-        {
-            MissingHeaderRow = missingHeaderRow;
-            MissingHeaders = missingHeaders;
-            InvalidHeaders = invalidHeaders;
-        }
-
         /// <summary>
         /// Gets the value that determines whether the specified header row is not found.
         /// </summary>
-        public bool MissingHeaderRow { get; }
+        public bool MissingHeaderRow { get; init; } = MissingHeaderRow;
 
         /// <summary>
         /// Gets the collection of headers that are not found.
         /// </summary>
-        public IReadOnlyCollection<MissingHeaderReadingFailure> MissingHeaders { get; }
+        public IReadOnlyCollection<MissingHeaderReadingFailure> MissingHeaders { get; init; } = MissingHeaders;
 
         /// <summary>
         /// Gets the collection of headers that do not match the map.
         /// </summary>
-        public IReadOnlyCollection<InvalidHeaderReadingFailure> InvalidHeaders { get; }
+        public IReadOnlyCollection<InvalidHeaderReadingFailure> InvalidHeaders { get; init; } = InvalidHeaders;
     }
 }
