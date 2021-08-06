@@ -4,17 +4,13 @@ using LanceC.SpreadsheetIO.Reading.Failures;
 namespace LanceC.SpreadsheetIO.Reading.Internal
 {
     [ExcludeFromCodeCoverage]
-    internal class BodyRowReadingResult<TResource>
+    internal record BodyRowReadingResult<TResource>(
+        NumberedResource<TResource>? NumberedResource,
+        ResourceReadingFailure? Failure)
         where TResource : class
     {
-        public BodyRowReadingResult(TResource? resource, ResourceReadingFailure? failure)
-        {
-            Resource = resource;
-            Failure = failure;
-        }
+        public NumberedResource<TResource>? NumberedResource { get; init; } = NumberedResource;
 
-        public TResource? Resource { get; }
-
-        public ResourceReadingFailure? Failure { get; }
+        public ResourceReadingFailure? Failure { get; init; } = Failure;
     }
 }

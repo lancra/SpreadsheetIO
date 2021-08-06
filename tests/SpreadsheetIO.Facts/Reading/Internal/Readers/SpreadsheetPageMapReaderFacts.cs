@@ -389,7 +389,8 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
                 var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
 
                 // Assert
-                Assert.Equal(expectedModel, readingResult.Resource);
+                Assert.Equal(rowNumber, readingResult.NumberedResource!.RowNumber);
+                Assert.Equal(expectedModel, readingResult.NumberedResource.Resource);
                 propertyValuesMock.Verify();
 
                 Assert.Null(readingResult.Failure);
@@ -450,7 +451,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
                 var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
 
                 // Assert
-                Assert.Null(readingResult.Resource);
+                Assert.Null(readingResult.NumberedResource);
                 propertyValuesMock.Verify();
 
                 Assert.NotNull(readingResult.Failure);
@@ -521,7 +522,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
                 var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
 
                 // Assert
-                Assert.Null(readingResult.Resource);
+                Assert.Null(readingResult.NumberedResource);
                 propertyValuesMock.Verify();
 
                 Assert.NotNull(readingResult.Failure);
@@ -580,7 +581,8 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
                 var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
 
                 // Assert
-                Assert.Equal(expectedModel, readingResult.Resource);
+                Assert.Equal(rowNumber, readingResult.NumberedResource!.RowNumber);
+                Assert.Equal(expectedModel, readingResult.NumberedResource.Resource);
                 propertyValuesMock.Verify();
 
                 Assert.Null(readingResult.Failure);
@@ -633,7 +635,9 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
                 var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
 
                 // Assert
-                Assert.Null(readingResult.Resource);
+                Assert.NotNull(readingResult.NumberedResource);
+                Assert.Equal(rowNumber, readingResult.NumberedResource!.RowNumber);
+                Assert.Null(readingResult.NumberedResource.Resource);
                 propertyValuesMock.Verify(propertyValues => propertyValues.Add(idPropertyMap, idValue));
 
                 Assert.Null(readingResult.Failure);
@@ -687,7 +691,9 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
                 var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
 
                 // Assert
-                Assert.Null(readingResult.Resource);
+                Assert.NotNull(readingResult.NumberedResource);
+                Assert.Equal(rowNumber, readingResult.NumberedResource!.RowNumber);
+                Assert.Null(readingResult.NumberedResource.Resource);
                 propertyValuesMock.Verify(propertyValues => propertyValues.Add(idPropertyMap, idValue));
 
                 Assert.Null(readingResult.Failure);

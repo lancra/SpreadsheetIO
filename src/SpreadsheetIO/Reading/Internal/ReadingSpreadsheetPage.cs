@@ -54,12 +54,12 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
             if (headerRowResult.Failure is not null)
             {
                 return new ReadingResult<TResource>(
-                    Array.Empty<TResource>(),
+                    Array.Empty<NumberedResource<TResource>>(),
                     headerRowResult.Failure,
                     Array.Empty<ResourceReadingFailure>());
             }
 
-            var resources = new List<TResource>();
+            var resources = new List<NumberedResource<TResource>>();
             var resourceFailures = new List<ResourceReadingFailure>();
 
             var shouldExitOnResourceReadingFailure = map.Options
@@ -69,9 +69,9 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
             {
                 var bodyRowResult = _spreadsheetPageMapReader.ReadBodyRow(worksheetReader, map, headerRowResult.Headers);
 
-                if (bodyRowResult.Resource is not null)
+                if (bodyRowResult.NumberedResource is not null)
                 {
-                    resources.Add(bodyRowResult.Resource);
+                    resources.Add(bodyRowResult.NumberedResource);
                 }
 
                 if (bodyRowResult.Failure is not null)

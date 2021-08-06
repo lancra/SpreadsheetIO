@@ -54,6 +54,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
                 constructorParameters.Add(value);
             }
 
+            // TODO: Move this check to `ResourceMapOptionsBuilder<TResource>.UseExplicitConstructor(string[])`.
             var constructor = typeof(TResource).GetConstructor(constructorParameterTypes.ToArray());
             if (constructor is null)
             {
@@ -83,6 +84,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
                 constructorParameters.Add(value);
             }
 
+            // TODO: Move this check to `ResourceMapOptionsBuilder<TResource>.UseImplicitConstructor()`.
             var constructor = typeof(TResource).GetConstructor(constructorParameterTypes.ToArray());
             if (constructor is null)
             {
