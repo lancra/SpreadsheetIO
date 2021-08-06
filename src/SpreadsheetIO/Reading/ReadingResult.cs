@@ -10,7 +10,7 @@ namespace LanceC.SpreadsheetIO.Reading
     /// <typeparam name="TResource">The type of resource that was read.</typeparam>
     [ExcludeFromCodeCoverage]
     public record ReadingResult<TResource>(
-        IReadOnlyCollection<TResource> Resources,
+        IReadOnlyCollection<NumberedResource<TResource>> Resources,
         HeaderReadingFailure? HeaderFailure,
         IReadOnlyCollection<ResourceReadingFailure> ResourceFailures)
         where TResource : class
@@ -18,7 +18,7 @@ namespace LanceC.SpreadsheetIO.Reading
         /// <summary>
         /// Gets the collection of resources read from the spreadsheet.
         /// </summary>
-        public IReadOnlyCollection<TResource> Resources { get; init; } = Resources;
+        public IReadOnlyCollection<NumberedResource<TResource>> Resources { get; init; } = Resources;
 
         /// <summary>
         /// Gets the failure encountered when reading the header row.

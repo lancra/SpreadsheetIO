@@ -166,11 +166,11 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
                 }
             }
 
-            var resource = default(TResource);
+            var resource = default(NumberedResource<TResource>?);
             var resourceFailure = default(ResourceReadingFailure?);
             if (!missingPropertyFailures.Any() && !invalidPropertyFailures.Any())
             {
-                resource = _resourceCreator.Create(map, propertyValues);
+                resource = new NumberedResource<TResource>(rowNumber, _resourceCreator.Create(map, propertyValues));
             }
             else
             {
