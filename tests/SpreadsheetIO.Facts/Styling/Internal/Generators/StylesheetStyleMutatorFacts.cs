@@ -48,7 +48,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 2,
                 49);
 
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
         private readonly IList<IndexerKey> _mockStyleKeys = new List<IndexerKey>();
 
         private StylesheetStyleMutator CreateSystemUnderTest()

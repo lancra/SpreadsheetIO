@@ -15,7 +15,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Writers
 {
     public class SpreadsheetPageMapWriterFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private SpreadsheetPageMapWriter CreateSystemUnderTest()
             => _mocker.CreateInstance<SpreadsheetPageMapWriter>();

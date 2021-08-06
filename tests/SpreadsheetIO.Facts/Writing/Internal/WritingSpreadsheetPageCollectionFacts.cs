@@ -9,7 +9,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
 {
     public class WritingSpreadsheetPageCollectionFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private static Mock<IWritingSpreadsheetPage> MockSpreadsheetPage(string name = "Name")
         {

@@ -11,7 +11,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 {
     public class StylesheetBorderMutatorFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private StylesheetBorderMutator CreateSystemUnderTest()
             => _mocker.CreateInstance<StylesheetBorderMutator>();

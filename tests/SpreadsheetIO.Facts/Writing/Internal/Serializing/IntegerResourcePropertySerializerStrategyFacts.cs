@@ -10,10 +10,31 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Serializing
 {
     public class IntegerResourcePropertySerializerStrategyFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private IntegerResourcePropertySerializerStrategy CreateSystemUnderTest()
             => _mocker.CreateInstance<IntegerResourcePropertySerializerStrategy>();
+
+        public class ThePropertyTypesProperty : IntegerResourcePropertySerializerStrategyFacts
+        {
+            [Fact]
+            public void ReturnsIntegerTypes()
+            {
+                // Arrange
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var propertyTypes = sut.PropertyTypes;
+
+                // Assert
+                Assert.Equal(5, propertyTypes.Count);
+                Assert.Single(propertyTypes, propertyType => propertyType == typeof(sbyte));
+                Assert.Single(propertyTypes, propertyType => propertyType == typeof(byte));
+                Assert.Single(propertyTypes, propertyType => propertyType == typeof(short));
+                Assert.Single(propertyTypes, propertyType => propertyType == typeof(ushort));
+                Assert.Single(propertyTypes, propertyType => propertyType == typeof(int));
+            }
+        }
 
         public class TheSerializeMethod : IntegerResourcePropertySerializerStrategyFacts
         {

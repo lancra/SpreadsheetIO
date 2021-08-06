@@ -14,7 +14,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
 {
     public class SpreadsheetPageMapReaderFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private SpreadsheetPageMapReader CreateSystemUnderTest()
             => _mocker.CreateInstance<SpreadsheetPageMapReader>();
@@ -38,6 +38,14 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
 
         public class TheReadHeaderRowMethod : SpreadsheetPageMapReaderFacts
         {
+            public static TheoryData<PropertyElementKind>
+                DataForDoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderOptionsExtension
+                => new()
+                {
+                    { PropertyElementKind.All },
+                    { PropertyElementKind.Header },
+                };
+
             [Fact]
             public void ReturnsReadingResultWithoutFailuresWhenAllRequiredPropertyMapsAreFound()
             {
@@ -240,8 +248,9 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
                 Assert.Null(readingResult.Failure);
             }
 
-            [Fact]
-            public void DoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderOptionsExtension()
+            [Theory]
+            [MemberData(nameof(DataForDoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderOptionsExtension))]
+            public void DoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderOptionsExtension(PropertyElementKind kind)
             {
                 // Arrange
                 var readerMock = _mocker.GetMock<IWorksheetElementReader>();
@@ -252,7 +261,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
 
                 var map = new FakeModelMap()
                     .Map(model => model.Id)
-                    .Map(model => model.Name, optionsAction => optionsAction.MarkHeaderAsOptional());
+                    .Map(model => model.Name, optionsAction => optionsAction.MarkAsOptional(kind));
 
                 var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
                 var namePropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Name));
@@ -317,6 +326,13 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
 
         public class TheReadBodyRowMethod : SpreadsheetPageMapReaderFacts
         {
+            public static TheoryData<PropertyElementKind> DataForUsesResolvedDefaultValueForEmptyOptionalPropertyMap
+                => new()
+                {
+                    { PropertyElementKind.All },
+                    { PropertyElementKind.Body },
+                };
+
             [Fact]
             public void ReturnsReadingResultWithoutFailuresWhenAllRequiredPropertyMapsAreFound()
             {
@@ -623,8 +639,9 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
                 Assert.Null(readingResult.Failure);
             }
 
-            [Fact]
-            public void UsesResolvedDefaultValueForEmptyOptionalPropertyMap()
+            [Theory]
+            [MemberData(nameof(DataForUsesResolvedDefaultValueForEmptyOptionalPropertyMap))]
+            public void UsesResolvedDefaultValueForEmptyOptionalPropertyMap(PropertyElementKind kind)
             {
                 // Arrange
                 var rowNumber = 2U;
@@ -637,7 +654,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
                 object? idValue = 1;
 
                 var map = new FakeModelMap()
-                    .Map(model => model.Id, optionsAction => optionsAction.MarkValueAsOptional());
+                    .Map(model => model.Id, optionsAction => optionsAction.MarkAsOptional(kind));
 
                 var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
 

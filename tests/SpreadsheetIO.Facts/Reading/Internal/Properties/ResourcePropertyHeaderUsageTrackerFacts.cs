@@ -7,7 +7,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Properties
 {
     public class ResourcePropertyHeaderUsageTrackerFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private ResourcePropertyHeaderUsageTracker CreateSystemUnderTest()
             => _mocker.CreateInstance<ResourcePropertyHeaderUsageTracker>();

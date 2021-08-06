@@ -14,7 +14,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
 {
     public class ReadingSpreadsheetPageFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private ReadingSpreadsheetPage CreateSystemUnderTest()
             => _mocker.CreateInstance<ReadingSpreadsheetPage>();

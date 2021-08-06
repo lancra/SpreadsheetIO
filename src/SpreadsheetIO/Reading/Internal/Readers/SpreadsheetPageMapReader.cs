@@ -75,7 +75,10 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
             foreach (var propertyMap in map.Properties)
             {
                 var isIndexed = propertyHeaders.ContainsMap(propertyMap);
-                var isRequired = !propertyMap.Options.HasExtension<OptionalHeaderPropertyMapOptionsExtension>();
+
+                var optionalExtension = propertyMap.Options.FindExtension<OptionalPropertyMapOptionsExtension>();
+                var isRequired = optionalExtension is null ||
+                    (optionalExtension.Kind != PropertyElementKind.All && optionalExtension.Kind != PropertyElementKind.Header);
 
                 if (!isIndexed && isRequired)
                 {
@@ -141,7 +144,10 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
                 }
 
                 var propertyMap = propertyHeaders.GetMap(columnNumber);
-                var isRequired = !propertyMap.Options.HasExtension<OptionalValuePropertyMapOptionsExtension>();
+
+                var optionalExtension = propertyMap.Options.FindExtension<OptionalPropertyMapOptionsExtension>();
+                var isRequired = optionalExtension is null ||
+                    (optionalExtension.Kind != PropertyElementKind.All && optionalExtension.Kind != PropertyElementKind.Body);
 
                 var hasDefaultValue = _resourcePropertyDefaultValueResolver
                     .TryResolve(

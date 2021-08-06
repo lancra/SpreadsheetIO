@@ -3,6 +3,7 @@ using System.Linq;
 using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Mapping.Extensions;
 using LanceC.SpreadsheetIO.Reading;
+using LanceC.SpreadsheetIO.Reading.Internal;
 using LanceC.SpreadsheetIO.Shared;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
@@ -82,18 +83,28 @@ namespace LanceC.SpreadsheetIO.Mapping
         }
 
         /// <summary>
+        /// Marks the property as optional for reading.
+        /// </summary>
+        /// <param name="kind">The kind of property element.</param>
+        /// <returns>The resulting property map options builder.</returns>
+        public PropertyMapOptionsBuilder<TResource, TProperty> MarkAsOptional(PropertyElementKind kind = default!)
+            => WithOption(new OptionalPropertyMapOptionsExtension(kind ?? PropertyElementKind.All));
+
+        /// <summary>
         /// Marks the property map header as optional for reading.
         /// </summary>
         /// <returns>The resulting property map options builder.</returns>
+        [Obsolete("This method is obsolete. Use MarkElementAsOptional(PropertyElementKind.Header) instead.")]
         public PropertyMapOptionsBuilder<TResource, TProperty> MarkHeaderAsOptional()
-            => WithOption(new OptionalHeaderPropertyMapOptionsExtension());
+            => WithOption(new OptionalPropertyMapOptionsExtension(PropertyElementKind.Header));
 
         /// <summary>
         /// Marks the property map value as optional for reading.
         /// </summary>
         /// <returns>The resulting property map options builder.</returns>
+        [Obsolete("This method is obsolete. Use MarkElementAsOptional(PropertyElementKind.Body) instead.")]
         public PropertyMapOptionsBuilder<TResource, TProperty> MarkValueAsOptional()
-            => WithOption(new OptionalValuePropertyMapOptionsExtension());
+            => WithOption(new OptionalPropertyMapOptionsExtension(PropertyElementKind.Body));
 
         /// <summary>
         /// Specifies a style to use for the property header.

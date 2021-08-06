@@ -9,7 +9,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
 {
     public class ResourceMapFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private FakeModelMap CreateSystemUnderTest()
             => _mocker.CreateInstance<FakeModelMap>();
@@ -187,7 +187,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                sut.Map(model => model.Name, optionsAction => optionsAction.MarkHeaderAsOptional());
+                sut.Map(model => model.Name, optionsAction => optionsAction.MarkAsOptional());
 
                 // Assert
                 var propertyMap = Assert.Single(sut.Properties);
@@ -198,7 +198,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 Assert.Null(propertyMap.Key.Number);
                 Assert.False(propertyMap.Key.IsNameIgnored);
 
-                Assert.True(propertyMap.Options.HasExtension<OptionalHeaderPropertyMapOptionsExtension>());
+                Assert.True(propertyMap.Options.HasExtension<OptionalPropertyMapOptionsExtension>());
                 Assert.True(propertyMap.Options.IsFrozen);
             }
 
@@ -233,7 +233,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var exception = Record.Exception(() => sut.Map(model => true, optionsAction => optionsAction.MarkHeaderAsOptional()));
+                var exception = Record.Exception(() => sut.Map(model => true, optionsAction => optionsAction.MarkAsOptional()));
 
                 // Assert
                 Assert.NotNull(exception);
@@ -248,7 +248,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
 
                 // Act
                 var exception = Record.Exception(()
-                    => sut.Map(model => model.Field, optionsAction => optionsAction.MarkHeaderAsOptional()));
+                    => sut.Map(model => model.Field, optionsAction => optionsAction.MarkAsOptional()));
 
                 // Assert
                 Assert.NotNull(exception);
@@ -270,7 +270,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 sut.Map(
                     model => model.Name,
                     keyAction => keyAction.UseNumber(keyNumber),
-                    optionsAction => optionsAction.MarkHeaderAsOptional());
+                    optionsAction => optionsAction.MarkAsOptional());
 
                 // Assert
                 var propertyMap = Assert.Single(sut.Properties);
@@ -281,7 +281,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 Assert.Equal(keyNumber, propertyMap.Key.Number);
                 Assert.False(propertyMap.Key.IsNameIgnored);
 
-                Assert.True(propertyMap.Options.HasExtension<OptionalHeaderPropertyMapOptionsExtension>());
+                Assert.True(propertyMap.Options.HasExtension<OptionalPropertyMapOptionsExtension>());
                 Assert.True(propertyMap.Options.IsFrozen);
             }
 
@@ -321,7 +321,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                     => sut.Map(
                         model => true,
                         keyAction => keyAction.UseNumber(1U),
-                        optionsAction => optionsAction.MarkHeaderAsOptional()));
+                        optionsAction => optionsAction.MarkAsOptional()));
 
                 // Assert
                 Assert.NotNull(exception);
@@ -339,7 +339,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                     => sut.Map(
                         model => model.Field,
                         keyAction => keyAction.UseNumber(1U),
-                        optionsAction => optionsAction.MarkHeaderAsOptional()));
+                        optionsAction => optionsAction.MarkAsOptional()));
 
                 // Assert
                 Assert.NotNull(exception);

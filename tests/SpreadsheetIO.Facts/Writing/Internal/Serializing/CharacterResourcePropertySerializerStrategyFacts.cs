@@ -10,10 +10,27 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Serializing
 {
     public class CharacterResourcePropertySerializerStrategyFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private CharacterResourcePropertySerializerStrategy CreateSystemUnderTest()
             => _mocker.CreateInstance<CharacterResourcePropertySerializerStrategy>();
+
+        public class ThePropertyTypesProperty : CharacterResourcePropertySerializerStrategyFacts
+        {
+            [Fact]
+            public void ReturnsCharacterType()
+            {
+                // Arrange
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var propertyTypes = sut.PropertyTypes;
+
+                // Assert
+                var propertyType = Assert.Single(propertyTypes);
+                Assert.Equal(typeof(char), propertyType);
+            }
+        }
 
         public class TheSerializeMethod : CharacterResourcePropertySerializerStrategyFacts
         {

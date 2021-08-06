@@ -8,7 +8,7 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal.Indexers
 {
     public class StringIndexerFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private StringIndexer CreateSystemUnderTest()
             => _mocker.CreateInstance<StringIndexer>();

@@ -9,7 +9,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
 {
     public class BorderIndexerFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private BorderIndexer CreateSystemUnderTest()
             => _mocker.CreateInstance<BorderIndexer>();

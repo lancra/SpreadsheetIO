@@ -13,7 +13,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
 {
     public class ResourcePropertyParserFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private static Mock<IResourcePropertyParserStrategy> MockStrategy(Type propertyType)
         {

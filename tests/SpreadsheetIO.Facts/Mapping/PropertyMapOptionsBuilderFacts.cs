@@ -190,10 +190,14 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
                 // Act
+#pragma warning disable CS0618 // Type or member is obsolete
                 sut.MarkHeaderAsOptional();
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 // Assert
-                Assert.True(sut.Options.HasExtension<OptionalHeaderPropertyMapOptionsExtension>());
+                var extension = sut.Options.FindExtension<OptionalPropertyMapOptionsExtension>();
+                Assert.NotNull(extension);
+                Assert.Equal(PropertyElementKind.Header, extension!.Kind);
             }
         }
 
@@ -207,10 +211,14 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
                 // Act
+#pragma warning disable CS0618 // Type or member is obsolete
                 sut.MarkValueAsOptional();
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 // Assert
-                Assert.True(sut.Options.HasExtension<OptionalValuePropertyMapOptionsExtension>());
+                var extension = sut.Options.FindExtension<OptionalPropertyMapOptionsExtension>();
+                Assert.NotNull(extension);
+                Assert.Equal(PropertyElementKind.Body, extension!.Kind);
             }
         }
 

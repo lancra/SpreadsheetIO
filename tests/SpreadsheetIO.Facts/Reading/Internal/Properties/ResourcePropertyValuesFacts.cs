@@ -10,7 +10,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Properties
 {
     public class ResourcePropertyValuesFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private ResourcePropertyValues<FakeModel> CreateSystemUnderTest()
             => _mocker.CreateInstance<ResourcePropertyValues<FakeModel>>();

@@ -10,7 +10,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
 {
     public class ResourceCreatorFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private ResourceCreator CreateSystemUnderTest()
             => _mocker.CreateInstance<ResourceCreator>();

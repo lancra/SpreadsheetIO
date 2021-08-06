@@ -9,7 +9,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
 {
     public class FontIndexerFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private FontIndexer CreateSystemUnderTest()
             => _mocker.CreateInstance<FontIndexer>();

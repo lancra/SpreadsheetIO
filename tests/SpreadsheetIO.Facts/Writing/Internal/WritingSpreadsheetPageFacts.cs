@@ -14,10 +14,10 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
 {
     public class WritingSpreadsheetPageFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private static WritingCell DefaultCell
-            => new WritingCell(new WritingCellValue(default(string?)));
+            => new(new WritingCellValue(default(string?)));
 
         private WritingSpreadsheetPage CreateSystemUnderTest()
         {
@@ -58,6 +58,27 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
                 // Assert
                 _mocker.GetMock<IOpenXmlWriterWrapper>()
                     .Verify(writer => writer.WriteStartElement(It.IsAny<OpenXml.Spreadsheet.SheetData>()));
+            }
+        }
+
+        public class TheNameProperty : WritingSpreadsheetPageFacts
+        {
+            [Fact]
+            public void ReturnsWorksheetPartName()
+            {
+                // Arrange
+                var expectedName = "foo";
+                _mocker.GetMock<IWorksheetPartWrapper>()
+                    .SetupGet(worksheetPart => worksheetPart.Name)
+                    .Returns(expectedName);
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var actualName = sut.Name;
+
+                // Assert
+                Assert.Equal(expectedName, actualName);
             }
         }
 

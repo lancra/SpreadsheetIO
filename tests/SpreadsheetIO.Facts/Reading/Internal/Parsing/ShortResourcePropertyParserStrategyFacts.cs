@@ -8,7 +8,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
 {
     public class ShortResourcePropertyParserStrategyFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private ShortResourcePropertyParserStrategy CreateSystemUnderTest()
             => _mocker.CreateInstance<ShortResourcePropertyParserStrategy>();

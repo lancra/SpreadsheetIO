@@ -11,17 +11,17 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
 {
     public class StyleIndexerFacts
     {
-        private static readonly IndexerKey Key = new IndexerKey("Style", IndexerKeyKind.Custom);
+        private static readonly IndexerKey Key = new("Style", IndexerKeyKind.Custom);
 
         private static readonly Style Style =
-            new Style(
+            new(
                 new Border(new BorderLine(Color.White, BorderLineKind.Thick)),
                 new Fill(FillKind.Solid, Color.Black),
                 new Font("Arial", 20D, Color.White, true, true),
                 new NumericFormat("#,##0.0000"),
                 new Alignment(HorizontalAlignmentKind.Right, VerticalAlignmentKind.Top));
 
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private StyleIndexer CreateSystemUnderTest()
             => _mocker.CreateInstance<StyleIndexer>();

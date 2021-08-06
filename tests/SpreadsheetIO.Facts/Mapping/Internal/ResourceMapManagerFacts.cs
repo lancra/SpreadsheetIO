@@ -10,7 +10,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping.Internal
 {
     public class ResourceMapManagerFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private ResourceMapManager CreateSystemUnderTest()
             => _mocker.CreateInstance<ResourceMapManager>();

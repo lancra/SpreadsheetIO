@@ -13,7 +13,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
 {
     public class WorksheetElementReaderFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private WorksheetElementReader CreateSystemUnderTest()
             => _mocker.CreateInstance<WorksheetElementReader>();

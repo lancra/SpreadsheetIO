@@ -13,7 +13,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
 {
     public class ResourcePropertyDefaultValueResolverFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private ResourcePropertyDefaultValueResolver CreateSystemUnderTest()
             => _mocker.CreateInstance<ResourcePropertyDefaultValueResolver>();
