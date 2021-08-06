@@ -11,7 +11,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
 {
     public class DateTimeResourcePropertyParserStrategyFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private DateTimeResourcePropertyParserStrategy CreateSystemUnderTest()
             => _mocker.CreateInstance<DateTimeResourcePropertyParserStrategy>();

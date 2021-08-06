@@ -13,7 +13,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Serializing
 {
     public class ResourcePropertySerializerFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private static Mock<IResourcePropertySerializerStrategy> MockStrategy(params Type[] propertyTypes)
         {

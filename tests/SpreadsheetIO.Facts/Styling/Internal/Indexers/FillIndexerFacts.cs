@@ -9,7 +9,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
 {
     public class FillIndexerFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private FillIndexer CreateSystemUnderTest()
             => _mocker.CreateInstance<FillIndexer>();

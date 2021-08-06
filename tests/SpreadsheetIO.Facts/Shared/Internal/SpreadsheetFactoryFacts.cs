@@ -20,7 +20,7 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal
 {
     public class SpreadsheetFactoryFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private SpreadsheetFactory CreateSystemUnderTest()
             => _mocker.CreateInstance<SpreadsheetFactory>();

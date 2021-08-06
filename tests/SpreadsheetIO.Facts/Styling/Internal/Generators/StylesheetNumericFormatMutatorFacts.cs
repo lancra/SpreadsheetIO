@@ -10,7 +10,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 {
     public class StylesheetNumericFormatMutatorFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private StylesheetNumericFormatMutator CreateSystemUnderTest()
             => _mocker.CreateInstance<StylesheetNumericFormatMutator>();

@@ -11,7 +11,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 {
     public class StylesheetFontMutatorFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private StylesheetFontMutator CreateSystemUnderTest()
             => _mocker.CreateInstance<StylesheetFontMutator>();

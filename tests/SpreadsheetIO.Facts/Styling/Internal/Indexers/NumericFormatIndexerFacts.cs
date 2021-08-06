@@ -8,7 +8,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
 {
     public class NumericFormatIndexerFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private NumericFormatIndexer CreateSystemUnderTest()
             => _mocker.CreateInstance<NumericFormatIndexer>();

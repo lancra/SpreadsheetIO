@@ -12,10 +12,27 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Serializing
 {
     public class DateTimeResourcePropertySerializerStrategyFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private DateTimeResourcePropertySerializerStrategy CreateSystemUnderTest()
             => _mocker.CreateInstance<DateTimeResourcePropertySerializerStrategy>();
+
+        public class ThePropertyTypesProperty : DateTimeResourcePropertySerializerStrategyFacts
+        {
+            [Fact]
+            public void ReturnsDateTimeType()
+            {
+                // Arrange
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var propertyTypes = sut.PropertyTypes;
+
+                // Assert
+                var propertyType = Assert.Single(propertyTypes);
+                Assert.Equal(typeof(DateTime), propertyType);
+            }
+        }
 
         public class TheSerializeMethod : DateTimeResourcePropertySerializerStrategyFacts
         {

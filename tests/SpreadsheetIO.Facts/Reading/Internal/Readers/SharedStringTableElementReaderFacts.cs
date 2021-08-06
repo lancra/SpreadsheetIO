@@ -10,7 +10,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
 {
     public class SharedStringTableElementReaderFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private SharedStringTableElementReader CreateSystemUnderTest()
             => _mocker.CreateInstance<SharedStringTableElementReader>();

@@ -10,7 +10,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 {
     public class StylesheetGeneratorFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private StylesheetGenerator CreateSystemUnderTest()
             => _mocker.CreateInstance<StylesheetGenerator>();

@@ -11,7 +11,7 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal.Generators
 {
     public class SharedStringTableGeneratorFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private SharedStringTableGenerator CreateSystemUnderTest()
             => _mocker.CreateInstance<SharedStringTableGenerator>();

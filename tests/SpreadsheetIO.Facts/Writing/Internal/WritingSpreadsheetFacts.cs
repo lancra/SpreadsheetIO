@@ -20,7 +20,7 @@ namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
 {
     public class WritingSpreadsheetFacts
     {
-        private readonly AutoMocker _mocker = new AutoMocker();
+        private readonly AutoMocker _mocker = new();
 
         private WritingSpreadsheet CreateSystemUnderTest()
         {
