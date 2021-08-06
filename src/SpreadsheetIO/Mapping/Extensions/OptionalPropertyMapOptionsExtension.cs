@@ -5,8 +5,15 @@ using System.Diagnostics.CodeAnalysis;
 namespace LanceC.SpreadsheetIO.Mapping.Extensions
 {
     [ExcludeFromCodeCoverage]
-    internal class OptionalValuePropertyMapOptionsExtension : IPropertyMapOptionsExtension
+    internal class OptionalPropertyMapOptionsExtension : IPropertyMapOptionsExtension
     {
+        public OptionalPropertyMapOptionsExtension(PropertyElementKind kind)
+        {
+            Kind = kind;
+        }
+
         public IReadOnlyCollection<Type> AllowedTypes { get; } = Array.Empty<Type>();
+
+        public PropertyElementKind Kind { get; }
     }
 }

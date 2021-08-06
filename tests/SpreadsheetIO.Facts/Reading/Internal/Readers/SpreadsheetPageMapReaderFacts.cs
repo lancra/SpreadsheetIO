@@ -252,7 +252,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
 
                 var map = new FakeModelMap()
                     .Map(model => model.Id)
-                    .Map(model => model.Name, optionsAction => optionsAction.MarkHeaderAsOptional());
+                    .Map(model => model.Name, optionsAction => optionsAction.MarkAsOptional());
 
                 var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
                 var namePropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Name));
@@ -637,7 +637,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
                 object? idValue = 1;
 
                 var map = new FakeModelMap()
-                    .Map(model => model.Id, optionsAction => optionsAction.MarkValueAsOptional());
+                    .Map(model => model.Id, optionsAction => optionsAction.MarkAsOptional());
 
                 var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
 
