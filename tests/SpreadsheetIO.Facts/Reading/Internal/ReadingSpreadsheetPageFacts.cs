@@ -85,20 +85,20 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var firstBodyRowResult = new BodyRowReadingResult<FakeModel>(
+                var firstResourceResult = new ResourceReadingResult<FakeModel>(
                     default,
                     new ResourceReadingFailure(
                         2U,
                         Array.Empty<MissingResourcePropertyReadingFailure>(),
                         Array.Empty<InvalidResourcePropertyReadingFailure>()));
-                var secondBodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
+                var secondResourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
                 spreadsheetPageMapReaderMock
                     .SetupSequence(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
                         worksheetReaderMock.Object,
                         map,
                         headersMock.Object))
-                    .Returns(firstBodyRowResult)
-                    .Returns(secondBodyRowResult);
+                    .Returns(firstResourceResult)
+                    .Returns(secondResourceResult);
 
                 var sut = CreateSystemUnderTest();
 
@@ -109,7 +109,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                 Assert.Empty(result.Resources);
                 Assert.Null(result.HeaderFailure);
                 var resourceFailure = Assert.Single(result.ResourceFailures);
-                Assert.Equal(firstBodyRowResult.Failure, resourceFailure);
+                Assert.Equal(firstResourceResult.Failure, resourceFailure);
             }
 
             [Fact]
@@ -139,20 +139,20 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var firstBodyRowResult = new BodyRowReadingResult<FakeModel>(
+                var firstResourceResult = new ResourceReadingResult<FakeModel>(
                     default,
                     new ResourceReadingFailure(
                         2U,
                         Array.Empty<MissingResourcePropertyReadingFailure>(),
                         Array.Empty<InvalidResourcePropertyReadingFailure>()));
-                var secondBodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
+                var secondResourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
                 spreadsheetPageMapReaderMock
                     .SetupSequence(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
                         worksheetReaderMock.Object,
                         map,
                         headersMock.Object))
-                    .Returns(firstBodyRowResult)
-                    .Returns(secondBodyRowResult);
+                    .Returns(firstResourceResult)
+                    .Returns(secondResourceResult);
 
                 var sut = CreateSystemUnderTest();
 
@@ -161,10 +161,10 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
 
                 // Assert
                 var resource = Assert.Single(result.Resources);
-                Assert.Equal(secondBodyRowResult.NumberedResource, resource);
+                Assert.Equal(secondResourceResult.NumberedResource, resource);
                 Assert.Null(result.HeaderFailure);
                 var resourceFailure = Assert.Single(result.ResourceFailures);
-                Assert.Equal(firstBodyRowResult.Failure, resourceFailure);
+                Assert.Equal(firstResourceResult.Failure, resourceFailure);
             }
 
             [Fact]
@@ -193,13 +193,13 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var bodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
+                var resourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
                 spreadsheetPageMapReaderMock
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
                         worksheetReaderMock.Object,
                         map,
                         headersMock.Object))
-                    .Returns(bodyRowResult);
+                    .Returns(resourceResult);
 
                 var sut = CreateSystemUnderTest();
 
@@ -208,7 +208,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
 
                 // Assert
                 var resource = Assert.Single(result.Resources);
-                Assert.Equal(bodyRowResult.NumberedResource, resource);
+                Assert.Equal(resourceResult.NumberedResource, resource);
                 Assert.Null(result.HeaderFailure);
                 Assert.Empty(result.ResourceFailures);
             }
@@ -279,20 +279,20 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var firstBodyRowResult = new BodyRowReadingResult<FakeModel>(
+                var firstResourceResult = new ResourceReadingResult<FakeModel>(
                     default,
                     new ResourceReadingFailure(
                         2U,
                         Array.Empty<MissingResourcePropertyReadingFailure>(),
                         Array.Empty<InvalidResourcePropertyReadingFailure>()));
-                var secondBodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
+                var secondResourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
                 spreadsheetPageMapReaderMock
                     .SetupSequence(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
                         worksheetReaderMock.Object,
                         map,
                         headersMock.Object))
-                    .Returns(firstBodyRowResult)
-                    .Returns(secondBodyRowResult);
+                    .Returns(firstResourceResult)
+                    .Returns(secondResourceResult);
 
                 var sut = CreateSystemUnderTest();
 
@@ -303,7 +303,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                 Assert.Empty(result.Resources);
                 Assert.Null(result.HeaderFailure);
                 var resourceFailure = Assert.Single(result.ResourceFailures);
-                Assert.Equal(firstBodyRowResult.Failure, resourceFailure);
+                Assert.Equal(firstResourceResult.Failure, resourceFailure);
             }
 
             [Fact]
@@ -333,20 +333,20 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var firstBodyRowResult = new BodyRowReadingResult<FakeModel>(
+                var firstResourceResult = new ResourceReadingResult<FakeModel>(
                     default,
                     new ResourceReadingFailure(
                         2U,
                         Array.Empty<MissingResourcePropertyReadingFailure>(),
                         Array.Empty<InvalidResourcePropertyReadingFailure>()));
-                var secondBodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
+                var secondResourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
                 spreadsheetPageMapReaderMock
                     .SetupSequence(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
                         worksheetReaderMock.Object,
                         map,
                         headersMock.Object))
-                    .Returns(firstBodyRowResult)
-                    .Returns(secondBodyRowResult);
+                    .Returns(firstResourceResult)
+                    .Returns(secondResourceResult);
 
                 var sut = CreateSystemUnderTest();
 
@@ -355,10 +355,10 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
 
                 // Assert
                 var resource = Assert.Single(result.Resources);
-                Assert.Equal(secondBodyRowResult.NumberedResource, resource);
+                Assert.Equal(secondResourceResult.NumberedResource, resource);
                 Assert.Null(result.HeaderFailure);
                 var resourceFailure = Assert.Single(result.ResourceFailures);
-                Assert.Equal(firstBodyRowResult.Failure, resourceFailure);
+                Assert.Equal(firstResourceResult.Failure, resourceFailure);
             }
 
             [Fact]
@@ -387,13 +387,13 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var bodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
+                var resourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
                 spreadsheetPageMapReaderMock
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
                         worksheetReaderMock.Object,
                         map,
                         headersMock.Object))
-                    .Returns(bodyRowResult);
+                    .Returns(resourceResult);
 
                 var sut = CreateSystemUnderTest();
 
@@ -402,7 +402,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
 
                 // Assert
                 var resource = Assert.Single(result.Resources);
-                Assert.Equal(bodyRowResult.NumberedResource, resource);
+                Assert.Equal(resourceResult.NumberedResource, resource);
                 Assert.Null(result.HeaderFailure);
                 Assert.Empty(result.ResourceFailures);
             }

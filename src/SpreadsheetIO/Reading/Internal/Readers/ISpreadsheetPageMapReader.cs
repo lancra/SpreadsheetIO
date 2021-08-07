@@ -25,8 +25,8 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
         /// <param name="reader">The worksheet element reader.</param>
         /// <param name="map">The resource map.</param>
         /// <param name="propertyHeaders">The headers for the resource properties.</param>
-        /// <returns>The body row reading result.</returns>
-        BodyRowReadingResult<TResource> ReadBodyRow<TResource>(
+        /// <returns>The resource reading result.</returns>
+        ResourceReadingResult<TResource> ReadBodyRow<TResource>(
             IWorksheetElementReader reader,
             ResourceMap<TResource> map,
             IResourcePropertyHeaders<TResource> propertyHeaders)

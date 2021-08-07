@@ -97,7 +97,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
             return headerRowResult;
         }
 
-        public BodyRowReadingResult<TResource> ReadBodyRow<TResource>(
+        public ResourceReadingResult<TResource> ReadBodyRow<TResource>(
             IWorksheetElementReader reader,
             ResourceMap<TResource> map,
             IResourcePropertyHeaders<TResource> propertyHeaders)
@@ -177,8 +177,8 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
                 resourceFailure = new ResourceReadingFailure(rowNumber, missingPropertyFailures, invalidPropertyFailures);
             }
 
-            var bodyRowResult = new BodyRowReadingResult<TResource>(resource, resourceFailure);
-            return bodyRowResult;
+            var resourceResult = new ResourceReadingResult<TResource>(resource, resourceFailure);
+            return resourceResult;
         }
     }
 }
