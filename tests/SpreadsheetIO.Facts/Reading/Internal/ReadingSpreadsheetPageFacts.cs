@@ -20,7 +20,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
         private ReadingSpreadsheetPage CreateSystemUnderTest()
             => _mocker.CreateInstance<ReadingSpreadsheetPage>();
 
-        public class TheReadMethodWithResourceGenericParameter : ReadingSpreadsheetPageFacts
+        public class TheReadAllMethodWithResourceGenericParameter : ReadingSpreadsheetPageFacts
         {
             [Fact]
             public void ReturnsNoResourcesWhenHeaderRowReadingFailureIsSet()
@@ -50,7 +50,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel>();
+                var result = sut.ReadAll<FakeModel>();
 
                 // Assert
                 Assert.Empty(result.Resources);
@@ -103,7 +103,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel>();
+                var result = sut.ReadAll<FakeModel>();
 
                 // Assert
                 Assert.Empty(result.Resources);
@@ -157,7 +157,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel>();
+                var result = sut.ReadAll<FakeModel>();
 
                 // Assert
                 var resource = Assert.Single(result.Resources);
@@ -204,7 +204,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel>();
+                var result = sut.ReadAll<FakeModel>();
 
                 // Assert
                 var resource = Assert.Single(result.Resources);
@@ -214,7 +214,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
             }
         }
 
-        public class TheReadMethodWithResourceAndResourceMapGenericParameters : ReadingSpreadsheetPageFacts
+        public class TheReadAllMethodWithResourceAndResourceMapGenericParameters : ReadingSpreadsheetPageFacts
         {
             [Fact]
             public void ReturnsNoResourcesWhenHeaderRowReadingFailureIsSet()
@@ -244,7 +244,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel, FakeModelMap>();
+                var result = sut.ReadAll<FakeModel, FakeModelMap>();
 
                 // Assert
                 Assert.Empty(result.Resources);
@@ -297,7 +297,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel, FakeModelMap>();
+                var result = sut.ReadAll<FakeModel, FakeModelMap>();
 
                 // Assert
                 Assert.Empty(result.Resources);
@@ -351,7 +351,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel, FakeModelMap>();
+                var result = sut.ReadAll<FakeModel, FakeModelMap>();
 
                 // Assert
                 var resource = Assert.Single(result.Resources);
@@ -398,7 +398,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel, FakeModelMap>();
+                var result = sut.ReadAll<FakeModel, FakeModelMap>();
 
                 // Assert
                 var resource = Assert.Single(result.Resources);

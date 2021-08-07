@@ -28,24 +28,24 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
             _spreadsheetPageMapReader = spreadsheetPageMapReader;
         }
 
-        public ReadingResult<TResource> Read<TResource>()
+        public ReadingResult<TResource> ReadAll<TResource>()
             where TResource : class
         {
             var map = _resourceMapManager.Single<TResource>();
-            var result = ReadImpl(map);
+            var result = ReadAllImpl(map);
             return result;
         }
 
-        public ReadingResult<TResource> Read<TResource, TResourceMap>()
+        public ReadingResult<TResource> ReadAll<TResource, TResourceMap>()
             where TResource : class
             where TResourceMap : ResourceMap<TResource>
         {
             var map = _resourceMapManager.Single<TResource, TResourceMap>();
-            var result = ReadImpl(map);
+            var result = ReadAllImpl(map);
             return result;
         }
 
-        private ReadingResult<TResource> ReadImpl<TResource>(ResourceMap<TResource> map)
+        private ReadingResult<TResource> ReadAllImpl<TResource>(ResourceMap<TResource> map)
             where TResource : class
         {
             using var worksheetReader = _elementReaderFactory.CreateWorksheetReader(_worksheetPart);
