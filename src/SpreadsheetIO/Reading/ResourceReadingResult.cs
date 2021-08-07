@@ -14,6 +14,13 @@ namespace LanceC.SpreadsheetIO.Reading
         where TResource : class
     {
         /// <summary>
+        /// Gets the resource reading result kind.
+        /// </summary>
+        public ResourceReadingResultKind Kind { get; } = Failure is null
+            ? ResourceReadingResultKind.Success
+            : ResourceReadingResultKind.Failure;
+
+        /// <summary>
         /// Gets the resource read from the spreadsheet or <c>null</c> if a failure was encountered.
         /// </summary>
         public NumberedResource<TResource>? NumberedResource { get; init; } = NumberedResource;
