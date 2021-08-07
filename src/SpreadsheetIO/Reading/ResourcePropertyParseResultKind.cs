@@ -1,11 +1,11 @@
-using LanceC.SpreadsheetIO.Shared;
+using Ardalis.SmartEnum;
 
 namespace LanceC.SpreadsheetIO.Reading
 {
     /// <summary>
     /// Represents the kind of value parsed for a resource property.
     /// </summary>
-    public class ResourcePropertyParseResultKind : Enumeration
+    public class ResourcePropertyParseResultKind : SmartEnum<ResourcePropertyParseResultKind>
     {
         /// <summary>
         /// Specifies that no value is present and the resource property type supports this.
@@ -28,7 +28,7 @@ namespace LanceC.SpreadsheetIO.Reading
         public static readonly ResourcePropertyParseResultKind Success = new(4, "Success", true);
 
         private ResourcePropertyParseResultKind(int id, string name, bool valid)
-            : base(id, name)
+            : base(name, id)
         {
             Valid = valid;
         }

@@ -156,9 +156,6 @@
   <data name="InvalidElementForValue" xml:space="preserve">
     <value>Cannot retrieve {value} from the unrecognized element type.</value>
   </data>
-  <data name="InvalidEnumerationValue" xml:space="preserve">
-    <value>'{value}' is not a valid {description} in {enumerationType}.</value>
-  </data>
   <data name="InvalidExcelStyleSetup" xml:space="preserve">
     <value>The {styleName} Excel style has not been set up with an identifier. Please contact the package maintainer.</value>
   </data>
@@ -209,8 +206,5 @@
   </data>
   <data name="UnindexedResourceForKey" xml:space="preserve">
     <value>No resource is indexed for {key}.</value>
-  </data>
-  <data name="UnsupportedEnumerationType" xml:space="preserve">
-    <value>{enumerationType} is not an Enumeration type.</value>
   </data>
 </root>

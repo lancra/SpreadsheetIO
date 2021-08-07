@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using LanceC.SpreadsheetIO.Shared;
+using Ardalis.SmartEnum;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace LanceC.SpreadsheetIO.Styling
@@ -8,7 +8,7 @@ namespace LanceC.SpreadsheetIO.Styling
     /// Represents the kind of horizontal alignment for cell content.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class HorizontalAlignmentKind : Enumeration
+    public class HorizontalAlignmentKind : SmartEnum<HorizontalAlignmentKind>
     {
         /// <summary>
         /// Specifies a general horizontal alignment.
@@ -60,7 +60,7 @@ namespace LanceC.SpreadsheetIO.Styling
             new(8, "Justify Distributed", OpenXml.HorizontalAlignmentValues.Distributed);
 
         private HorizontalAlignmentKind(int id, string name, OpenXml.HorizontalAlignmentValues openXmlValue, bool isDefault = false)
-            : base(id, name)
+            : base(name, id)
         {
             OpenXmlValue = openXmlValue;
             IsDefault = isDefault;

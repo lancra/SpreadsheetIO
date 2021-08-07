@@ -108,14 +108,6 @@ namespace LanceC.SpreadsheetIO.Properties
                 value);
 
         /// <summary>
-        /// '{value}' is not a valid {description} in {enumerationType}.
-        /// </summary>
-        public static string InvalidEnumerationValue(object? value, object? description, object? enumerationType)
-            => string.Format(
-                GetString("InvalidEnumerationValue", nameof(value), nameof(description), nameof(enumerationType)),
-                value, description, enumerationType);
-
-        /// <summary>
         /// The {styleName} Excel style has not been set up with an identifier. Please contact the package maintainer.
         /// </summary>
         public static string InvalidExcelStyleSetup(object? styleName)
@@ -242,14 +234,6 @@ namespace LanceC.SpreadsheetIO.Properties
             => string.Format(
                 GetString("UnindexedResourceForKey", nameof(key)),
                 key);
-
-        /// <summary>
-        /// {enumerationType} is not an Enumeration type.
-        /// </summary>
-        public static string UnsupportedEnumerationType(object? enumerationType)
-            => string.Format(
-                GetString("UnsupportedEnumerationType", nameof(enumerationType)),
-                enumerationType);
 
         private static string GetString(string name, params string[] formatterNames)
         {

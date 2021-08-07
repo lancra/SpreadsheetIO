@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using LanceC.SpreadsheetIO.Shared;
+using Ardalis.SmartEnum;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace LanceC.SpreadsheetIO.Styling
@@ -8,7 +8,7 @@ namespace LanceC.SpreadsheetIO.Styling
     /// Represents the kind of vertical alignment for cell content.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class VerticalAlignmentKind : Enumeration
+    public class VerticalAlignmentKind : SmartEnum<VerticalAlignmentKind>
     {
         /// <summary>
         /// Specifies a top vertical alignment.
@@ -37,7 +37,7 @@ namespace LanceC.SpreadsheetIO.Styling
         public static readonly VerticalAlignmentKind Distributed = new(5, "Distributed", OpenXml.VerticalAlignmentValues.Distributed);
 
         private VerticalAlignmentKind(int id, string name, OpenXml.VerticalAlignmentValues openXmlValue, bool isDefault = false)
-            : base(id, name)
+            : base(name, id)
         {
             OpenXmlValue = openXmlValue;
             IsDefault = isDefault;

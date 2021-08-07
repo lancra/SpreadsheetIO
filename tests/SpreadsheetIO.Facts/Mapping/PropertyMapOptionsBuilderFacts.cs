@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Ardalis.SmartEnum;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Mapping.Extensions;
@@ -83,7 +84,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 var extension = sut.Options.FindExtension<DefaultValuePropertyMapOptionsExtension>();
                 Assert.NotNull(extension);
                 Assert.Equal(value, extension!.Value);
-                Assert.Equal(Enumeration.GetAll<ResourcePropertyDefaultReadingResolution>().Count, extension.Resolutions.Count);
+                Assert.Equal(SmartEnum<ResourcePropertyDefaultReadingResolution>.List.Count, extension.Resolutions.Count);
             }
 
             [Fact]

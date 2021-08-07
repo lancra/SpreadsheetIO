@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using LanceC.SpreadsheetIO.Shared;
+using Ardalis.SmartEnum;
 
 namespace LanceC.SpreadsheetIO.Styling
 {
@@ -7,7 +7,7 @@ namespace LanceC.SpreadsheetIO.Styling
     /// Represents the kind of numeric format for negative numbers.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class NegativeNumericFormatKind : Enumeration
+    public class NegativeNumericFormatKind : SmartEnum<NegativeNumericFormatKind>
     {
         /// <summary>
         /// Specifies that negative numbers will be prefixed by a hyphen.
@@ -31,7 +31,7 @@ namespace LanceC.SpreadsheetIO.Styling
             new(4, "Red Parentheses", hasColor: true, hasParentheses: true);
 
         private NegativeNumericFormatKind(int id, string name, bool hasColor = false, bool hasParentheses = false)
-            : base(id, name)
+            : base(name, id)
         {
             HasColor = hasColor;
             HasParentheses = hasParentheses;

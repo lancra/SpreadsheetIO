@@ -29,6 +29,7 @@ Use record types for reading results to allow for easier mocking in consumer cod
 
   <ItemGroup>
     <PackageReference Include="Ardalis.GuardClauses" Version="3.0.0" />
+    <PackageReference Include="Ardalis.SmartEnum" Version="2.0.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.12.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
   </ItemGroup>
