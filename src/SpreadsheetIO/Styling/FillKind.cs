@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using Ardalis.SmartEnum;
 using DocumentFormat.OpenXml.Spreadsheet;
-using LanceC.SpreadsheetIO.Shared;
 
 namespace LanceC.SpreadsheetIO.Styling
 {
@@ -8,22 +8,22 @@ namespace LanceC.SpreadsheetIO.Styling
     /// Represents the kind of fill.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class FillKind : Enumeration
+    public class FillKind : SmartEnum<FillKind>
     {
         /// <summary>
         /// Specifies a blank fill.
         /// </summary>
-        public static readonly FillKind None = new FillKind(0, "None", PatternValues.None);
+        public static readonly FillKind None = new(0, "None", PatternValues.None);
 
         /// <summary>
         /// Specifies a solid fill.
         /// </summary>
-        public static readonly FillKind Solid = new FillKind(1, "Solid", PatternValues.Solid);
+        public static readonly FillKind Solid = new(1, "Solid", PatternValues.Solid);
 
-        internal static readonly FillKind Gray125 = new FillKind(-1, "Gray125", PatternValues.Gray125);
+        internal static readonly FillKind Gray125 = new(-1, "Gray125", PatternValues.Gray125);
 
         private FillKind(int id, string name, PatternValues openXmlValue)
-            : base(id, name)
+            : base(name, id)
         {
             OpenXmlValue = openXmlValue;
         }

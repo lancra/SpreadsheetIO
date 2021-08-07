@@ -1,6 +1,8 @@
+using Ardalis.SmartEnum;
+
 namespace LanceC.SpreadsheetIO.Shared.Internal
 {
-    internal class CellValueKind : Enumeration
+    internal class CellValueKind : SmartEnum<CellValueKind>
     {
         public static readonly CellValueKind Boolean = new(1, "Boolean", "b");
 
@@ -13,7 +15,7 @@ namespace LanceC.SpreadsheetIO.Shared.Internal
         public static readonly CellValueKind InlineString = new(5, "Inline String", "inlineStr");
 
         private CellValueKind(int id, string name, string xmlName)
-            : base(id, name)
+            : base(name, id)
         {
             XmlName = xmlName;
         }

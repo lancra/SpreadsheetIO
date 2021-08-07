@@ -1,11 +1,11 @@
-using LanceC.SpreadsheetIO.Shared;
+using Ardalis.SmartEnum;
 
 namespace LanceC.SpreadsheetIO.Reading
 {
     /// <summary>
     /// Represents the scenario in which a default property should be used in place of a parsed value.
     /// </summary>
-    public class ResourcePropertyDefaultReadingResolution : Enumeration
+    public class ResourcePropertyDefaultReadingResolution : SmartEnum<ResourcePropertyDefaultReadingResolution>
     {
         /// <summary>
         /// Specifies that the default value should be used for an <see cref="ResourcePropertyParseResultKind.Empty"/> parse result.
@@ -25,7 +25,7 @@ namespace LanceC.SpreadsheetIO.Reading
             new(3, "Invalid", ResourcePropertyParseResultKind.Invalid);
 
         private ResourcePropertyDefaultReadingResolution(int id, string name, ResourcePropertyParseResultKind parseResultKind)
-            : base(id, name)
+            : base(name, id)
         {
             ParseResultKind = parseResultKind;
         }

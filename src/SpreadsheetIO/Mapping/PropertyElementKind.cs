@@ -1,11 +1,11 @@
-using LanceC.SpreadsheetIO.Shared;
+using Ardalis.SmartEnum;
 
 namespace LanceC.SpreadsheetIO.Mapping
 {
     /// <summary>
     /// Represents the kind of element within a property.
     /// </summary>
-    public class PropertyElementKind : Enumeration
+    public class PropertyElementKind : SmartEnum<PropertyElementKind>
     {
         /// <summary>
         /// Specifies all property elements.
@@ -23,7 +23,7 @@ namespace LanceC.SpreadsheetIO.Mapping
         public static readonly PropertyElementKind Body = new(3, "Body");
 
         private PropertyElementKind(int id, string name)
-            : base(id, name)
+            : base(name, id)
         {
         }
     }

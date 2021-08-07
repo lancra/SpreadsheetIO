@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using LanceC.SpreadsheetIO.Shared;
+using Ardalis.SmartEnum;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 
 namespace LanceC.SpreadsheetIO.Styling
@@ -8,7 +8,7 @@ namespace LanceC.SpreadsheetIO.Styling
     /// Represents a style that is built-in to this package.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class BuiltInPackageStyle : Enumeration
+    public class BuiltInPackageStyle : SmartEnum<BuiltInPackageStyle>
     {
         /// <summary>
         /// Specifies the bold style.
@@ -25,7 +25,7 @@ namespace LanceC.SpreadsheetIO.Styling
                     Alignment.Default));
 
         private BuiltInPackageStyle(int id, string name, Style style)
-            : base(id, name)
+            : base(name, id)
         {
             Style = style;
         }

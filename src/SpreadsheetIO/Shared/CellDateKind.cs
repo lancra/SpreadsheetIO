@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Ardalis.SmartEnum;
 
 namespace LanceC.SpreadsheetIO.Shared
 {
@@ -6,20 +7,20 @@ namespace LanceC.SpreadsheetIO.Shared
     /// Represents the kind of cell date.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class CellDateKind : Enumeration
+    public class CellDateKind : SmartEnum<CellDateKind>
     {
         /// <summary>
         /// Specifies a date written as a number with a format required for readability.
         /// </summary>
-        public static readonly CellDateKind Number = new CellDateKind(1, "Number");
+        public static readonly CellDateKind Number = new(1, "Number");
 
         /// <summary>
         /// Specifies a date written as text where formatting cannot be modified.
         /// </summary>
-        public static readonly CellDateKind Text = new CellDateKind(2, "Text");
+        public static readonly CellDateKind Text = new(2, "Text");
 
         private CellDateKind(int id, string name)
-            : base(id, name)
+            : base(name, id)
         {
         }
     }

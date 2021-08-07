@@ -1,6 +1,8 @@
+using Ardalis.SmartEnum;
+
 namespace LanceC.SpreadsheetIO.Shared.Internal
 {
-    internal class ElementAttributeKind : Enumeration
+    internal class ElementAttributeKind : SmartEnum<ElementAttributeKind>
     {
         public static readonly ElementAttributeKind RowNumber = new(1, "Row Number", "r");
 
@@ -9,7 +11,7 @@ namespace LanceC.SpreadsheetIO.Shared.Internal
         public static readonly ElementAttributeKind CellValueType = new(3, "Cell Value Type", "t");
 
         private ElementAttributeKind(int id, string name, string localName)
-            : base(id, name)
+            : base(name, id)
         {
             LocalName = localName;
         }

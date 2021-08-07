@@ -1,10 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
-using LanceC.SpreadsheetIO.Shared;
+using Ardalis.SmartEnum;
 
 namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
 {
     [ExcludeFromCodeCoverage]
-    internal class IndexerKeyKind : Enumeration
+    internal class IndexerKeyKind : SmartEnum<IndexerKeyKind>
     {
         public static readonly IndexerKeyKind Excel = new IndexerKeyKind(1, "Excel");
 
@@ -13,7 +13,7 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
         public static readonly IndexerKeyKind Custom = new IndexerKeyKind(3, "Custom");
 
         private IndexerKeyKind(int id, string name)
-            : base(id, name)
+            : base(name, id)
         {
         }
     }

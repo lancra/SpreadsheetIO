@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using LanceC.SpreadsheetIO.Shared;
+using Ardalis.SmartEnum;
 using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 
@@ -10,7 +10,7 @@ namespace LanceC.SpreadsheetIO.Styling
     /// Represents a style that is built-in to Excel.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class BuiltInExcelStyle : Enumeration
+    public class BuiltInExcelStyle : SmartEnum<BuiltInExcelStyle>
     {
         /// <summary>
         /// Specifies the normal style.
@@ -191,7 +191,7 @@ namespace LanceC.SpreadsheetIO.Styling
                     11));
 
         private BuiltInExcelStyle(int id, string name, Style style)
-            : base(id, name)
+            : base(name, id)
         {
             Style = style;
         }

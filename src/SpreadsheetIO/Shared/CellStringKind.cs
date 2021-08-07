@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Ardalis.SmartEnum;
 using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace LanceC.SpreadsheetIO.Shared
@@ -7,20 +8,20 @@ namespace LanceC.SpreadsheetIO.Shared
     /// Represents the kind of cell string.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class CellStringKind : Enumeration
+    public class CellStringKind : SmartEnum<CellStringKind>
     {
         /// <summary>
         /// Specifies a string shared between cells in a spreadsheet.
         /// </summary>
-        public static readonly CellStringKind SharedString = new CellStringKind(1, "Shared String", CellValues.SharedString);
+        public static readonly CellStringKind SharedString = new(1, "Shared String", CellValues.SharedString);
 
         /// <summary>
         /// Specifies a string written directly to a cell.
         /// </summary>
-        public static readonly CellStringKind InlineString = new CellStringKind(2, "Inline String", CellValues.InlineString);
+        public static readonly CellStringKind InlineString = new(2, "Inline String", CellValues.InlineString);
 
         private CellStringKind(int id, string name, CellValues openXmlValue)
-            : base(id, name)
+            : base(name, id)
         {
             OpenXmlValue = openXmlValue;
         }

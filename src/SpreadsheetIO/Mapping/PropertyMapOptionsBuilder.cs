@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Ardalis.GuardClauses;
+using Ardalis.SmartEnum;
 using LanceC.SpreadsheetIO.Mapping.Extensions;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
@@ -58,7 +59,7 @@ namespace LanceC.SpreadsheetIO.Mapping
         public PropertyMapOptionsBuilder<TResource, TProperty> HasDefault(TProperty value)
         {
             var resolutionsExtension = _resourceOptions.FindExtension<DefaultPropertyReadingResolutionsResourceMapOptionsExtension>();
-            var resolutions = resolutionsExtension?.Resolutions ?? Enumeration.GetAll<ResourcePropertyDefaultReadingResolution>();
+            var resolutions = resolutionsExtension?.Resolutions ?? SmartEnum<ResourcePropertyDefaultReadingResolution>.List;
 
             return HasDefault(value, resolutions.ToArray());
         }
