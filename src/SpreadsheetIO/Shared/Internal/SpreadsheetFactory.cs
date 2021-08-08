@@ -96,6 +96,7 @@ namespace LanceC.SpreadsheetIO.Shared.Internal
             var elementReaderFactory = scope.ServiceProvider.GetRequiredService<IElementReaderFactory>();
             var resourceMapManager = scope.ServiceProvider.GetRequiredService<IResourceMapManager>();
             var spreadsheetPageMapReader = scope.ServiceProvider.GetRequiredService<ISpreadsheetPageMapReader>();
+            var operationFactory = scope.ServiceProvider.GetRequiredService<IReadingSpreadsheetPageOperationFactory>();
 
             var stringIndexer = scope.ServiceProvider.GetRequiredService<IStringIndexer>();
             PopulateStringIndexer(stringIndexer, spreadsheetDocument, elementReaderFactory);
@@ -108,7 +109,8 @@ namespace LanceC.SpreadsheetIO.Shared.Internal
                     worksheetPart,
                     elementReaderFactory,
                     resourceMapManager,
-                    spreadsheetPageMapReader);
+                    spreadsheetPageMapReader,
+                    operationFactory);
                 spreadsheetPages.Add(spreadsheetPage, worksheetPart.Name);
             }
 
