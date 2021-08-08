@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
+using LanceC.SpreadsheetIO.Facts.Testing.Moq;
 using LanceC.SpreadsheetIO.Mapping.Internal;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Failures;
@@ -20,7 +22,26 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
         private ReadingSpreadsheetPage CreateSystemUnderTest()
             => _mocker.CreateInstance<ReadingSpreadsheetPage>();
 
-        public class TheReadMethodWithResourceGenericParameter : ReadingSpreadsheetPageFacts
+        private void MockOperationRead(params (bool HasRow, ResourceReadingResult<FakeModel>? ResourceResult)[] values)
+        {
+            var operationMock = _mocker.GetMock<IReadingSpreadsheetPageOperation<FakeModel>>();
+
+            var callbackReturnValues = values
+                .Select(value => new CallbackReturnValue<bool>(
+                    value.HasRow,
+                    () => operationMock.SetupGet(operation => operation.CurrentResult)
+                        .Returns(value.ResourceResult)));
+
+            operationMock.Setup(operation => operation.ReadNext())
+                .ReturnsCallbackSequence(values
+                    .Select(value => new CallbackReturnValue<bool>(
+                        value.HasRow,
+                        () => operationMock.SetupGet(operation => operation.CurrentResult)
+                            .Returns(value.ResourceResult)))
+                    .ToArray());
+        }
+
+        public class TheReadAllMethodWithResourceGenericParameter : ReadingSpreadsheetPageFacts
         {
             [Fact]
             public void ReturnsNoResourcesWhenHeaderRowReadingFailureIsSet()
@@ -47,10 +68,18 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
+                var operationMock = _mocker.GetMock<IReadingSpreadsheetPageOperation<FakeModel>>();
+                operationMock.SetupGet(operation => operation.HeaderFailure)
+                    .Returns(headerRowResult.Failure);
+
+                _mocker.GetMock<IReadingSpreadsheetPageOperationFactory>()
+                    .Setup(operationFactory => operationFactory.Create(worksheetReaderMock.Object, headerRowResult, map))
+                    .Returns(operationMock.Object);
+
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel>();
+                var result = sut.ReadAll<FakeModel>();
 
                 // Assert
                 Assert.Empty(result.Resources);
@@ -68,11 +97,6 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Returns(map);
 
                 var worksheetReaderMock = _mocker.GetMock<IWorksheetElementReader>();
-                worksheetReaderMock.SetupSequence(worksheetReader => worksheetReader.ReadNextRow())
-                    .Returns(true)
-                    .Returns(true)
-                    .Returns(false);
-
                 _mocker.GetMock<IElementReaderFactory>()
                     .Setup(elementReaderFactory => elementReaderFactory.CreateWorksheetReader(It.IsAny<IWorksheetPartWrapper>()))
                     .Returns(worksheetReaderMock.Object);
@@ -85,31 +109,34 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var firstBodyRowResult = new BodyRowReadingResult<FakeModel>(
+                var firstResourceResult = new ResourceReadingResult<FakeModel>(
                     default,
                     new ResourceReadingFailure(
                         2U,
                         Array.Empty<MissingResourcePropertyReadingFailure>(),
                         Array.Empty<InvalidResourcePropertyReadingFailure>()));
-                var secondBodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
-                spreadsheetPageMapReaderMock
-                    .SetupSequence(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
-                        worksheetReaderMock.Object,
-                        map,
-                        headersMock.Object))
-                    .Returns(firstBodyRowResult)
-                    .Returns(secondBodyRowResult);
+                var secondResourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
+
+                var operationMock = _mocker.GetMock<IReadingSpreadsheetPageOperation<FakeModel>>();
+                operationMock.SetupGet(operation => operation.HeaderFailure)
+                    .Returns(headerRowResult.Failure);
+
+                MockOperationRead((true, firstResourceResult), (true, secondResourceResult), (false, default));
+
+                _mocker.GetMock<IReadingSpreadsheetPageOperationFactory>()
+                    .Setup(operationFactory => operationFactory.Create(worksheetReaderMock.Object, headerRowResult, map))
+                    .Returns(operationMock.Object);
 
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel>();
+                var result = sut.ReadAll<FakeModel>();
 
                 // Assert
                 Assert.Empty(result.Resources);
                 Assert.Null(result.HeaderFailure);
                 var resourceFailure = Assert.Single(result.ResourceFailures);
-                Assert.Equal(firstBodyRowResult.Failure, resourceFailure);
+                Assert.Equal(firstResourceResult.Failure, resourceFailure);
             }
 
             [Fact]
@@ -122,11 +149,6 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Returns(map);
 
                 var worksheetReaderMock = _mocker.GetMock<IWorksheetElementReader>();
-                worksheetReaderMock.SetupSequence(worksheetReader => worksheetReader.ReadNextRow())
-                    .Returns(true)
-                    .Returns(true)
-                    .Returns(false);
-
                 _mocker.GetMock<IElementReaderFactory>()
                     .Setup(elementReaderFactory => elementReaderFactory.CreateWorksheetReader(It.IsAny<IWorksheetPartWrapper>()))
                     .Returns(worksheetReaderMock.Object);
@@ -139,32 +161,35 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var firstBodyRowResult = new BodyRowReadingResult<FakeModel>(
+                var firstResourceResult = new ResourceReadingResult<FakeModel>(
                     default,
                     new ResourceReadingFailure(
                         2U,
                         Array.Empty<MissingResourcePropertyReadingFailure>(),
                         Array.Empty<InvalidResourcePropertyReadingFailure>()));
-                var secondBodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
-                spreadsheetPageMapReaderMock
-                    .SetupSequence(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
-                        worksheetReaderMock.Object,
-                        map,
-                        headersMock.Object))
-                    .Returns(firstBodyRowResult)
-                    .Returns(secondBodyRowResult);
+                var secondResourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
+
+                var operationMock = _mocker.GetMock<IReadingSpreadsheetPageOperation<FakeModel>>();
+                operationMock.SetupGet(operation => operation.HeaderFailure)
+                    .Returns(headerRowResult.Failure);
+
+                MockOperationRead((true, firstResourceResult), (true, secondResourceResult), (false, default));
+
+                _mocker.GetMock<IReadingSpreadsheetPageOperationFactory>()
+                    .Setup(operationFactory => operationFactory.Create(worksheetReaderMock.Object, headerRowResult, map))
+                    .Returns(operationMock.Object);
 
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel>();
+                var result = sut.ReadAll<FakeModel>();
 
                 // Assert
                 var resource = Assert.Single(result.Resources);
-                Assert.Equal(secondBodyRowResult.NumberedResource, resource);
+                Assert.Equal(secondResourceResult.NumberedResource, resource);
                 Assert.Null(result.HeaderFailure);
                 var resourceFailure = Assert.Single(result.ResourceFailures);
-                Assert.Equal(firstBodyRowResult.Failure, resourceFailure);
+                Assert.Equal(firstResourceResult.Failure, resourceFailure);
             }
 
             [Fact]
@@ -177,10 +202,6 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Returns(map);
 
                 var worksheetReaderMock = _mocker.GetMock<IWorksheetElementReader>();
-                worksheetReaderMock.SetupSequence(worksheetReader => worksheetReader.ReadNextRow())
-                    .Returns(true)
-                    .Returns(false);
-
                 _mocker.GetMock<IElementReaderFactory>()
                     .Setup(elementReaderFactory => elementReaderFactory.CreateWorksheetReader(It.IsAny<IWorksheetPartWrapper>()))
                     .Returns(worksheetReaderMock.Object);
@@ -193,28 +214,32 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var bodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
-                spreadsheetPageMapReaderMock
-                    .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
-                        worksheetReaderMock.Object,
-                        map,
-                        headersMock.Object))
-                    .Returns(bodyRowResult);
+                var resourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
+
+                var operationMock = _mocker.GetMock<IReadingSpreadsheetPageOperation<FakeModel>>();
+                operationMock.SetupGet(operation => operation.HeaderFailure)
+                    .Returns(headerRowResult.Failure);
+
+                MockOperationRead((true, resourceResult), (false, default));
+
+                _mocker.GetMock<IReadingSpreadsheetPageOperationFactory>()
+                    .Setup(operationFactory => operationFactory.Create(worksheetReaderMock.Object, headerRowResult, map))
+                    .Returns(operationMock.Object);
 
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel>();
+                var result = sut.ReadAll<FakeModel>();
 
                 // Assert
                 var resource = Assert.Single(result.Resources);
-                Assert.Equal(bodyRowResult.NumberedResource, resource);
+                Assert.Equal(resourceResult.NumberedResource, resource);
                 Assert.Null(result.HeaderFailure);
                 Assert.Empty(result.ResourceFailures);
             }
         }
 
-        public class TheReadMethodWithResourceAndResourceMapGenericParameters : ReadingSpreadsheetPageFacts
+        public class TheReadAllMethodWithResourceAndResourceMapGenericParameters : ReadingSpreadsheetPageFacts
         {
             [Fact]
             public void ReturnsNoResourcesWhenHeaderRowReadingFailureIsSet()
@@ -241,10 +266,18 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
+                var operationMock = _mocker.GetMock<IReadingSpreadsheetPageOperation<FakeModel>>();
+                operationMock.SetupGet(operation => operation.HeaderFailure)
+                    .Returns(headerRowResult.Failure);
+
+                _mocker.GetMock<IReadingSpreadsheetPageOperationFactory>()
+                    .Setup(operationFactory => operationFactory.Create(worksheetReaderMock.Object, headerRowResult, map))
+                    .Returns(operationMock.Object);
+
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel, FakeModelMap>();
+                var result = sut.ReadAll<FakeModel, FakeModelMap>();
 
                 // Assert
                 Assert.Empty(result.Resources);
@@ -262,11 +295,6 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Returns(map);
 
                 var worksheetReaderMock = _mocker.GetMock<IWorksheetElementReader>();
-                worksheetReaderMock.SetupSequence(worksheetReader => worksheetReader.ReadNextRow())
-                    .Returns(true)
-                    .Returns(true)
-                    .Returns(false);
-
                 _mocker.GetMock<IElementReaderFactory>()
                     .Setup(elementReaderFactory => elementReaderFactory.CreateWorksheetReader(It.IsAny<IWorksheetPartWrapper>()))
                     .Returns(worksheetReaderMock.Object);
@@ -279,31 +307,34 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var firstBodyRowResult = new BodyRowReadingResult<FakeModel>(
+                var firstResourceResult = new ResourceReadingResult<FakeModel>(
                     default,
                     new ResourceReadingFailure(
                         2U,
                         Array.Empty<MissingResourcePropertyReadingFailure>(),
                         Array.Empty<InvalidResourcePropertyReadingFailure>()));
-                var secondBodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
-                spreadsheetPageMapReaderMock
-                    .SetupSequence(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
-                        worksheetReaderMock.Object,
-                        map,
-                        headersMock.Object))
-                    .Returns(firstBodyRowResult)
-                    .Returns(secondBodyRowResult);
+                var secondResourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
+
+                var operationMock = _mocker.GetMock<IReadingSpreadsheetPageOperation<FakeModel>>();
+                operationMock.SetupGet(operation => operation.HeaderFailure)
+                    .Returns(headerRowResult.Failure);
+
+                MockOperationRead((true, firstResourceResult), (true, secondResourceResult), (false, default));
+
+                _mocker.GetMock<IReadingSpreadsheetPageOperationFactory>()
+                    .Setup(operationFactory => operationFactory.Create(worksheetReaderMock.Object, headerRowResult, map))
+                    .Returns(operationMock.Object);
 
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel, FakeModelMap>();
+                var result = sut.ReadAll<FakeModel, FakeModelMap>();
 
                 // Assert
                 Assert.Empty(result.Resources);
                 Assert.Null(result.HeaderFailure);
                 var resourceFailure = Assert.Single(result.ResourceFailures);
-                Assert.Equal(firstBodyRowResult.Failure, resourceFailure);
+                Assert.Equal(firstResourceResult.Failure, resourceFailure);
             }
 
             [Fact]
@@ -316,11 +347,6 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Returns(map);
 
                 var worksheetReaderMock = _mocker.GetMock<IWorksheetElementReader>();
-                worksheetReaderMock.SetupSequence(worksheetReader => worksheetReader.ReadNextRow())
-                    .Returns(true)
-                    .Returns(true)
-                    .Returns(false);
-
                 _mocker.GetMock<IElementReaderFactory>()
                     .Setup(elementReaderFactory => elementReaderFactory.CreateWorksheetReader(It.IsAny<IWorksheetPartWrapper>()))
                     .Returns(worksheetReaderMock.Object);
@@ -333,32 +359,35 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var firstBodyRowResult = new BodyRowReadingResult<FakeModel>(
+                var firstResourceResult = new ResourceReadingResult<FakeModel>(
                     default,
                     new ResourceReadingFailure(
                         2U,
                         Array.Empty<MissingResourcePropertyReadingFailure>(),
                         Array.Empty<InvalidResourcePropertyReadingFailure>()));
-                var secondBodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
-                spreadsheetPageMapReaderMock
-                    .SetupSequence(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
-                        worksheetReaderMock.Object,
-                        map,
-                        headersMock.Object))
-                    .Returns(firstBodyRowResult)
-                    .Returns(secondBodyRowResult);
+                var secondResourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(3U, new()), default);
+
+                var operationMock = _mocker.GetMock<IReadingSpreadsheetPageOperation<FakeModel>>();
+                operationMock.SetupGet(operation => operation.HeaderFailure)
+                    .Returns(headerRowResult.Failure);
+
+                MockOperationRead((true, firstResourceResult), (true, secondResourceResult), (false, default));
+
+                _mocker.GetMock<IReadingSpreadsheetPageOperationFactory>()
+                    .Setup(operationFactory => operationFactory.Create(worksheetReaderMock.Object, headerRowResult, map))
+                    .Returns(operationMock.Object);
 
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel, FakeModelMap>();
+                var result = sut.ReadAll<FakeModel, FakeModelMap>();
 
                 // Assert
                 var resource = Assert.Single(result.Resources);
-                Assert.Equal(secondBodyRowResult.NumberedResource, resource);
+                Assert.Equal(secondResourceResult.NumberedResource, resource);
                 Assert.Null(result.HeaderFailure);
                 var resourceFailure = Assert.Single(result.ResourceFailures);
-                Assert.Equal(firstBodyRowResult.Failure, resourceFailure);
+                Assert.Equal(firstResourceResult.Failure, resourceFailure);
             }
 
             [Fact]
@@ -371,10 +400,6 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Returns(map);
 
                 var worksheetReaderMock = _mocker.GetMock<IWorksheetElementReader>();
-                worksheetReaderMock.SetupSequence(worksheetReader => worksheetReader.ReadNextRow())
-                    .Returns(true)
-                    .Returns(false);
-
                 _mocker.GetMock<IElementReaderFactory>()
                     .Setup(elementReaderFactory => elementReaderFactory.CreateWorksheetReader(It.IsAny<IWorksheetPartWrapper>()))
                     .Returns(worksheetReaderMock.Object);
@@ -387,24 +412,108 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
                     .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
                     .Returns(headerRowResult);
 
-                var bodyRowResult = new BodyRowReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
-                spreadsheetPageMapReaderMock
-                    .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
-                        worksheetReaderMock.Object,
-                        map,
-                        headersMock.Object))
-                    .Returns(bodyRowResult);
+                var resourceResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
+
+                var operationMock = _mocker.GetMock<IReadingSpreadsheetPageOperation<FakeModel>>();
+                operationMock.SetupGet(operation => operation.HeaderFailure)
+                    .Returns(headerRowResult.Failure);
+
+                MockOperationRead((true, resourceResult), (false, default));
+
+                _mocker.GetMock<IReadingSpreadsheetPageOperationFactory>()
+                    .Setup(operationFactory => operationFactory.Create(worksheetReaderMock.Object, headerRowResult, map))
+                    .Returns(operationMock.Object);
 
                 var sut = CreateSystemUnderTest();
 
                 // Act
-                var result = sut.Read<FakeModel, FakeModelMap>();
+                var result = sut.ReadAll<FakeModel, FakeModelMap>();
 
                 // Assert
                 var resource = Assert.Single(result.Resources);
-                Assert.Equal(bodyRowResult.NumberedResource, resource);
+                Assert.Equal(resourceResult.NumberedResource, resource);
                 Assert.Null(result.HeaderFailure);
                 Assert.Empty(result.ResourceFailures);
+            }
+        }
+
+        public class TheStartReadMethodWithResourceGenericParameter : ReadingSpreadsheetPageFacts
+        {
+            [Fact]
+            public void ReturnsOperationFromFactory()
+            {
+                // Arrange
+                var map = new FakeModelMap();
+                _mocker.GetMock<IResourceMapManager>()
+                    .Setup(resourceMapManager => resourceMapManager.Single<FakeModel>())
+                    .Returns(map);
+
+                var worksheetReaderMock = _mocker.GetMock<IWorksheetElementReader>();
+                _mocker.GetMock<IElementReaderFactory>()
+                    .Setup(elementReaderFactory => elementReaderFactory.CreateWorksheetReader(It.IsAny<IWorksheetPartWrapper>()))
+                    .Returns(worksheetReaderMock.Object);
+
+                var spreadsheetPageMapReaderMock = _mocker.GetMock<ISpreadsheetPageMapReader>();
+
+                var headersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+                var headerRowResult = new HeaderRowReadingResult<FakeModel>(headersMock.Object, default);
+                spreadsheetPageMapReaderMock
+                    .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
+                    .Returns(headerRowResult);
+
+                var operationMock = _mocker.GetMock<IReadingSpreadsheetPageOperation<FakeModel>>();
+
+                _mocker.GetMock<IReadingSpreadsheetPageOperationFactory>()
+                    .Setup(operationFactory => operationFactory.Create(worksheetReaderMock.Object, headerRowResult, map))
+                    .Returns(operationMock.Object);
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var operation = sut.StartRead<FakeModel>();
+
+                // Assert
+                Assert.Equal(operationMock.Object, operation);
+            }
+        }
+
+        public class TheStartReadMethodWithResourceAndResourceMapGenericParameters : ReadingSpreadsheetPageFacts
+        {
+            [Fact]
+            public void ReturnsOperationFromFactory()
+            {
+                // Arrange
+                var map = new FakeModelMap();
+                _mocker.GetMock<IResourceMapManager>()
+                    .Setup(resourceMapManager => resourceMapManager.Single<FakeModel, FakeModelMap>())
+                    .Returns(map);
+
+                var worksheetReaderMock = _mocker.GetMock<IWorksheetElementReader>();
+                _mocker.GetMock<IElementReaderFactory>()
+                    .Setup(elementReaderFactory => elementReaderFactory.CreateWorksheetReader(It.IsAny<IWorksheetPartWrapper>()))
+                    .Returns(worksheetReaderMock.Object);
+
+                var spreadsheetPageMapReaderMock = _mocker.GetMock<ISpreadsheetPageMapReader>();
+
+                var headersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+                var headerRowResult = new HeaderRowReadingResult<FakeModel>(headersMock.Object, default);
+                spreadsheetPageMapReaderMock
+                    .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadHeaderRow(worksheetReaderMock.Object, map))
+                    .Returns(headerRowResult);
+
+                var operationMock = _mocker.GetMock<IReadingSpreadsheetPageOperation<FakeModel>>();
+
+                _mocker.GetMock<IReadingSpreadsheetPageOperationFactory>()
+                    .Setup(operationFactory => operationFactory.Create(worksheetReaderMock.Object, headerRowResult, map))
+                    .Returns(operationMock.Object);
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var operation = sut.StartRead<FakeModel, FakeModelMap>();
+
+                // Assert
+                Assert.Equal(operationMock.Object, operation);
             }
         }
     }

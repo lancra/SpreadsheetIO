@@ -66,6 +66,7 @@ namespace LanceC.SpreadsheetIO
             .AddScoped<IResourcePropertyParserStrategy, UnsignedShortResourcePropertyParserStrategy>()
             .AddScoped<IResourcePropertyCollectionFactory, ResourcePropertyCollectionFactory>()
             .AddScoped<IElementReaderFactory, ElementReaderFactory>()
+            .AddScoped<IReadingSpreadsheetPageOperationFactory, ReadingSpreadsheetPageOperationFactory>()
             .AddScoped<ISpreadsheetPageMapReader, SpreadsheetPageMapReader>();
 
         private static IServiceCollection AddSpreadsheetIOShared(this IServiceCollection services)

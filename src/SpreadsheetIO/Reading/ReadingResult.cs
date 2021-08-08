@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using LanceC.SpreadsheetIO.Reading.Failures;
 
 namespace LanceC.SpreadsheetIO.Reading
@@ -16,6 +17,11 @@ namespace LanceC.SpreadsheetIO.Reading
         where TResource : class
     {
         /// <summary>
+        /// Gets the reading result kind.
+        /// </summary>
+        public ReadingResultKind Kind { get; } = GetKind(Resources, HeaderFailure, ResourceFailures);
+
+        /// <summary>
         /// Gets the collection of resources read from the spreadsheet.
         /// </summary>
         public IReadOnlyCollection<NumberedResource<TResource>> Resources { get; init; } = Resources;
@@ -29,5 +35,22 @@ namespace LanceC.SpreadsheetIO.Reading
         /// Gets the collection of failures encountered when reading the resources.
         /// </summary>
         public IReadOnlyCollection<ResourceReadingFailure> ResourceFailures { get; init; } = ResourceFailures;
+
+        private static ReadingResultKind GetKind(
+            IReadOnlyCollection<NumberedResource<TResource>> resources,
+            HeaderReadingFailure? headerFailure,
+            IReadOnlyCollection<ResourceReadingFailure> resourceFailures)
+        {
+            if (headerFailure is not null)
+            {
+                return ReadingResultKind.Failure;
+            }
+            else if (resourceFailures.Any())
+            {
+                return !resources.Any() ? ReadingResultKind.Failure : ReadingResultKind.PartialFailure;
+            }
+
+            return ReadingResultKind.Success;
+        }
     }
 }

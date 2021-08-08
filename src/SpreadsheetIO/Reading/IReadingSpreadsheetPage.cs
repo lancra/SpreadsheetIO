@@ -8,20 +8,38 @@ namespace LanceC.SpreadsheetIO.Reading
     public interface IReadingSpreadsheetPage
     {
         /// <summary>
-        /// Reads the spreadsheet page as a collection of resources.
+        /// Reads all resources from the spreadsheet page.
         /// </summary>
         /// <typeparam name="TResource">The type of resource to read.</typeparam>
         /// <returns>The resulting resources and failures from reading from the spreadsheet page.</returns>
-        ReadingResult<TResource> Read<TResource>()
+        ReadingResult<TResource> ReadAll<TResource>()
             where TResource : class;
 
         /// <summary>
-        /// Reads the spreadsheet page as a collection of resources.
+        /// Reads all resources from the spreadsheet page.
         /// </summary>
         /// <typeparam name="TResource">The type of resource to read.</typeparam>
         /// <typeparam name="TResourceMap">The type of resource map to use for reading.</typeparam>
         /// <returns>The resulting resources and failures from reading from the spreadsheet page.</returns>
-        ReadingResult<TResource> Read<TResource, TResourceMap>()
+        ReadingResult<TResource> ReadAll<TResource, TResourceMap>()
+            where TResource : class
+            where TResourceMap : ResourceMap<TResource>;
+
+        /// <summary>
+        /// Starts a read operation on the spreadsheet page.
+        /// </summary>
+        /// <typeparam name="TResource">The type of resource to read.</typeparam>
+        /// <returns>The read operation on the spreadsheet page.</returns>
+        IReadingSpreadsheetPageOperation<TResource> StartRead<TResource>()
+            where TResource : class;
+
+        /// <summary>
+        /// Starts a read operation on the spreadsheet page.
+        /// </summary>
+        /// <typeparam name="TResource">The type of resource to read.</typeparam>
+        /// <typeparam name="TResourceMap">The type of resource map to use for reading.</typeparam>
+        /// <returns>The read operation on the spreadsheet page.</returns>
+        IReadingSpreadsheetPageOperation<TResource> StartRead<TResource, TResourceMap>()
             where TResource : class
             where TResourceMap : ResourceMap<TResource>;
     }
