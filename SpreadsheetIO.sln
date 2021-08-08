@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{026063D8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LanceC.SpreadsheetIO.Facts", "tests\SpreadsheetIO.Facts\LanceC.SpreadsheetIO.Facts.csproj", "{6006DE60-66D0-4C20-9F2F-6A6BBB887390}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LanceC.SpreadsheetIO.Tests", "tests\SpreadsheetIO.Tests\LanceC.SpreadsheetIO.Tests.csproj", "{2134BF20-1C08-4671-B092-D315CE02E73F}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{5ACB49D3-72F1-4CFE-9947-BF8D9B0066AA}"
 	ProjectSection(SolutionItems) = preProject
 		tools\Resources.tt = tools\Resources.tt
@@ -45,6 +47,10 @@ Global
 		{6006DE60-66D0-4C20-9F2F-6A6BBB887390}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6006DE60-66D0-4C20-9F2F-6A6BBB887390}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6006DE60-66D0-4C20-9F2F-6A6BBB887390}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2134BF20-1C08-4671-B092-D315CE02E73F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2134BF20-1C08-4671-B092-D315CE02E73F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2134BF20-1C08-4671-B092-D315CE02E73F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2134BF20-1C08-4671-B092-D315CE02E73F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +58,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{449B99F6-25EB-4FDC-B219-FDC041733084} = {A48C0D6F-4BEA-4BDF-8383-E72FB5320747}
 		{6006DE60-66D0-4C20-9F2F-6A6BBB887390} = {026063D8-6981-4D51-B3AB-6AC3B9A91F1E}
+		{2134BF20-1C08-4671-B092-D315CE02E73F} = {026063D8-6981-4D51-B3AB-6AC3B9A91F1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9433C90A-83C5-4BD5-B169-FF690F9B24C9}
