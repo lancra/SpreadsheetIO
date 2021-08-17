@@ -21,6 +21,9 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
         public IReadOnlyCollection<IndexerKey> Keys
             => (IReadOnlyCollection<IndexerKey>)_nameIndexer.Keys;
 
+        public IReadOnlyCollection<TResource> Resources
+            => (IReadOnlyCollection<TResource>)_resourceIndexer.Keys;
+
         public IndexedResource<TResource> this[IndexerKey key]
         {
             get

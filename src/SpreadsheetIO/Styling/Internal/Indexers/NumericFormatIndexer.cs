@@ -8,12 +8,14 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
         private const uint InitialIndex = 164U;
 
         private readonly BuiltInNumericFormats _builtInResources;
+        private readonly ConstantNumericFormats _constantResources;
         private readonly IDictionary<NumericFormat, uint> _resourceIndexer = new Dictionary<NumericFormat, uint>();
         private uint _indexProvider;
 
-        public NumericFormatIndexer(BuiltInNumericFormats builtInResources)
+        public NumericFormatIndexer(BuiltInNumericFormats builtInResources, ConstantNumericFormats constantResources)
         {
             _builtInResources = builtInResources;
+            _constantResources = constantResources;
             _indexProvider = InitialIndex;
         }
 
@@ -47,6 +49,14 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Indexers
             {
                 _resourceIndexer.Add(resource, builtInId);
                 return builtInId;
+            }
+
+            var isConstant = _constantResources.TryGetValue(resource.Code, out var constantId);
+            if (isConstant)
+            {
+                _resourceIndexer.Add(resource, constantId);
+                NonBuiltInCount++;
+                return constantId;
             }
 
             index = _indexProvider;

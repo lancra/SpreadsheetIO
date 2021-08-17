@@ -12,7 +12,7 @@ namespace LanceC.SpreadsheetIO.Styling
         /// <summary>
         /// Gets the default border line.
         /// </summary>
-        public static readonly BorderLine Default = new BorderLine(Color.Black, BorderLineKind.None);
+        public static readonly BorderLine Default = new(Color.Black, BorderLineKind.None);
 
         /// <summary>
         /// Gets the line color.

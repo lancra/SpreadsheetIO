@@ -11,8 +11,7 @@ namespace LanceC.SpreadsheetIO.Styling
         /// <summary>
         /// Gets the default border.
         /// </summary>
-        public static readonly Border Default =
-            new Border(BorderLine.Default);
+        public static readonly Border Default = new(BorderLine.Default);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Border"/> class.

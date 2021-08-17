@@ -47,10 +47,16 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
         {
             if (borderLine.Kind != BorderLineKind.None)
             {
-                openXmlBorderLine.Color = new OpenXml.Color
+                openXmlBorderLine.Color = new OpenXml.Color();
+                if (borderLine.Color == System.Drawing.Color.Black)
                 {
-                    Rgb = borderLine.Color.ToHex(),
-                };
+                    openXmlBorderLine.Color.Auto = true;
+                }
+                else
+                {
+                    openXmlBorderLine.Color.Rgb = borderLine.Color.ToHex();
+                }
+
                 openXmlBorderLine.Style = borderLine.Kind.OpenXmlValue;
             }
 

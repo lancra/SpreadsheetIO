@@ -87,6 +87,7 @@ namespace LanceC.SpreadsheetIO
             .AddScoped<IFillIndexer, FillIndexer>()
             .AddScoped<IFontIndexer, FontIndexer>()
             .AddScoped<BuiltInNumericFormats>()
+            .AddScoped<ConstantNumericFormats>()
             .AddScoped<INumericFormatIndexer, NumericFormatIndexer>()
             .AddScoped<IStyleIndexer, StyleIndexer>();
 

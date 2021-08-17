@@ -12,7 +12,7 @@ namespace LanceC.SpreadsheetIO.Styling
         /// <summary>
         /// Gets the default fill.
         /// </summary>
-        public static readonly Fill Default = new Fill(FillKind.None, Color.White);
+        public static readonly Fill Default = new(FillKind.None, Color.White);
 
         /// <summary>
         /// Gets the fill kind.

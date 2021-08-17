@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
@@ -35,7 +36,7 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
                     },
                 };
 
-                if (fill.Kind != FillKind.None)
+                if (fill.ForegroundColor != Color.White)
                 {
                     openXmlFill.PatternFill.ForegroundColor = new OpenXml.ForegroundColor
                     {

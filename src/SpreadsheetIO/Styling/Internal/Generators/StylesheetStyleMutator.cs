@@ -16,7 +16,7 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
         private readonly INumericFormatIndexer _numericFormatIndexer;
         private readonly IStyleIndexer _styleIndexer;
 
-        private readonly IDictionary<IndexerKey, uint> _excelFormatIdLookup = new Dictionary<IndexerKey, uint>();
+        private readonly IDictionary<Style, uint> _excelFormatIdLookup = new Dictionary<Style, uint>();
         private uint _excelFormatIdProvider = 0U;
 
         public StylesheetStyleMutator(
@@ -35,15 +35,14 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
 
         public void Mutate(OpenXml.Stylesheet stylesheet)
         {
-            var styleKeyValues = _styleIndexer.Keys
+            var excelStyleKeyValues = _styleIndexer.Keys
+                .Where(key => key.Kind == IndexerKeyKind.Excel)
                 .Select(key => new IndexedKeyValue(key, _styleIndexer[key]))
-                .ToArray();
-            var excelStyleKeyValues = styleKeyValues.Where(styleKeyValue => styleKeyValue.Key.Kind == IndexerKeyKind.Excel)
                 .ToArray();
 
             stylesheet.CellStyleFormats = GenerateCellStyleFormats(excelStyleKeyValues);
             stylesheet.CellStyles = GenerateCellStyles(excelStyleKeyValues);
-            stylesheet.CellFormats = GenerateCellFormats(styleKeyValues);
+            stylesheet.CellFormats = GenerateCellFormats(_styleIndexer.Resources);
 
             _excelFormatIdLookup.Clear();
             _excelFormatIdProvider = 0U;
@@ -85,26 +84,25 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
                 var cellFormat = GenerateCellFormat(style);
                 cellStyleFormats.Append(cellFormat);
 
-                _excelFormatIdLookup.Add(styleKeyValue.Key, _excelFormatIdProvider);
+                _excelFormatIdLookup.Add(styleKeyValue.Value.Resource, _excelFormatIdProvider);
                 _excelFormatIdProvider++;
             }
 
             return cellStyleFormats;
         }
 
-        private OpenXml.CellFormats GenerateCellFormats(IReadOnlyCollection<IndexedKeyValue> styleKeyValues)
+        private OpenXml.CellFormats GenerateCellFormats(IReadOnlyCollection<Style> styles)
         {
             var cellFormats = new OpenXml.CellFormats
             {
-                Count = Convert.ToUInt32(styleKeyValues.Count),
+                Count = Convert.ToUInt32(styles.Count),
             };
 
-            foreach (var styleKeyValue in styleKeyValues)
+            foreach (var style in styles)
             {
-                var style = styleKeyValue.Value.Resource;
                 var cellFormat = GenerateCellFormat(style);
 
-                _excelFormatIdLookup.TryGetValue(styleKeyValue.Key, out var formatId);
+                _excelFormatIdLookup.TryGetValue(style, out var formatId);
                 cellFormat.FormatId = formatId;
 
                 SetCellFormatAlignment(cellFormat, style.Alignment);
@@ -129,7 +127,7 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
                     throw new InvalidOperationException(Messages.InvalidExcelStyleSetup(styleKeyValue.Key.Name));
                 }
 
-                var formatId = _excelFormatIdLookup[styleKeyValue.Key];
+                var formatId = _excelFormatIdLookup[styleKeyValue.Value.Resource];
                 var cellStyle = new OpenXml.CellStyle
                 {
                     Name = styleKeyValue.Key.Name,

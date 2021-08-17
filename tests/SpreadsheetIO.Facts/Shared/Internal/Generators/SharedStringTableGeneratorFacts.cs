@@ -55,7 +55,36 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal.Generators
             }
 
             [Fact]
-            public void WritesSharedStringTableElements()
+            public void WritesSharedStringTableElementForAtLeastOneIndexedString()
+            {
+                // Arrange
+                var writerMock = _mocker.GetMock<IOpenXmlWriterWrapper>();
+
+                var sharedStringTablePartMock = _mocker.GetMock<ISharedStringTablePartWrapper>();
+                sharedStringTablePartMock.Setup(sharedStringTablePart => sharedStringTablePart.CreateWriter())
+                    .Returns(writerMock.Object);
+
+                var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
+                spreadsheetDocumentMock.Setup(spreadsheetDocument => spreadsheetDocument.AddSharedStringTablePart())
+                    .Returns(sharedStringTablePartMock.Object);
+
+                var indexedString = "foo";
+                _mocker.GetMock<IStringIndexer>()
+                    .SetupGet(stringIndexer => stringIndexer.Resources)
+                    .Returns(new[] { indexedString, });
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                sut.Generate(spreadsheetDocumentMock.Object);
+
+                // Assert
+                writerMock.Verify(writer => writer.WriteStartElement(It.IsAny<OpenXml.SharedStringTable>()));
+                writerMock.Verify(writer => writer.WriteEndElement());
+            }
+
+            [Fact]
+            public void DoesNotWriteSharedStringTableElementWhenNoStringsIndexed()
             {
                 // Arrange
                 var writerMock = _mocker.GetMock<IOpenXmlWriterWrapper>();
@@ -78,8 +107,8 @@ namespace LanceC.SpreadsheetIO.Facts.Shared.Internal.Generators
                 sut.Generate(spreadsheetDocumentMock.Object);
 
                 // Assert
-                writerMock.Verify(writer => writer.WriteStartElement(It.IsAny<OpenXml.SharedStringTable>()));
-                writerMock.Verify(writer => writer.WriteEndElement());
+                writerMock.Verify(writer => writer.WriteStartElement(It.IsAny<OpenXml.SharedStringTable>()), Times.Never);
+                writerMock.Verify(writer => writer.WriteEndElement(), Times.Never);
             }
         }
     }

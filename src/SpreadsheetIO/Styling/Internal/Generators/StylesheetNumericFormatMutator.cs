@@ -18,8 +18,13 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
         public void Mutate(OpenXml.Stylesheet stylesheet)
             => stylesheet.NumberingFormats = GenerateNumberingFormats(_numericFormatIndexer.Resources);
 
-        private OpenXml.NumberingFormats GenerateNumberingFormats(IReadOnlyCollection<NumericFormat> numericFormats)
+        private OpenXml.NumberingFormats? GenerateNumberingFormats(IReadOnlyCollection<NumericFormat> numericFormats)
         {
+            if (_numericFormatIndexer.NonBuiltInCount == 0)
+            {
+                return default;
+            }
+
             var openXmlNumberingFormats = new OpenXml.NumberingFormats
             {
                 Count = _numericFormatIndexer.NonBuiltInCount,
