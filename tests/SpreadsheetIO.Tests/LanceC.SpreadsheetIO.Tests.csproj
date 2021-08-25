@@ -8,6 +8,7 @@
     <None Remove="Testing\Content\ManualMultiple.xlsx" />
     <None Remove="Testing\Content\ManualSingle.xlsx" />
     <None Remove="Testing\Content\ManualSingleNumbers.xlsx" />
+    <None Remove="Testing\Content\MapSimple.xlsx" />
     <None Remove="Testing\Content\StyleAlignment.xlsx" />
     <None Remove="Testing\Content\StyleBorder.xlsx" />
     <None Remove="Testing\Content\StyleFill.xlsx" />
@@ -23,6 +24,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Testing\Content\ManualSingleNumbers.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testing\Content\MapSimple.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Testing\Content\StyleAlignment.xlsx">

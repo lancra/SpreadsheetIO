@@ -1,8 +1,11 @@
 using System;
 using System.Drawing;
+using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Tests.Testing;
+using LanceC.SpreadsheetIO.Tests.Testing.Fakes;
 using LanceC.SpreadsheetIO.Writing;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -100,6 +103,51 @@ namespace LanceC.SpreadsheetIO.Tests
                     .AddCell("Two")
                     .AdvanceToColumn(6)
                     .AddCell("Three");
+            }
+
+            // Assert
+            _excelFixture.EquivalentToSource();
+        }
+
+        [Fact]
+        [ExcelSourceFile("MapSimple.xlsx")]
+        public void MappedSimpleSpreadsheetPage()
+        {
+            // Arrange
+            var models = new[]
+            {
+                new FakeModel
+                {
+                    Id = 1,
+                    Name = "One",
+                    DisplayName = "Uno",
+                    Date = new DateTime(2021, 1, 1),
+                    Amount = 1.1100000000000001M,
+                    Letter = 'O',
+                },
+                new FakeModel
+                {
+                    Id = 2,
+                    Name = "Two",
+                    Date = new DateTime(2021, 2, 22),
+                    Amount = 22M,
+                    Letter = 'T',
+                },
+                new FakeModel
+                {
+                    Id = 3,
+                    Name = "Three",
+                    DisplayName = "Tres",
+                    Date = new DateTime(2021, 3, 3),
+                    Amount = 3M,
+                    Letter = 'T',
+                },
+            };
+
+            // Act
+            using (var spreadsheet = _excelFixture.CreateSpreadsheet(services => services.AddSingleton<IResourceMap, FakeModelMap>()))
+            {
+                spreadsheet.WritePage("Map", models);
             }
 
             // Assert

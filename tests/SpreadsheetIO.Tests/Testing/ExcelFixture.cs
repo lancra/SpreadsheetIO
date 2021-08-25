@@ -19,13 +19,13 @@ namespace LanceC.SpreadsheetIO.Tests.Testing
 
         public Uri Path { get; } = new(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx"));
 
-        public IWritingSpreadsheet CreateSpreadsheet()
-            => GetSpreadsheetFactory()
+        public IWritingSpreadsheet CreateSpreadsheet(Action<IServiceCollection>? additionalServices = default)
+            => GetSpreadsheetFactory(additionalServices)
             .Create(Path);
 
-        public IReadingSpreadsheet OpenReadSpreadsheet()
-            => GetSpreadsheetFactory()
-            .OpenRead(Path);
+        public IReadingSpreadsheet OpenReadSpreadsheet(Action<IServiceCollection>? additionalServices = default)
+            => GetSpreadsheetFactory(additionalServices)
+            .OpenRead(GetSourcePath());
 
         public void EquivalentToSource() => _asserter.Equal(GetSourcePath(), Path);
 
@@ -62,7 +62,7 @@ namespace LanceC.SpreadsheetIO.Tests.Testing
             var directoryPath = System.IO.Path.GetDirectoryName(assembly.Location)
                 ?? throw new InvalidOperationException("Could not retrieve the directory path from the executing assembly.");
 
-            // Get source frame through [0]:GetSourcePath() -> [1]:EquivalentToSource() -> [2]:<Source Frame>.
+            // Get source frame through [0]:GetSourcePath() -> [1]:<ExcelFixture Method> -> [2]:<Source Frame>.
             var sourceFrame = new StackTrace().GetFrame(2)
                 ?? throw new InvalidOperationException("Could not retrieve the stack frame containing the test method.");
 

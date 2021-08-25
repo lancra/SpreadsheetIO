@@ -76,7 +76,7 @@ namespace LanceC.SpreadsheetIO.Tests.Testing
         }
 
         private static Package OpenPackage(Uri uri)
-            => Package.Open(uri.LocalPath, FileMode.Open, FileAccess.Read);
+            => Package.Open(uri.LocalPath, FileMode.Open, FileAccess.Read, FileShare.Read);
 
         private static IDictionary<ExcelFileKind, IList<PackagePart>> GetPackageParts(Package package)
         {
