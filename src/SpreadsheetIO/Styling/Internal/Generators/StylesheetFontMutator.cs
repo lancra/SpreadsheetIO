@@ -33,15 +33,21 @@ namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
                     {
                         Val = font.Size,
                     },
-                    Color = new OpenXml.Color
-                    {
-                        Rgb = font.Color.ToHex(),
-                    },
+                    Color = new OpenXml.Color(),
                     FontName = new OpenXml.FontName
                     {
                         Val = font.Name,
                     },
                 };
+
+                if (font.Color == System.Drawing.Color.Black)
+                {
+                    openXmlFont.Color.Theme = 1U;
+                }
+                else
+                {
+                    openXmlFont.Color.Rgb = font.Color.ToHex();
+                }
 
                 if (font.IsBold)
                 {

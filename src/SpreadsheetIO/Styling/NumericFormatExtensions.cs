@@ -28,7 +28,8 @@ namespace LanceC.SpreadsheetIO.Styling
 
             if (numericFormat.NegativeFormatKind != NegativeNumericFormatKind.Default)
             {
-                formatCodeBuilder.Append(';')
+                formatCodeBuilder.AppendIf("_)", numericFormat.NegativeFormatKind.HasParentheses)
+                    .Append(';')
                     .AppendIf("[Red]", numericFormat.NegativeFormatKind.HasColor)
                     .AppendIf(@"\(", numericFormat.NegativeFormatKind.HasParentheses)
                     .Append(wholeNumberFormat)
@@ -67,7 +68,8 @@ namespace LanceC.SpreadsheetIO.Styling
 
             if (numericFormat.NegativeFormatKind != NegativeNumericFormatKind.Default)
             {
-                formatCodeBuilder.Append(';')
+                formatCodeBuilder.AppendIf("_)", numericFormat.NegativeFormatKind.HasParentheses)
+                    .Append(';')
                     .AppendIf("[Red]", numericFormat.NegativeFormatKind.HasColor)
                     .AppendIf(@"\(", numericFormat.NegativeFormatKind.HasParentheses)
                     .Append(currencyFormat)

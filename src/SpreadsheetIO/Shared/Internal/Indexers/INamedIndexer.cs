@@ -16,6 +16,11 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
         IReadOnlyCollection<IndexerKey> Keys { get; }
 
         /// <summary>
+        /// Gets the indexed resources.
+        /// </summary>
+        IReadOnlyCollection<TResource> Resources { get; }
+
+        /// <summary>
         /// Gets the index for a key.
         /// </summary>
         /// <param name="key">The indexer key.</param>

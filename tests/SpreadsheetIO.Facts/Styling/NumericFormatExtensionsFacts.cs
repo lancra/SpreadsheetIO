@@ -33,11 +33,11 @@ namespace LanceC.SpreadsheetIO.Facts.Styling
                     },
                     {
                         new NumberNumericFormat(4, true, NegativeNumericFormatKind.Parentheses),
-                        @"#,##0.0000;\(#,##0.0000\)"
+                        @"#,##0.0000_);\(#,##0.0000\)"
                     },
                     {
                         new NumberNumericFormat(4, true, NegativeNumericFormatKind.RedParentheses),
-                        @"#,##0.0000;[Red]\(#,##0.0000\)"
+                        @"#,##0.0000_);[Red]\(#,##0.0000\)"
                     },
                 };
 
@@ -96,11 +96,11 @@ namespace LanceC.SpreadsheetIO.Facts.Styling
                     },
                     {
                         new CurrencyNumericFormat(4, "USD", NegativeNumericFormatKind.Parentheses),
-                        @"[$USD]\ #,##0.0000;\([$USD]\ #,##0.0000\)"
+                        @"[$USD]\ #,##0.0000_);\([$USD]\ #,##0.0000\)"
                     },
                     {
                         new CurrencyNumericFormat(4, "USD", NegativeNumericFormatKind.RedParentheses),
-                        @"[$USD]\ #,##0.0000;[Red]\([$USD]\ #,##0.0000\)"
+                        @"[$USD]\ #,##0.0000_);[Red]\([$USD]\ #,##0.0000\)"
                     },
                 };
 

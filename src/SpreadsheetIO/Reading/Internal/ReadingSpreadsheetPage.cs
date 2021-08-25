@@ -108,7 +108,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal
         private IReadingSpreadsheetPageOperation<TResource> StartReadImpl<TResource>(ResourceMap<TResource> map)
             where TResource : class
         {
-            using var worksheetReader = _elementReaderFactory.CreateWorksheetReader(_worksheetPart);
+            var worksheetReader = _elementReaderFactory.CreateWorksheetReader(_worksheetPart);
             var headerRowResult = _spreadsheetPageMapReader.ReadHeaderRow(worksheetReader, map);
             var operation = _operationFactory.Create(worksheetReader, headerRowResult, map);
             return operation;

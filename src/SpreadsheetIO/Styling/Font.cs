@@ -12,7 +12,7 @@ namespace LanceC.SpreadsheetIO.Styling
         /// <summary>
         /// Gets the default font.
         /// </summary>
-        public static readonly Font Default = new Font("Calibri", 11D, Color.Black);
+        public static readonly Font Default = new("Calibri", 11D, Color.Black);
 
         /// <summary>
         /// Gets the font name.

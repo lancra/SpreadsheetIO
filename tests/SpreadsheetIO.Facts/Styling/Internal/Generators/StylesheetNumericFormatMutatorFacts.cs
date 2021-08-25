@@ -63,7 +63,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
             }
 
             [Fact]
-            public void CreatesEmptySpreadsheetNumberingFormatsWhenNoNumericFormatsAreIndexed()
+            public void DoesNotCreateSpreadsheetNumberingFormatsWhenNoNumericFormatsAreIndexed()
             {
                 // Arrange
                 var stylesheet = new OpenXml.Stylesheet();
@@ -78,9 +78,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 sut.Mutate(stylesheet);
 
                 // Assert
-                Assert.NotNull(stylesheet.NumberingFormats);
-                Assert.Equal(0U, stylesheet.NumberingFormats.Count.Value);
-                Assert.Equal(0, stylesheet.NumberingFormats.ChildElements.Count);
+                Assert.Null(stylesheet.NumberingFormats);
             }
 
             [Fact]
@@ -89,14 +87,24 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
                 // Arrange
                 var stylesheet = new OpenXml.Stylesheet();
 
-                var numericFormat = new NumericFormat("@");
+                var builtInNumericFormat = new NumericFormat("@");
                 _mocker.GetMock<INumericFormatIndexer>()
-                    .SetupGet(numericFormatIndexer => numericFormatIndexer[numericFormat])
+                    .SetupGet(numericFormatIndexer => numericFormatIndexer[builtInNumericFormat])
                     .Returns(49U);
+
+                var nonBuiltInNumericFormatId = 164U;
+                var nonBuiltInNumericFormat = new NumericFormat("#,##0.0000");
+                _mocker.GetMock<INumericFormatIndexer>()
+                    .SetupGet(numericFormatIndexer => numericFormatIndexer[nonBuiltInNumericFormat])
+                    .Returns(nonBuiltInNumericFormatId);
 
                 _mocker.GetMock<INumericFormatIndexer>()
                     .SetupGet(numericFormatIndexer => numericFormatIndexer.Resources)
-                    .Returns(new[] { numericFormat, });
+                    .Returns(new[] { builtInNumericFormat, nonBuiltInNumericFormat, });
+
+                _mocker.GetMock<INumericFormatIndexer>()
+                    .SetupGet(numericFormatIndexer => numericFormatIndexer.NonBuiltInCount)
+                    .Returns(1U);
 
                 var sut = CreateSystemUnderTest();
 
@@ -105,8 +113,12 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
                 // Assert
                 Assert.NotNull(stylesheet.NumberingFormats);
-                Assert.Equal(0U, stylesheet.NumberingFormats.Count.Value);
-                Assert.Equal(0, stylesheet.NumberingFormats.ChildElements.Count);
+                Assert.Equal(1U, stylesheet.NumberingFormats.Count.Value);
+                Assert.Equal(1, stylesheet.NumberingFormats.ChildElements.Count);
+
+                var nonBuiltInNumberingFormat = Assert.IsType<OpenXml.NumberingFormat>(stylesheet.NumberingFormats.ChildElements[0]);
+                Assert.Equal(nonBuiltInNumericFormatId, nonBuiltInNumberingFormat.NumberFormatId.Value);
+                Assert.Equal(nonBuiltInNumericFormat.Code, nonBuiltInNumberingFormat.FormatCode.Value);
             }
         }
     }

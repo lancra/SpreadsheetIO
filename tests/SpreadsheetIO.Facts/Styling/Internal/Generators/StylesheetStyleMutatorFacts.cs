@@ -50,6 +50,7 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
 
         private readonly AutoMocker _mocker = new();
         private readonly IList<IndexerKey> _mockStyleKeys = new List<IndexerKey>();
+        private readonly IList<Style> _mockStyles = new List<Style>();
 
         private StylesheetStyleMutator CreateSystemUnderTest()
             => _mocker.CreateInstance<StylesheetStyleMutator>();
@@ -80,6 +81,11 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Generators
             _mocker.GetMock<IStyleIndexer>()
                 .Setup(styleIndexer => styleIndexer.Keys)
                 .Returns(_mockStyleKeys.ToArray());
+
+            _mockStyles.Add(styleMock.Style.Resource);
+            _mocker.GetMock<IStyleIndexer>()
+                .Setup(styleIndexer => styleIndexer.Resources)
+                .Returns(_mockStyles.ToArray());
         }
 
         private void MockIndexersForDefaultStyles()

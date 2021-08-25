@@ -49,6 +49,29 @@ namespace LanceC.SpreadsheetIO.Facts.Styling.Internal.Indexers
             }
         }
 
+        public class TheResourcesProperty : StyleIndexerFacts
+        {
+            [Fact]
+            public void ReturnsIndexedStyles()
+            {
+                // Arrange
+                var defaultKey = BuiltInExcelStyle.Normal.IndexerKey;
+                var defaultStyle = BuiltInExcelStyle.Normal.Style;
+
+                var sut = CreateSystemUnderTest();
+                sut.Add(defaultKey, defaultStyle);
+                sut.Add(Key, Style);
+
+                // Act
+                var resources = sut.Resources;
+
+                // Assert
+                Assert.Equal(2, resources.Count);
+                Assert.Single(resources, resource => resource == defaultStyle);
+                Assert.Single(resources, resource => resource == Style);
+            }
+        }
+
         public class TheKeyIndexer : StyleIndexerFacts
         {
             [Fact]
