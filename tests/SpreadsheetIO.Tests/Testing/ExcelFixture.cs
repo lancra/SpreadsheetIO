@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Writing;
@@ -23,6 +24,7 @@ namespace LanceC.SpreadsheetIO.Tests.Testing
             => GetSpreadsheetFactory(additionalServices)
             .Create(Path);
 
+        [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Keeps reading and writing APIs consistent.")]
         public IReadingSpreadsheet OpenReadSpreadsheet(Action<IServiceCollection>? additionalServices = default)
             => GetSpreadsheetFactory(additionalServices)
             .OpenRead(GetSourcePath());
