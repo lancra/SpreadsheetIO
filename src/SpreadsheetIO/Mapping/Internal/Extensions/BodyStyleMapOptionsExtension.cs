@@ -4,12 +4,12 @@ using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 
-namespace LanceC.SpreadsheetIO.Mapping.Extensions
+namespace LanceC.SpreadsheetIO.Mapping.Internal.Extensions
 {
     [ExcludeFromCodeCoverage]
-    internal class HeaderStyleMapOptionsExtension : IResourceMapOptionsExtension, IPropertyMapOptionsExtension
+    internal class BodyStyleMapOptionsExtension : IResourceMapOptionsExtension, IPropertyMapOptionsExtension
     {
-        public HeaderStyleMapOptionsExtension(IndexerKey key, Style style)
+        public BodyStyleMapOptionsExtension(IndexerKey key, Style style)
         {
             Key = key;
             Style = style;
