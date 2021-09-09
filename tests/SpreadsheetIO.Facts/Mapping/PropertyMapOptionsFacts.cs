@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
+using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
 using Xunit;
 

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Reading;
 
-namespace LanceC.SpreadsheetIO.Mapping.Extensions
+namespace LanceC.SpreadsheetIO.Mapping.Internal.Extensions
 {
     [ExcludeFromCodeCoverage]
     internal class DefaultPropertyReadingResolutionsResourceMapOptionsExtension : IResourceMapOptionsExtension

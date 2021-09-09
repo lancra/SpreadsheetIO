@@ -1,8 +1,9 @@
 using System;
 using System.Linq.Expressions;
+using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
 
-namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes
+namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps
 {
     public class FakeConstructionModelMap : ResourceMap<FakeConstructionModel>
     {

@@ -1,6 +1,6 @@
 using System;
 using Ardalis.GuardClauses;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Internal.Extensions;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Shared;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;

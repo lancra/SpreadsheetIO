@@ -1,7 +1,7 @@
 using System.Linq;
 using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Internal.Extensions;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal
 {

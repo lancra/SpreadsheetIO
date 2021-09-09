@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Internal.Extensions;
 using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal.Writers

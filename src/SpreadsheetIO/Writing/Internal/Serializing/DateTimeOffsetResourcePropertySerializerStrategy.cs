@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Internal.Extensions;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing
 {

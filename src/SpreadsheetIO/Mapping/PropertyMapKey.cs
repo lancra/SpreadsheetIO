@@ -7,12 +7,12 @@ namespace LanceC.SpreadsheetIO.Mapping
     /// Represents an identifier for a resource property map.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public sealed record PropertyMapKey(string? Name, uint? Number, bool IsNameIgnored)
+    public sealed record PropertyMapKey(string Name, uint? Number, bool IsNameIgnored)
     {
         /// <summary>
         /// Gets the name for the property.
         /// </summary>
-        public string? Name { get; init; } = Name;
+        public string Name { get; init; } = Name;
 
         /// <summary>
         /// Gets the column number for the property.

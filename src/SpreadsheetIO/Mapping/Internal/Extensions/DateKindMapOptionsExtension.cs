@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Shared;
 
-namespace LanceC.SpreadsheetIO.Mapping.Extensions
+namespace LanceC.SpreadsheetIO.Mapping.Internal.Extensions
 {
     [ExcludeFromCodeCoverage]
     internal class DateKindMapOptionsExtension : IResourceMapOptionsExtension, IPropertyMapOptionsExtension

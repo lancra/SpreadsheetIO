@@ -6,6 +6,7 @@ using System.Resources;
 
 namespace LanceC.SpreadsheetIO.Properties
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal static class Messages
     {
         private static readonly ResourceManager _resourceManager
@@ -56,6 +57,38 @@ namespace LanceC.SpreadsheetIO.Properties
                 resourceType);
 
         /// <summary>
+        /// The {propertyName} property has already been mapped for the {resourceMapType} resource map.
+        /// </summary>
+        public static string DuplicatePropertyMap(object? propertyName, object? resourceMapType)
+            => string.Format(
+                GetString("DuplicatePropertyMap", nameof(propertyName), nameof(resourceMapType)),
+                propertyName, resourceMapType);
+
+        /// <summary>
+        /// The {keyName} property key name has already been defined for the {resourceMapType} resource map.
+        /// </summary>
+        public static string DuplicatePropertyMapKeyName(object? keyName, object? resourceMapType)
+            => string.Format(
+                GetString("DuplicatePropertyMapKeyName", nameof(keyName), nameof(resourceMapType)),
+                keyName, resourceMapType);
+
+        /// <summary>
+        /// The {keyNumber} property key number has already been defined for the {resourceMapType} resource map.
+        /// </summary>
+        public static string DuplicatePropertyMapKeyNumber(object? keyNumber, object? resourceMapType)
+            => string.Format(
+                GetString("DuplicatePropertyMapKeyNumber", nameof(keyNumber), nameof(resourceMapType)),
+                keyNumber, resourceMapType);
+
+        /// <summary>
+        /// Multiple {resourceType} constructors are defined.
+        /// </summary>
+        public static string DuplicateResourceConstructor(object? resourceType)
+            => string.Format(
+                GetString("DuplicateResourceConstructor", nameof(resourceType)),
+                resourceType);
+
+        /// <summary>
         /// A spreadsheet page has already been added with the name '{name}'.
         /// </summary>
         public static string DuplicateSpreadsheetPageForName(object? name)
@@ -70,6 +103,12 @@ namespace LanceC.SpreadsheetIO.Properties
             => string.Format(
                 GetString("DuplicateStrategy", nameof(parentName), nameof(strategyType), nameof(propertyType)),
                 parentName, strategyType, propertyType);
+
+        /// <summary>
+        /// One or more validation failures occurred.
+        /// </summary>
+        public static string FailedResourceMapValidation
+            => GetString("FailedResourceMapValidation");
 
         /// <summary>
         /// This operation cannot be performed since writing has been closed.
@@ -116,6 +155,14 @@ namespace LanceC.SpreadsheetIO.Properties
                 styleName);
 
         /// <summary>
+        /// The {resourceType} map does not specify a constructor and the following properties do not have public setters: {propertyNames}.
+        /// </summary>
+        public static string InvalidPropertyMapsForSetterCreation(object? resourceType, object? propertyNames)
+            => string.Format(
+                GetString("InvalidPropertyMapsForSetterCreation", nameof(resourceType), nameof(propertyNames)),
+                resourceType, propertyNames);
+
+        /// <summary>
         /// The provided expression does not represent a resource property.
         /// </summary>
         public static string InvalidResourcePropertyExpression
@@ -142,6 +189,14 @@ namespace LanceC.SpreadsheetIO.Properties
             => string.Format(
                 GetString("MissingMapForResourceMapType", nameof(resourceMapType), nameof(resourceType)),
                 resourceMapType, resourceType);
+
+        /// <summary>
+        /// The {resourceType} map has properties that were specified as constructor parameters but do not have a defined map: {propertyNames}.
+        /// </summary>
+        public static string MissingMapForResourceProperties(object? resourceType, object? propertyNames)
+            => string.Format(
+                GetString("MissingMapForResourceProperties", nameof(resourceType), nameof(propertyNames)),
+                resourceType, propertyNames);
 
         /// <summary>
         /// No map is defined for the {resourceType} resource.

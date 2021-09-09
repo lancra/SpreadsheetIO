@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Ardalis.GuardClauses;
@@ -102,6 +103,9 @@ namespace LanceC.SpreadsheetIO.Mapping
 
             optionsBuilder.Options.Freeze();
 
+            ValidatePropertyUniqueness(propertyInfo);
+            ValidatePropertyKeyUniqueness(keyBuilder.Key);
+
             var propertyMap = new PropertyMap<TResource>(propertyInfo, keyBuilder.Key, optionsBuilder.Options);
             _properties.Add(propertyMap);
 
@@ -127,6 +131,36 @@ namespace LanceC.SpreadsheetIO.Mapping
             }
 
             throw new ArgumentException(Messages.InvalidResourcePropertyExpression, nameof(property));
+        }
+
+        private void ValidatePropertyUniqueness(PropertyInfo property)
+        {
+            var isDuplicate = _properties.Any(p => p.Property == property);
+            if (isDuplicate)
+            {
+                throw new ArgumentException(Messages.DuplicatePropertyMap(property.Name, GetType().Name), nameof(property));
+            }
+        }
+
+        private void ValidatePropertyKeyUniqueness(PropertyMapKey key)
+        {
+            if (!key.IsNameIgnored)
+            {
+                var isDuplicate = _properties.Any(p => !p.Key.IsNameIgnored && p.Key.Name == key.Name);
+                if (isDuplicate)
+                {
+                    throw new ArgumentException(Messages.DuplicatePropertyMapKeyName(key.Name, GetType().Name), nameof(key));
+                }
+            }
+
+            if (key.Number.HasValue)
+            {
+                var isDuplicate = _properties.Any(p => p.Key.Number == key.Number);
+                if (isDuplicate)
+                {
+                    throw new ArgumentException(Messages.DuplicatePropertyMapKeyNumber(key.Number, GetType().Name), nameof(key));
+                }
+            }
         }
     }
 }

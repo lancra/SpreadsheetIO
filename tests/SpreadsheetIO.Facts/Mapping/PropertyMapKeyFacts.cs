@@ -10,10 +10,10 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
             {
                 {
                     default,
-                    new PropertyMapKey(default, default, default)
+                    new PropertyMapKey(default!, default, default)
                 },
                 {
-                    new PropertyMapKey(default, default, default),
+                    new PropertyMapKey(default!, default, default),
                     default
                 },
             };
@@ -34,7 +34,7 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                     new PropertyMapKey("bar", 2U, false)
                 },
                 {
-                    new PropertyMapKey(default, 1U, true),
+                    new PropertyMapKey(default!, 1U, true),
                     new PropertyMapKey("foo", 1U, false)
                 },
                 {

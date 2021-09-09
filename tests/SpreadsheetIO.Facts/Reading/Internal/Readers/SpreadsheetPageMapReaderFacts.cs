@@ -1,5 +1,6 @@
 using System.Linq;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
+using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
+using LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;

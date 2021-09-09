@@ -1,6 +1,6 @@
 using System;
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Internal.Extensions;
 using LanceC.SpreadsheetIO.Shared;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing
