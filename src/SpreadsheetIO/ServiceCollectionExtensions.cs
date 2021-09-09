@@ -1,5 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
 using LanceC.SpreadsheetIO.Mapping.Internal;
+using LanceC.SpreadsheetIO.Mapping.Internal.Validators;
+using LanceC.SpreadsheetIO.Mapping.Validation;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
 using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
@@ -40,7 +44,9 @@ namespace LanceC.SpreadsheetIO
 
         private static IServiceCollection AddSpreadsheetIOMapping(this IServiceCollection services)
             => services
-            .AddScoped<IResourceMapManager, ResourceMapManager>();
+            .AddScoped<IResourceMapAggregateValidator, ResourceMapAggregateValidator>()
+            .AddScoped<IResourceMapManager, ResourceMapManager>()
+            .AddResourceMapValidators();
 
         private static IServiceCollection AddSpreadsheetIOReading(this IServiceCollection services)
             => services
@@ -103,5 +109,23 @@ namespace LanceC.SpreadsheetIO
             .AddScoped<IResourcePropertySerializerStrategy, IntegerResourcePropertySerializerStrategy>()
             .AddScoped<IResourcePropertySerializerStrategy, StringResourcePropertySerializerStrategy>()
             .AddScoped<ISpreadsheetPageMapWriter, SpreadsheetPageMapWriter>();
+
+        private static IServiceCollection AddResourceMapValidators(this IServiceCollection services)
+        {
+            var assembly = Assembly.GetAssembly(typeof(ServiceCollectionExtensions));
+            var serviceType = typeof(IResourceMapValidator);
+
+            var implementationTypes = assembly!.GetTypes()
+                .Where(type => type.GetInterface(serviceType.Name) != null)
+                .Where(type => type.IsClass)
+                .Where(type => !type.IsAbstract)
+                .ToArray();
+            foreach (var implementationType in implementationTypes)
+            {
+                services.AddScoped(serviceType, implementationType);
+            }
+
+            return services;
+        }
     }
 }

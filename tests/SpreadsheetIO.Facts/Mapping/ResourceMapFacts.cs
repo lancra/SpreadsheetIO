@@ -98,6 +98,21 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 Assert.NotNull(exception);
                 Assert.IsType<ArgumentException>(exception);
             }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenPropertyIsAlreadyMapped()
+            {
+                // Arrange
+                var sut = CreateSystemUnderTest();
+                sut.Map(model => model.Name);
+
+                // Act
+                var exception = Record.Exception(() => sut.Map(model => model.Name));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
         }
 
         public class TheMapMethodWithPropertyAndKeyActionParameters : ResourceMapFacts
@@ -177,6 +192,54 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 Assert.NotNull(exception);
                 Assert.IsType<ArgumentException>(exception);
             }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenPropertyIsAlreadyMapped()
+            {
+                // Arrange
+                var sut = CreateSystemUnderTest();
+                sut.Map(model => model.Name);
+
+                // Act
+                var exception = Record.Exception(() => sut.Map(model => model.Name, keyAction => keyAction.UseNumber(1U)));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenPropertyKeyNameIsAlreadyDefined()
+            {
+                // Arrange
+                var keyName = "Foo";
+                var sut = CreateSystemUnderTest();
+                sut.Map(model => model.Id, keyAction => keyAction.IgnoreName());
+                sut.Map(model => model.Display, keyAction => keyAction.OverrideName(keyName));
+
+                // Act
+                var exception = Record.Exception(() => sut.Map(model => model.Name, keyAction => keyAction.OverrideName(keyName)));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenPropertyKeyNumberIsAlreadyDefined()
+            {
+                // Arrange
+                var keyNumber = 1U;
+                var sut = CreateSystemUnderTest();
+                sut.Map(model => model.Id, keyAction => keyAction.UseNumber(keyNumber));
+
+                // Act
+                var exception = Record.Exception(() => sut.Map(model => model.Name, keyAction => keyAction.UseNumber(keyNumber)));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
         }
 
         public class TheMapMethodWithPropertyAndOptionsActionParameters : ResourceMapFacts
@@ -250,6 +313,21 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 // Act
                 var exception = Record.Exception(()
                     => sut.Map(model => model.Field, optionsAction => optionsAction.MarkAsOptional()));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenPropertyIsAlreadyMapped()
+            {
+                // Arrange
+                var sut = CreateSystemUnderTest();
+                sut.Map(model => model.Name);
+
+                // Act
+                var exception = Record.Exception(() => sut.Map(model => model.Name, optionsAction => optionsAction.MarkAsOptional()));
 
                 // Assert
                 Assert.NotNull(exception);
@@ -340,6 +418,66 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                     => sut.Map(
                         model => model.Field,
                         keyAction => keyAction.UseNumber(1U),
+                        optionsAction => optionsAction.MarkAsOptional()));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenPropertyIsAlreadyMapped()
+            {
+                // Arrange
+                var sut = CreateSystemUnderTest();
+                sut.Map(model => model.Name);
+
+                // Act
+                var exception = Record.Exception(()
+                    => sut.Map(
+                        model => model.Name,
+                        keyAction => keyAction.UseNumber(1U),
+                        optionsAction => optionsAction.MarkAsOptional()));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenPropertyKeyNameIsAlreadyDefined()
+            {
+                // Arrange
+                var keyName = "Foo";
+                var sut = CreateSystemUnderTest();
+                sut.Map(model => model.Id, keyAction => keyAction.IgnoreName());
+                sut.Map(model => model.Display, keyAction => keyAction.OverrideName(keyName));
+
+                // Act
+                var exception = Record.Exception(()
+                    => sut.Map(
+                        model => model.Name,
+                        keyAction => keyAction.OverrideName(keyName),
+                        optionsAction => optionsAction.MarkAsOptional()));
+
+                // Assert
+                Assert.NotNull(exception);
+                Assert.IsType<ArgumentException>(exception);
+            }
+
+            [Fact]
+            public void ThrowsArgumentExceptionWhenPropertyKeyNumberIsAlreadyDefined()
+            {
+                // Arrange
+                var keyNumber = 1U;
+                var sut = CreateSystemUnderTest();
+                sut.Map(model => model.Id, keyAction => keyAction.UseNumber(keyNumber));
+
+                // Act
+                var exception = Record.Exception(()
+                    => sut.Map(
+                        model => model.Name,
+                        keyAction => keyAction.UseNumber(keyNumber),
                         optionsAction => optionsAction.MarkAsOptional()));
 
                 // Assert

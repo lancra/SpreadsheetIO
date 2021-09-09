@@ -21,6 +21,7 @@ using System.Resources;
 
 namespace <#= model.Namespace #>
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     <#= model.AccessModifier #> static class <#= model.Class #>
     {
         private static readonly ResourceManager _resourceManager

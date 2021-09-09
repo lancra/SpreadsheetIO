@@ -1,17 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LanceC.SpreadsheetIO.Mapping.Internal.Validators;
+using LanceC.SpreadsheetIO.Mapping.Validation;
 using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Mapping.Internal
 {
     internal class ResourceMapManager : IResourceMapManager
     {
+        private readonly IResourceMapAggregateValidator _resourceMapValidator;
         private readonly IDictionary<Type, IResourceMap[]> _resourceMaps =
             new Dictionary<Type, IResourceMap[]>();
 
-        public ResourceMapManager(IEnumerable<IResourceMap> resourceMaps)
+        public ResourceMapManager(IResourceMapAggregateValidator resourceMapValidator, IEnumerable<IResourceMap> resourceMaps)
         {
+            _resourceMapValidator = resourceMapValidator;
             _resourceMaps = resourceMaps.GroupBy(map => map.ResourceType)
                 .ToDictionary(mapGrouping => mapGrouping.Key, mapGrouping => mapGrouping.ToArray());
         }
@@ -29,7 +33,9 @@ namespace LanceC.SpreadsheetIO.Mapping.Internal
                 throw new InvalidOperationException(Messages.DuplicateMapForResourceType(typeof(TResource).Name));
             }
 
-            return resourceMaps.Single();
+            var resourceMap = resourceMaps.Single();
+            Validate(resourceMap);
+            return resourceMap;
         }
 
         public ResourceMap<TResource> Single<TResource, TResourceMap>()
@@ -44,6 +50,7 @@ namespace LanceC.SpreadsheetIO.Mapping.Internal
                     Messages.MissingMapForResourceMapType(typeof(TResourceMap).Name, typeof(TResource).Name));
             }
 
+            Validate(resourceMap);
             return resourceMap;
         }
 
@@ -58,6 +65,16 @@ namespace LanceC.SpreadsheetIO.Mapping.Internal
 
             return resourceMaps!.Cast<ResourceMap<TResource>>()
                 .ToArray();
+        }
+
+        private void Validate<TResource>(ResourceMap<TResource> map)
+            where TResource : class
+        {
+            var validationResult = _resourceMapValidator.Validate(map);
+            if (!validationResult.IsValid)
+            {
+                throw new ResourceMapValidationException(validationResult);
+            }
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Mapping.Internal;
+using LanceC.SpreadsheetIO.Mapping.Internal.Validators;
+using LanceC.SpreadsheetIO.Mapping.Validation;
 using Moq.AutoMock;
 using Xunit;
 
@@ -23,6 +25,10 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping.Internal
                 // Arrange
                 var expectedResourceMap = new FakeStringResourceMap();
                 _mocker.Use<IEnumerable<IResourceMap>>(new[] { expectedResourceMap, });
+
+                _mocker.GetMock<IResourceMapAggregateValidator>()
+                    .Setup(resourceMapValidator => resourceMapValidator.Validate(expectedResourceMap))
+                    .Returns(ResourceMapValidationResult.Success());
 
                 var sut = CreateSystemUnderTest();
 
@@ -70,6 +76,29 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping.Internal
                 Assert.NotNull(exception);
                 Assert.IsType<InvalidOperationException>(exception);
             }
+
+            [Fact]
+            public void ThrowsResourceMapValidationExceptionWhenValidatorIndicatesInvalidResult()
+            {
+                // Arrange
+                var resourceMap = new FakeStringResourceMap();
+                _mocker.Use<IEnumerable<IResourceMap>>(new[] { resourceMap, });
+
+                var validationResult = ResourceMapValidationResult.Failure("FooBar");
+                _mocker.GetMock<IResourceMapAggregateValidator>()
+                    .Setup(resourceMapValidator => resourceMapValidator.Validate(resourceMap))
+                    .Returns(validationResult);
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var exception = Record.Exception(() => sut.Single<string>());
+
+                // Assert
+                Assert.NotNull(exception);
+                var resourceMapValidationException = Assert.IsType<ResourceMapValidationException>(exception);
+                Assert.Equal(validationResult, resourceMapValidationException.ValidationResult);
+            }
         }
 
         public class TheSingleMethodWithResourceAndResourceMapGenericParameters : ResourceMapManagerFacts
@@ -80,6 +109,10 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping.Internal
                 // Arrange
                 var expectedResourceMap = new FakeStringResourceMap();
                 _mocker.Use<IEnumerable<IResourceMap>>(new[] { expectedResourceMap, });
+
+                _mocker.GetMock<IResourceMapAggregateValidator>()
+                    .Setup(resourceMapValidator => resourceMapValidator.Validate(expectedResourceMap))
+                    .Returns(ResourceMapValidationResult.Success());
 
                 var sut = CreateSystemUnderTest();
 
@@ -104,6 +137,29 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping.Internal
                 // Assert
                 Assert.NotNull(exception);
                 Assert.IsType<KeyNotFoundException>(exception);
+            }
+
+            [Fact]
+            public void ThrowsResourceMapValidationExceptionWhenValidatorIndicatesInvalidResult()
+            {
+                // Arrange
+                var resourceMap = new FakeStringResourceMap();
+                _mocker.Use<IEnumerable<IResourceMap>>(new[] { resourceMap, });
+
+                var validationResult = ResourceMapValidationResult.Failure("FooBar");
+                _mocker.GetMock<IResourceMapAggregateValidator>()
+                    .Setup(resourceMapValidator => resourceMapValidator.Validate(resourceMap))
+                    .Returns(validationResult);
+
+                var sut = CreateSystemUnderTest();
+
+                // Act
+                var exception = Record.Exception(() => sut.Single<string, FakeStringResourceMap>());
+
+                // Assert
+                Assert.NotNull(exception);
+                var resourceMapValidationException = Assert.IsType<ResourceMapValidationException>(exception);
+                Assert.Equal(validationResult, resourceMapValidationException.ValidationResult);
             }
         }
     }
