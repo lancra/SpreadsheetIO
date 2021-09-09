@@ -1,8 +1,7 @@
 using System;
 using System.Reflection;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
+using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
-using Moq.AutoMock;
 using Xunit;
 
 namespace LanceC.SpreadsheetIO.Facts.Mapping

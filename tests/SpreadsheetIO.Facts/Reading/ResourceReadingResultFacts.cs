@@ -1,5 +1,5 @@
 using System;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
+using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Failures;
 using Xunit;

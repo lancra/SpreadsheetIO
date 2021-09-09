@@ -1,6 +1,6 @@
 using System;
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
+using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using Moq.AutoMock;
