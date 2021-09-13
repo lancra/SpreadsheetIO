@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Extensions;
 using LanceC.SpreadsheetIO.Mapping.Internal;
-using LanceC.SpreadsheetIO.Mapping.Internal.Extensions;
 using LanceC.SpreadsheetIO.Reading.Failures;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;

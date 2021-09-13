@@ -2,7 +2,7 @@ using System;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps;
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Internal.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Extensions;
 using Moq.AutoMock;
 using Xunit;
 
