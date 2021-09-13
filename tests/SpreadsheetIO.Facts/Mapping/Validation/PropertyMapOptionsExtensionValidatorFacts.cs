@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Internal.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Extensions;
 using LanceC.SpreadsheetIO.Mapping.Validation;
 using LanceC.SpreadsheetIO.Styling;
 using Moq.AutoMock;

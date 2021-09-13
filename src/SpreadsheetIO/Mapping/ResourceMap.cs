@@ -15,7 +15,7 @@ namespace LanceC.SpreadsheetIO.Mapping
     public abstract class ResourceMap<TResource> : IResourceMap
         where TResource : class
     {
-        private List<PropertyMap<TResource>> _properties = new();
+        private readonly List<PropertyMap<TResource>> _properties = new();
         private ResourceMapOptions<TResource>? _options;
 
         /// <summary>

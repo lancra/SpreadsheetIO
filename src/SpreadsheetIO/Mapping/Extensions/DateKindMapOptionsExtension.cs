@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Shared;
 
-namespace LanceC.SpreadsheetIO.Mapping.Internal.Extensions
+namespace LanceC.SpreadsheetIO.Mapping.Extensions
 {
+    /// <summary>
+    /// Provides a date format for a resource or a property.
+    /// </summary>
     [ExcludeFromCodeCoverage]
-    internal class DateKindMapOptionsExtension : IResourceMapOptionsExtension, IPropertyMapOptionsExtension
+    public class DateKindMapOptionsExtension : IResourceMapOptionsExtension, IPropertyMapOptionsExtension
     {
-        public DateKindMapOptionsExtension(CellDateKind dateKind)
+        internal DateKindMapOptionsExtension(CellDateKind dateKind)
         {
             DateKind = dateKind;
         }
 
+        /// <inheritdoc/>
         public IReadOnlyCollection<Type> AllowedTypes
             => new[]
             {
@@ -20,6 +24,9 @@ namespace LanceC.SpreadsheetIO.Mapping.Internal.Extensions
                 typeof(DateTimeOffset),
             };
 
+        /// <summary>
+        /// Gets the date format.
+        /// </summary>
         public CellDateKind DateKind { get; }
     }
 }

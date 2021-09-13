@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Ardalis.GuardClauses;
 using Ardalis.SmartEnum;
-using LanceC.SpreadsheetIO.Mapping.Internal.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Extensions;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Shared;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
