@@ -6,7 +6,7 @@ on:
   pull_request:
   
 env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 jobs:
   build:
@@ -22,4 +22,4 @@ jobs:
         dotnet-version: 6.x
         
     - name: Build
-      run: dotnet run --projects tools\SpreadsheetIO.Tool.Build\LanceC.SpreadsheetIO.Tool.Build.csproj
+      run: dotnet run --project tools\SpreadsheetIO.Tool.Build\LanceC.SpreadsheetIO.Tool.Build.csproj
