@@ -94,9 +94,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
 
                 // Assert
                 Assert.Equal(ResourcePropertyParseResultKind.Success, parseResult);
-                Assert.Equal(
-                    new DateTimeOffset(1933, 10, 18, 16, 17, 36, 960, TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow)),
-                    value);
+                Assert.Equal(DateTimeOffset.Parse("1933-10-18T16:17:36.960"), value);
             }
 
             [Fact]
@@ -153,9 +151,7 @@ namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
 
                 // Assert
                 Assert.Equal(ResourcePropertyParseResultKind.Success, parseResult);
-                Assert.Equal(
-                    new DateTimeOffset(1933, 10, 18, 16, 17, 36, 960, TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow)),
-                    value);
+                Assert.Equal(DateTimeOffset.Parse("1933-10-18T16:17:36.960"), value);
             }
 
             [Fact]
