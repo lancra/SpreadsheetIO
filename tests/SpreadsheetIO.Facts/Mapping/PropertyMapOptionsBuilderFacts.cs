@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Ardalis.SmartEnum;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
@@ -179,48 +177,6 @@ namespace LanceC.SpreadsheetIO.Facts.Mapping
                 // Assert
                 Assert.NotNull(exception);
                 Assert.IsType<ArgumentNullException>(exception);
-            }
-        }
-
-        public class TheMarkHeaderAsOptionalMethod : PropertyMapOptionsBuilderFacts
-        {
-            [Fact]
-            public void AddsOptionsExtension()
-            {
-                // Arrange
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
-
-                // Act
-#pragma warning disable CS0618 // Type or member is obsolete
-                sut.MarkHeaderAsOptional();
-#pragma warning restore CS0618 // Type or member is obsolete
-
-                // Assert
-                var extension = sut.Options.FindExtension<OptionalPropertyMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(PropertyElementKind.Header, extension!.Kind);
-            }
-        }
-
-        public class TheMarkValueAsOptionalMethod : PropertyMapOptionsBuilderFacts
-        {
-            [Fact]
-            public void AddsOptionsExtension()
-            {
-                // Arrange
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
-
-                // Act
-#pragma warning disable CS0618 // Type or member is obsolete
-                sut.MarkValueAsOptional();
-#pragma warning restore CS0618 // Type or member is obsolete
-
-                // Assert
-                var extension = sut.Options.FindExtension<OptionalPropertyMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(PropertyElementKind.Body, extension!.Kind);
             }
         }
 

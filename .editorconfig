@@ -1,20 +1,13 @@
-; EditorConfig to support per-solution formatting.
-; Use the EditorConfig VS add-in to make this work.
-; http://editorconfig.org/
-
-; This is the default for the codeline.
 root = true
 
 [*]
-indent_style = space
 charset = utf-8
-trim_trailing_whitespace = true
+indent_style = space
 insert_final_newline = true
+trim_trailing_whitespace = true
 
 [*.cs]
 indent_size = 4
-dotnet_sort_system_directives_first = true:warning
-dotnet_code_quality.null_check_validation_methods = NotNull
 
 [*.{xml,config,json,*proj,nuspec,props,resx,targets,yml,tasks}]
 indent_size = 2
@@ -23,10 +16,13 @@ indent_size = 2
 indent_size = 4
 
 [*.sh]
-indent_size = 4
 end_of_line = lf
+indent_size = 4
 
 [*.{cs,vb}]
+dotnet_sort_system_directives_first = true:warning
+dotnet_code_quality.null_check_validation_methods = NotNull
+csharp_style_namespace_declarations=file_scoped
 # Rules
 dotnet_diagnostic.CA1000.severity = warning
 dotnet_diagnostic.CA1001.severity = warning
