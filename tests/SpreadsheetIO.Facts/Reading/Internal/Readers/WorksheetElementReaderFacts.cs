@@ -27,28 +27,22 @@ public class WorksheetElementReaderFacts
 
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Row),
                     attributes: new OpenXmlAttribute(default, ElementAttributeKind.RowNumber.LocalName, default, "1")),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Row),
                     attributes: new OpenXmlAttribute(
                         default,
                         ElementAttributeKind.RowNumber.LocalName,
                         default,
                         rowNumber.ToString())),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Row),
                     attributes: new OpenXmlAttribute(default, ElementAttributeKind.RowNumber.LocalName, default, "3")),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -71,18 +65,14 @@ public class WorksheetElementReaderFacts
 
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Row),
                     attributes: new OpenXmlAttribute(default, ElementAttributeKind.RowNumber.LocalName, default, "1")),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Row),
                     attributes: new OpenXmlAttribute(default, ElementAttributeKind.RowNumber.LocalName, default, "2")),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -106,10 +96,10 @@ public class WorksheetElementReaderFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -131,9 +121,9 @@ public class WorksheetElementReaderFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SheetData)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SheetData)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -160,16 +150,14 @@ public class WorksheetElementReaderFacts
 
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Row),
                     attributes: new OpenXmlAttribute(
                         default,
                         ElementAttributeKind.RowNumber.LocalName,
                         default,
                         expectedRowNumber.ToString())),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -191,7 +179,7 @@ public class WorksheetElementReaderFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Cell)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -217,10 +205,10 @@ public class WorksheetElementReaderFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Cell)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Cell)),
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Cell)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -242,9 +230,9 @@ public class WorksheetElementReaderFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Cell)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Cell)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -269,12 +257,10 @@ public class WorksheetElementReaderFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Cell),
                     attributes: new OpenXmlAttribute(default, ElementAttributeKind.CellReference.LocalName, default, "A2")),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -298,8 +284,8 @@ public class WorksheetElementReaderFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -327,17 +313,15 @@ public class WorksheetElementReaderFacts
 
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Cell),
                     attributes: new OpenXmlAttribute(
                         default,
                         ElementAttributeKind.CellValueType.LocalName,
                         default,
                         CellValueKind.InlineString.XmlName)),
-                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text), text: expectedCellValue),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.Create(typeof(OpenXml.Text), text: expectedCellValue),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -361,9 +345,9 @@ public class WorksheetElementReaderFacts
 
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Cell)),
-                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.CellValue), text: expectedCellValue),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.Create(typeof(OpenXml.CellValue), text: expectedCellValue),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -387,17 +371,15 @@ public class WorksheetElementReaderFacts
 
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Cell),
                     attributes: new OpenXmlAttribute(
                         default,
                         ElementAttributeKind.CellValueType.LocalName,
                         default,
                         CellValueKind.Boolean.XmlName)),
-                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.CellValue), text: expectedCellValue),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.Create(typeof(OpenXml.CellValue), text: expectedCellValue),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -422,17 +404,15 @@ public class WorksheetElementReaderFacts
 
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Cell),
                     attributes: new OpenXmlAttribute(
                         default,
                         ElementAttributeKind.CellValueType.LocalName,
                         default,
                         CellValueKind.SharedString.XmlName)),
-                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.CellValue), text: stringIndex.ToString()),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.Create(typeof(OpenXml.CellValue), text: stringIndex.ToString()),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -458,8 +438,8 @@ public class WorksheetElementReaderFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);

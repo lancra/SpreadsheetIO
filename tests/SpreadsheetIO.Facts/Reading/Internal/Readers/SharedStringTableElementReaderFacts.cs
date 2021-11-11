@@ -22,11 +22,11 @@ public class SharedStringTableElementReaderFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
-                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.SharedStringTable)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.SharedStringItem)),
+                FakeOpenXmlElement.Create(typeof(OpenXml.Text)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringItem)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringTable)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -47,11 +47,11 @@ public class SharedStringTableElementReaderFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
-                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.SharedStringTable)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.SharedStringItem)),
+                FakeOpenXmlElement.Create(typeof(OpenXml.Text)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringItem)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringTable)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -79,11 +79,11 @@ public class SharedStringTableElementReaderFacts
 
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
-                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text), text: expectedItemValue),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.SharedStringTable)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.SharedStringItem)),
+                FakeOpenXmlElement.Create(typeof(OpenXml.Text), text: expectedItemValue),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringItem)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringTable)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
@@ -105,11 +105,11 @@ public class SharedStringTableElementReaderFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
-                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.SharedStringTable)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.SharedStringItem)),
+                FakeOpenXmlElement.Create(typeof(OpenXml.Text)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringItem)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringTable)),
             };
 
             var readerMock = new FakeOpenXmlReaderWrapper(readerElements);

@@ -7,12 +7,12 @@ public class FakeOpenXmlReaderWrapper : IOpenXmlReaderWrapper
 {
     private const string ExceptionMessage = "The reader is not currently pointed at an element.";
 
-    private readonly IReadOnlyList<FakeOpenXmlReaderWrapperElement> _elements;
+    private readonly IReadOnlyList<FakeOpenXmlElement> _elements;
 
     private int _currentElementIndex = -1;
-    private FakeOpenXmlReaderWrapperElement? _currentElement;
+    private FakeOpenXmlElement? _currentElement;
 
-    public FakeOpenXmlReaderWrapper(IReadOnlyList<FakeOpenXmlReaderWrapperElement> elements)
+    public FakeOpenXmlReaderWrapper(IReadOnlyList<FakeOpenXmlElement> elements)
     {
         _elements = elements;
     }

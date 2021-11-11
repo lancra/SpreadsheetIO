@@ -16,16 +16,16 @@ public class OpenXmlReaderWrapperExtensionsFacts
         public void ReturnsTrueWhenStartElementOfSpecifiedStartTypeIsFound()
         {
             // Arrange
-            var expectedElement = new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Row));
+            var expectedElement = FakeOpenXmlElement.CreateStart(typeof(OpenXml.Row));
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Worksheet)),
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SheetData)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Worksheet)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.SheetData)),
                 expectedElement,
-                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Cell)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SheetData)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Worksheet)),
+                FakeOpenXmlElement.Create(typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SheetData)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Worksheet)),
             };
 
             var sut = new FakeOpenXmlReaderWrapper(readerElements);
@@ -44,14 +44,14 @@ public class OpenXmlReaderWrapperExtensionsFacts
         public void ReturnsFalseWhenEndElementOfSpecifiedEndTypeIsFoundBeforeStartElementOfSpecifiedStartType()
         {
             // Arrange
-            var expectedElement = new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row));
+            var expectedElement = FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row));
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Row)),
                 expectedElement,
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Cell)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.Create(typeof(OpenXml.Cell)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
             var sut = new FakeOpenXmlReaderWrapper(readerElements);
@@ -72,8 +72,8 @@ public class OpenXmlReaderWrapperExtensionsFacts
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.Row)),
-                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Row)),
+                FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
             var sut = new FakeOpenXmlReaderWrapper(readerElements);
@@ -105,7 +105,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
         public void ThrowsArgumentNullExceptionWhenStartElementTypeIsNull()
         {
             // Arrange
-            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlReaderWrapperElement>());
+            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
             var startElementType = default(Type);
             var endElementType = typeof(OpenXml.Row);
 
@@ -121,7 +121,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
         public void ThrowsArgumentNullExceptionWhenEndElementTypeIsNull()
         {
             // Arrange
-            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlReaderWrapperElement>());
+            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
             var startElementType = typeof(OpenXml.Cell);
             var endElementType = default(Type);
 
@@ -145,9 +145,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
             var expectedAttribute = new OpenXmlAttribute(string.Empty, kind.LocalName, string.Empty, "foo");
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Cell),
                     string.Empty,
                     expectedAttribute,
@@ -172,9 +170,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
 
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(
-                    true,
-                    false,
+                FakeOpenXmlElement.CreateStart(
                     typeof(OpenXml.Cell),
                     string.Empty,
                     new OpenXmlAttribute(string.Empty, ElementAttributeKind.CellValueType.LocalName, string.Empty, "bar")),
@@ -209,7 +205,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
         public void ThrowsArgumentNullExceptionWhenKindIsNull()
         {
             // Arrange
-            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlReaderWrapperElement>());
+            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
             var kind = default(ElementAttributeKind);
 
             // Act
@@ -230,7 +226,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
             var elementType = typeof(OpenXml.Cell);
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(true, false, elementType),
+                FakeOpenXmlElement.CreateStart(elementType),
             };
 
             var sut = new FakeOpenXmlReaderWrapper(readerElements);
@@ -243,18 +239,34 @@ public class OpenXmlReaderWrapperExtensionsFacts
             Assert.True(isStartElementOfType);
         }
 
-        [Theory]
-        [InlineData(typeof(OpenXml.Row), true)]
-        [InlineData(typeof(OpenXml.Row), false)]
-        [InlineData(typeof(OpenXml.Cell), false)]
-        public void ReturnsFalseWhenCurrentElementDoesNotMatchSpecifiedTypeOrIsNotStartElement(
-            Type elementType,
-            bool isStartElement)
+        [Fact]
+        public void ReturnsFalseWhenCurrentElementDoesNotMatchSpecifiedType()
         {
             // Arrange
             var readerElements = new[]
             {
-                new FakeOpenXmlReaderWrapperElement(isStartElement, false, elementType),
+                FakeOpenXmlElement.CreateStart(typeof(OpenXml.Row)),
+            };
+
+            var sut = new FakeOpenXmlReaderWrapper(readerElements);
+            sut.Read();
+
+            // Act
+            var isStartElementOfType = sut.IsStartElementOfType(typeof(OpenXml.Cell));
+
+            // Assert
+            Assert.False(isStartElementOfType);
+        }
+
+        [Theory]
+        [InlineData(typeof(OpenXml.Row))]
+        [InlineData(typeof(OpenXml.Cell))]
+        public void ReturnsFalseWhenCurrentElementIsNotStartElement(Type elementType)
+        {
+            // Arrange
+            var readerElements = new[]
+            {
+                FakeOpenXmlElement.CreateEnd(elementType),
             };
 
             var sut = new FakeOpenXmlReaderWrapper(readerElements);
@@ -286,7 +298,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
         public void ThrowsArgumentNullExceptionWhenElementTypeIsNull()
         {
             // Arrange
-            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlReaderWrapperElement>());
+            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
             var elementType = default(Type);
 
             // Act
