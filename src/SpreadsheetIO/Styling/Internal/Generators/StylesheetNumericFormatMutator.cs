@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 

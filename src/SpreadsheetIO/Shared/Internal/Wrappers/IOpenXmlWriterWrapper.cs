@@ -1,4 +1,3 @@
-using System;
 using DocumentFormat.OpenXml;
 
 namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers

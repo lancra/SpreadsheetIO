@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;

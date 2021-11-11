@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Mapping;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Properties

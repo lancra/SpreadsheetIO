@@ -1,4 +1,3 @@
-using System;
 using LanceC.SpreadsheetIO.Writing;
 using LanceC.SpreadsheetIO.Writing.Internal;
 using Moq;

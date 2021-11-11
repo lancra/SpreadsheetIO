@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps;

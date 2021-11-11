@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Drawing;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;

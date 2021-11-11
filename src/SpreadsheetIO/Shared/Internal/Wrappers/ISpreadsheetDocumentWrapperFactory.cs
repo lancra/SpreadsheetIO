@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
 {
     /// <summary>

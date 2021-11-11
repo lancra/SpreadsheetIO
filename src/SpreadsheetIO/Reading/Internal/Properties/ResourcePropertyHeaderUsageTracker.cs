@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 namespace LanceC.SpreadsheetIO.Reading.Internal.Properties
 {
     internal class ResourcePropertyHeaderUsageTracker : IResourcePropertyHeaderUsageTracker

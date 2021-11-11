@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace LanceC.SpreadsheetIO.Reading.Internal.Properties
 {
     /// <summary>

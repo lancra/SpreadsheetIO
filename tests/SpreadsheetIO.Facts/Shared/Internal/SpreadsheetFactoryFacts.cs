@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using LanceC.SpreadsheetIO.Mapping.Internal;
 using LanceC.SpreadsheetIO.Reading.Internal;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;

@@ -1,4 +1,3 @@
-using System;
 using LanceC.SpreadsheetIO.Styling;
 using Xunit;
 

@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Tests.Testing;

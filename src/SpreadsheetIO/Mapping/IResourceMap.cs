@@ -1,5 +1,3 @@
-using System;
-
 namespace LanceC.SpreadsheetIO.Mapping
 {
     /// <summary>

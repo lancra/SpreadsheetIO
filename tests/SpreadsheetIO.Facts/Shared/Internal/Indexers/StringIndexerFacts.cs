@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using Moq.AutoMock;
 using Xunit;

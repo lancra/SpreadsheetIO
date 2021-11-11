@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using Moq.AutoMock;
 using Xunit;

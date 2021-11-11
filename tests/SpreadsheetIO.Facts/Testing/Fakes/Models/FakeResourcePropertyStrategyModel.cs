@@ -1,5 +1,3 @@
-using System;
-
 namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models
 {
     public class FakeResourcePropertyStrategyModel
