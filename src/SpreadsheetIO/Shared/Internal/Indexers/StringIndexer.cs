@@ -1,33 +1,32 @@
 using LanceC.SpreadsheetIO.Properties;
 
-namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
+namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers;
+
+internal class StringIndexer : ReverseIndexerBase<string>, IStringIndexer
 {
-    internal class StringIndexer : ReverseIndexerBase<string>, IStringIndexer
+    protected override IReadOnlyCollection<string> DefaultResources
+        => Array.Empty<string>();
+
+    public override uint this[string resource]
     {
-        protected override IReadOnlyCollection<string> DefaultResources
-            => Array.Empty<string>();
-
-        public override uint this[string resource]
-        {
-            get
-            {
-                ValidateString(resource);
-                return base[resource];
-            }
-        }
-
-        public override uint Add(string resource)
+        get
         {
             ValidateString(resource);
-            return base.Add(resource);
+            return base[resource];
         }
+    }
 
-        private static void ValidateString(string resource)
+    public override uint Add(string resource)
+    {
+        ValidateString(resource);
+        return base.Add(resource);
+    }
+
+    private static void ValidateString(string resource)
+    {
+        if (string.IsNullOrEmpty(resource))
         {
-            if (string.IsNullOrEmpty(resource))
-            {
-                throw new ArgumentException(Messages.InvalidStringForIndexing);
-            }
+            throw new ArgumentException(Messages.InvalidStringForIndexing);
         }
     }
 }

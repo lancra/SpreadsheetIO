@@ -1,48 +1,47 @@
 using System.Diagnostics.CodeAnalysis;
 using DocumentFormat.OpenXml;
 
-namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
+namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
+
+[ExcludeFromCodeCoverage]
+internal class OpenXmlReaderWrapper : IOpenXmlReaderWrapper
 {
-    [ExcludeFromCodeCoverage]
-    internal class OpenXmlReaderWrapper : IOpenXmlReaderWrapper
+    private readonly OpenXmlReader _openXmlReader;
+
+    public OpenXmlReaderWrapper(OpenXmlReader openXmlReader)
     {
-        private readonly OpenXmlReader _openXmlReader;
+        _openXmlReader = openXmlReader;
+    }
 
-        public OpenXmlReaderWrapper(OpenXmlReader openXmlReader)
+    public bool IsStartElement
+        => _openXmlReader.IsStartElement;
+
+    public bool IsEndElement
+        => _openXmlReader.IsEndElement;
+
+    public Type ElementType
+        => _openXmlReader.ElementType;
+
+    public IReadOnlyCollection<OpenXmlAttribute> Attributes
+        => _openXmlReader.Attributes;
+
+    public bool Read()
+        => _openXmlReader.Read();
+
+    public string GetText()
+        => _openXmlReader.GetText();
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            _openXmlReader = openXmlReader;
-        }
-
-        public bool IsStartElement
-            => _openXmlReader.IsStartElement;
-
-        public bool IsEndElement
-            => _openXmlReader.IsEndElement;
-
-        public Type ElementType
-            => _openXmlReader.ElementType;
-
-        public IReadOnlyCollection<OpenXmlAttribute> Attributes
-            => _openXmlReader.Attributes;
-
-        public bool Read()
-            => _openXmlReader.Read();
-
-        public string GetText()
-            => _openXmlReader.GetText();
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _openXmlReader.Dispose();
-            }
+            _openXmlReader.Dispose();
         }
     }
 }

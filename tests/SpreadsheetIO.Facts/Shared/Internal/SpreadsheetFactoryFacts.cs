@@ -13,335 +13,334 @@ using Moq;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Shared.Internal
+namespace LanceC.SpreadsheetIO.Facts.Shared.Internal;
+
+public class SpreadsheetFactoryFacts
 {
-    public class SpreadsheetFactoryFacts
+    private readonly AutoMocker _mocker = new();
+
+    private SpreadsheetFactory CreateSystemUnderTest()
+        => _mocker.CreateInstance<SpreadsheetFactory>();
+
+    private Mock<IServiceProvider> MockServiceProvider()
     {
-        private readonly AutoMocker _mocker = new();
+        var serviceProviderMock = _mocker.GetMock<IServiceProvider>();
 
-        private SpreadsheetFactory CreateSystemUnderTest()
-            => _mocker.CreateInstance<SpreadsheetFactory>();
+        var serviceScopeMock = _mocker.GetMock<IServiceScope>();
+        serviceScopeMock.Setup(serviceScope => serviceScope.ServiceProvider)
+            .Returns(serviceProviderMock.Object);
 
-        private Mock<IServiceProvider> MockServiceProvider()
+        var serviceScopeFactoryMock = _mocker.GetMock<IServiceScopeFactory>();
+        serviceScopeFactoryMock.Setup(serviceScopeFactory => serviceScopeFactory.CreateScope())
+            .Returns(serviceScopeMock.Object);
+
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IServiceScopeFactory)))
+            .Returns(serviceScopeFactoryMock.Object);
+
+        return serviceProviderMock;
+    }
+
+    private void MockForCreate(Mock<IServiceProvider> serviceProviderMock)
+    {
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IStyleIndexer)))
+            .Returns(_mocker.GetMock<IStyleIndexer>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IStringIndexer)))
+            .Returns(_mocker.GetMock<IStringIndexer>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IEnumerable<ISpreadsheetGenerator>)))
+            .Returns(new[] { _mocker.GetMock<ISpreadsheetGenerator>().Object, });
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ISpreadsheetPageMapWriter)))
+            .Returns(_mocker.GetMock<ISpreadsheetPageMapWriter>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IResourceMapManager)))
+            .Returns(_mocker.GetMock<IResourceMapManager>().Object);
+    }
+
+    private void MockForOpenRead(Mock<IServiceProvider> serviceProviderMock)
+    {
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IElementReaderFactory)))
+            .Returns(_mocker.GetMock<IElementReaderFactory>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IResourceMapManager)))
+            .Returns(_mocker.GetMock<IResourceMapManager>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ISpreadsheetPageMapReader)))
+            .Returns(_mocker.GetMock<ISpreadsheetPageMapReader>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IReadingSpreadsheetPageOperationFactory)))
+            .Returns(_mocker.GetMock<IReadingSpreadsheetPageOperationFactory>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IStringIndexer)))
+            .Returns(_mocker.GetMock<IStringIndexer>().Object);
+    }
+
+    public class TheCreateMethodWithPathParameter : SpreadsheetFactoryFacts
+    {
+        [Fact]
+        public void ReturnsWritingSpreadsheet()
         {
-            var serviceProviderMock = _mocker.GetMock<IServiceProvider>();
+            // Arrange
+            var path = new Uri(@"C:\Test");
 
-            var serviceScopeMock = _mocker.GetMock<IServiceScope>();
-            serviceScopeMock.Setup(serviceScope => serviceScope.ServiceProvider)
-                .Returns(serviceProviderMock.Object);
+            var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
+            _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
+                .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Create(path.LocalPath))
+                .Returns(spreadsheetDocumentMock.Object);
 
-            var serviceScopeFactoryMock = _mocker.GetMock<IServiceScopeFactory>();
-            serviceScopeFactoryMock.Setup(serviceScopeFactory => serviceScopeFactory.CreateScope())
-                .Returns(serviceScopeMock.Object);
+            var serviceProviderMock = MockServiceProvider();
+            MockForCreate(serviceProviderMock);
 
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IServiceScopeFactory)))
-                .Returns(serviceScopeFactoryMock.Object);
+            var sut = CreateSystemUnderTest();
 
-            return serviceProviderMock;
+            // Act
+            var spreadsheet = sut.Create(path);
+
+            // Assert
+            Assert.IsType<WritingSpreadsheet>(spreadsheet);
         }
 
-        private void MockForCreate(Mock<IServiceProvider> serviceProviderMock)
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenPathIsNull()
         {
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IStyleIndexer)))
-                .Returns(_mocker.GetMock<IStyleIndexer>().Object);
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IStringIndexer)))
-                .Returns(_mocker.GetMock<IStringIndexer>().Object);
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IEnumerable<ISpreadsheetGenerator>)))
-                .Returns(new[] { _mocker.GetMock<ISpreadsheetGenerator>().Object, });
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ISpreadsheetPageMapWriter)))
-                .Returns(_mocker.GetMock<ISpreadsheetPageMapWriter>().Object);
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IResourceMapManager)))
-                .Returns(_mocker.GetMock<IResourceMapManager>().Object);
+            // Arrange
+            var path = default(Uri);
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var exception = Record.Exception(() => sut.Create(path!));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
+
+    public class TheCreateMethodWithStreamParameter : SpreadsheetFactoryFacts
+    {
+        [Fact]
+        public void ReturnsWritingSpreadsheet()
+        {
+            // Arrange
+            var stream = Stream.Null;
+
+            var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
+            _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
+                .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Create(stream))
+                .Returns(spreadsheetDocumentMock.Object);
+
+            var serviceProviderMock = MockServiceProvider();
+            MockForCreate(serviceProviderMock);
+
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var spreadsheet = sut.Create(stream);
+
+            // Assert
+            Assert.IsType<WritingSpreadsheet>(spreadsheet);
         }
 
-        private void MockForOpenRead(Mock<IServiceProvider> serviceProviderMock)
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenStreamIsNull()
         {
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IElementReaderFactory)))
-                .Returns(_mocker.GetMock<IElementReaderFactory>().Object);
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IResourceMapManager)))
-                .Returns(_mocker.GetMock<IResourceMapManager>().Object);
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ISpreadsheetPageMapReader)))
-                .Returns(_mocker.GetMock<ISpreadsheetPageMapReader>().Object);
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IReadingSpreadsheetPageOperationFactory)))
-                .Returns(_mocker.GetMock<IReadingSpreadsheetPageOperationFactory>().Object);
-            serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IStringIndexer)))
-                .Returns(_mocker.GetMock<IStringIndexer>().Object);
+            // Arrange
+            var stream = default(Stream);
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var exception = Record.Exception(() => sut.Create(stream!));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
+
+    public class TheOpenReadMethodWithPathParameter : SpreadsheetFactoryFacts
+    {
+        [Fact]
+        public void ReturnsReadingSpreadsheet()
+        {
+            // Arrange
+            var path = new Uri(@"C:\Test");
+
+            var worksheetPartMock = _mocker.GetMock<IWorksheetPartWrapper>();
+            worksheetPartMock.SetupGet(worksheetPart => worksheetPart.Name)
+                .Returns("Sheet1");
+
+            var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
+            spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.WorksheetParts)
+                .Returns(new[] { worksheetPartMock.Object, });
+
+            _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
+                .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Open(path.LocalPath, false))
+                .Returns(spreadsheetDocumentMock.Object);
+
+            var serviceProviderMock = MockServiceProvider();
+            MockForOpenRead(serviceProviderMock);
+
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var spreadsheet = sut.OpenRead(path);
+
+            // Assert
+            Assert.IsType<ReadingSpreadsheet>(spreadsheet);
+            Assert.Single(spreadsheet.Pages);
         }
 
-        public class TheCreateMethodWithPathParameter : SpreadsheetFactoryFacts
+        [Fact]
+        public void PopulatesStringIndexerWhenSharedStringTableIsPresent()
         {
-            [Fact]
-            public void ReturnsWritingSpreadsheet()
-            {
-                // Arrange
-                var path = new Uri(@"C:\Test");
+            // Arrange
+            var path = new Uri(@"C:\Test");
+            var firstExpectedItemValue = "foo";
+            var secondExpectedItemValue = "bar";
 
-                var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
-                _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
-                    .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Create(path.LocalPath))
-                    .Returns(spreadsheetDocumentMock.Object);
+            var sharedStringTablePartMock = _mocker.GetMock<ISharedStringTablePartWrapper>();
 
-                var serviceProviderMock = MockServiceProvider();
-                MockForCreate(serviceProviderMock);
+            var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
+            spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.WorksheetParts)
+                .Returns(Array.Empty<IWorksheetPartWrapper>());
+            spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.SharedStringTablePart)
+                .Returns(sharedStringTablePartMock.Object);
 
-                var sut = CreateSystemUnderTest();
+            _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
+                .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Open(path.LocalPath, false))
+                .Returns(spreadsheetDocumentMock.Object);
 
-                // Act
-                var spreadsheet = sut.Create(path);
+            var sharedStringTableReaderMock = _mocker.GetMock<ISharedStringTableElementReader>();
+            sharedStringTableReaderMock.SetupSequence(sharedStringTableReader => sharedStringTableReader.ReadNextItem())
+                .Returns(true)
+                .Returns(true)
+                .Returns(false);
+            sharedStringTableReaderMock.SetupSequence(sharedStringTableReader => sharedStringTableReader.GetItemValue())
+                .Returns(firstExpectedItemValue)
+                .Returns(secondExpectedItemValue);
 
-                // Assert
-                Assert.IsType<WritingSpreadsheet>(spreadsheet);
-            }
+            _mocker.GetMock<IElementReaderFactory>()
+                .Setup(elementReaderFactory => elementReaderFactory.CreateSharedStringTableReader(
+                    sharedStringTablePartMock.Object))
+                .Returns(sharedStringTableReaderMock.Object);
 
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenPathIsNull()
-            {
-                // Arrange
-                var path = default(Uri);
-                var sut = CreateSystemUnderTest();
+            var serviceProviderMock = MockServiceProvider();
+            MockForOpenRead(serviceProviderMock);
 
-                // Act
-                var exception = Record.Exception(() => sut.Create(path!));
+            var sut = CreateSystemUnderTest();
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Act
+            sut.OpenRead(path);
+
+            // Assert
+            var stringIndexerMock = _mocker.GetMock<IStringIndexer>();
+            stringIndexerMock.Verify(stringIndexer => stringIndexer.Add(firstExpectedItemValue));
+            stringIndexerMock.Verify(stringIndexer => stringIndexer.Add(secondExpectedItemValue));
         }
 
-        public class TheCreateMethodWithStreamParameter : SpreadsheetFactoryFacts
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenPathIsNull()
         {
-            [Fact]
-            public void ReturnsWritingSpreadsheet()
-            {
-                // Arrange
-                var stream = Stream.Null;
+            // Arrange
+            var path = default(Uri);
+            var sut = CreateSystemUnderTest();
 
-                var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
-                _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
-                    .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Create(stream))
-                    .Returns(spreadsheetDocumentMock.Object);
+            // Act
+            var exception = Record.Exception(() => sut.OpenRead(path!));
 
-                var serviceProviderMock = MockServiceProvider();
-                MockForCreate(serviceProviderMock);
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
 
-                var sut = CreateSystemUnderTest();
+    public class TheOpenReadMethodWithStreamParameter : SpreadsheetFactoryFacts
+    {
+        [Fact]
+        public void ReturnsReadingSpreadsheet()
+        {
+            // Arrange
+            var stream = Stream.Null;
 
-                // Act
-                var spreadsheet = sut.Create(stream);
+            var worksheetPartMock = _mocker.GetMock<IWorksheetPartWrapper>();
+            worksheetPartMock.SetupGet(worksheetPart => worksheetPart.Name)
+                .Returns("Sheet1");
 
-                // Assert
-                Assert.IsType<WritingSpreadsheet>(spreadsheet);
-            }
+            var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
+            spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.WorksheetParts)
+                .Returns(new[] { worksheetPartMock.Object, });
 
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenStreamIsNull()
-            {
-                // Arrange
-                var stream = default(Stream);
-                var sut = CreateSystemUnderTest();
+            _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
+                .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Open(stream, false))
+                .Returns(spreadsheetDocumentMock.Object);
 
-                // Act
-                var exception = Record.Exception(() => sut.Create(stream!));
+            var serviceProviderMock = MockServiceProvider();
+            MockForOpenRead(serviceProviderMock);
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var spreadsheet = sut.OpenRead(stream);
+
+            // Assert
+            Assert.IsType<ReadingSpreadsheet>(spreadsheet);
+            Assert.Single(spreadsheet.Pages);
         }
 
-        public class TheOpenReadMethodWithPathParameter : SpreadsheetFactoryFacts
+        [Fact]
+        public void PopulatesStringIndexerWhenSharedStringTableIsPresent()
         {
-            [Fact]
-            public void ReturnsReadingSpreadsheet()
-            {
-                // Arrange
-                var path = new Uri(@"C:\Test");
+            // Arrange
+            var stream = Stream.Null;
+            var firstExpectedItemValue = "foo";
+            var secondExpectedItemValue = "bar";
 
-                var worksheetPartMock = _mocker.GetMock<IWorksheetPartWrapper>();
-                worksheetPartMock.SetupGet(worksheetPart => worksheetPart.Name)
-                    .Returns("Sheet1");
+            var sharedStringTablePartMock = _mocker.GetMock<ISharedStringTablePartWrapper>();
 
-                var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
-                spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.WorksheetParts)
-                    .Returns(new[] { worksheetPartMock.Object, });
+            var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
+            spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.WorksheetParts)
+                .Returns(Array.Empty<IWorksheetPartWrapper>());
+            spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.SharedStringTablePart)
+                .Returns(sharedStringTablePartMock.Object);
 
-                _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
-                    .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Open(path.LocalPath, false))
-                    .Returns(spreadsheetDocumentMock.Object);
+            _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
+                .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Open(stream, false))
+                .Returns(spreadsheetDocumentMock.Object);
 
-                var serviceProviderMock = MockServiceProvider();
-                MockForOpenRead(serviceProviderMock);
+            var sharedStringTableReaderMock = _mocker.GetMock<ISharedStringTableElementReader>();
+            sharedStringTableReaderMock.SetupSequence(sharedStringTableReader => sharedStringTableReader.ReadNextItem())
+                .Returns(true)
+                .Returns(true)
+                .Returns(false);
+            sharedStringTableReaderMock.SetupSequence(sharedStringTableReader => sharedStringTableReader.GetItemValue())
+                .Returns(firstExpectedItemValue)
+                .Returns(secondExpectedItemValue);
 
-                var sut = CreateSystemUnderTest();
+            _mocker.GetMock<IElementReaderFactory>()
+                .Setup(elementReaderFactory => elementReaderFactory.CreateSharedStringTableReader(
+                    sharedStringTablePartMock.Object))
+                .Returns(sharedStringTableReaderMock.Object);
 
-                // Act
-                var spreadsheet = sut.OpenRead(path);
+            var serviceProviderMock = MockServiceProvider();
+            MockForOpenRead(serviceProviderMock);
 
-                // Assert
-                Assert.IsType<ReadingSpreadsheet>(spreadsheet);
-                Assert.Single(spreadsheet.Pages);
-            }
+            var sut = CreateSystemUnderTest();
 
-            [Fact]
-            public void PopulatesStringIndexerWhenSharedStringTableIsPresent()
-            {
-                // Arrange
-                var path = new Uri(@"C:\Test");
-                var firstExpectedItemValue = "foo";
-                var secondExpectedItemValue = "bar";
+            // Act
+            sut.OpenRead(stream);
 
-                var sharedStringTablePartMock = _mocker.GetMock<ISharedStringTablePartWrapper>();
-
-                var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
-                spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.WorksheetParts)
-                    .Returns(Array.Empty<IWorksheetPartWrapper>());
-                spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.SharedStringTablePart)
-                    .Returns(sharedStringTablePartMock.Object);
-
-                _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
-                    .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Open(path.LocalPath, false))
-                    .Returns(spreadsheetDocumentMock.Object);
-
-                var sharedStringTableReaderMock = _mocker.GetMock<ISharedStringTableElementReader>();
-                sharedStringTableReaderMock.SetupSequence(sharedStringTableReader => sharedStringTableReader.ReadNextItem())
-                    .Returns(true)
-                    .Returns(true)
-                    .Returns(false);
-                sharedStringTableReaderMock.SetupSequence(sharedStringTableReader => sharedStringTableReader.GetItemValue())
-                    .Returns(firstExpectedItemValue)
-                    .Returns(secondExpectedItemValue);
-
-                _mocker.GetMock<IElementReaderFactory>()
-                    .Setup(elementReaderFactory => elementReaderFactory.CreateSharedStringTableReader(
-                        sharedStringTablePartMock.Object))
-                    .Returns(sharedStringTableReaderMock.Object);
-
-                var serviceProviderMock = MockServiceProvider();
-                MockForOpenRead(serviceProviderMock);
-
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                sut.OpenRead(path);
-
-                // Assert
-                var stringIndexerMock = _mocker.GetMock<IStringIndexer>();
-                stringIndexerMock.Verify(stringIndexer => stringIndexer.Add(firstExpectedItemValue));
-                stringIndexerMock.Verify(stringIndexer => stringIndexer.Add(secondExpectedItemValue));
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenPathIsNull()
-            {
-                // Arrange
-                var path = default(Uri);
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var exception = Record.Exception(() => sut.OpenRead(path!));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            var stringIndexerMock = _mocker.GetMock<IStringIndexer>();
+            stringIndexerMock.Verify(stringIndexer => stringIndexer.Add(firstExpectedItemValue));
+            stringIndexerMock.Verify(stringIndexer => stringIndexer.Add(secondExpectedItemValue));
         }
 
-        public class TheOpenReadMethodWithStreamParameter : SpreadsheetFactoryFacts
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenStreamIsNull()
         {
-            [Fact]
-            public void ReturnsReadingSpreadsheet()
-            {
-                // Arrange
-                var stream = Stream.Null;
+            // Arrange
+            var stream = default(Stream);
+            var sut = CreateSystemUnderTest();
 
-                var worksheetPartMock = _mocker.GetMock<IWorksheetPartWrapper>();
-                worksheetPartMock.SetupGet(worksheetPart => worksheetPart.Name)
-                    .Returns("Sheet1");
+            // Act
+            var exception = Record.Exception(() => sut.OpenRead(stream!));
 
-                var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
-                spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.WorksheetParts)
-                    .Returns(new[] { worksheetPartMock.Object, });
-
-                _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
-                    .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Open(stream, false))
-                    .Returns(spreadsheetDocumentMock.Object);
-
-                var serviceProviderMock = MockServiceProvider();
-                MockForOpenRead(serviceProviderMock);
-
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var spreadsheet = sut.OpenRead(stream);
-
-                // Assert
-                Assert.IsType<ReadingSpreadsheet>(spreadsheet);
-                Assert.Single(spreadsheet.Pages);
-            }
-
-            [Fact]
-            public void PopulatesStringIndexerWhenSharedStringTableIsPresent()
-            {
-                // Arrange
-                var stream = Stream.Null;
-                var firstExpectedItemValue = "foo";
-                var secondExpectedItemValue = "bar";
-
-                var sharedStringTablePartMock = _mocker.GetMock<ISharedStringTablePartWrapper>();
-
-                var spreadsheetDocumentMock = _mocker.GetMock<ISpreadsheetDocumentWrapper>();
-                spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.WorksheetParts)
-                    .Returns(Array.Empty<IWorksheetPartWrapper>());
-                spreadsheetDocumentMock.SetupGet(spreadsheetDocument => spreadsheetDocument.SharedStringTablePart)
-                    .Returns(sharedStringTablePartMock.Object);
-
-                _mocker.GetMock<ISpreadsheetDocumentWrapperFactory>()
-                    .Setup(spreadsheetDocumentFactory => spreadsheetDocumentFactory.Open(stream, false))
-                    .Returns(spreadsheetDocumentMock.Object);
-
-                var sharedStringTableReaderMock = _mocker.GetMock<ISharedStringTableElementReader>();
-                sharedStringTableReaderMock.SetupSequence(sharedStringTableReader => sharedStringTableReader.ReadNextItem())
-                    .Returns(true)
-                    .Returns(true)
-                    .Returns(false);
-                sharedStringTableReaderMock.SetupSequence(sharedStringTableReader => sharedStringTableReader.GetItemValue())
-                    .Returns(firstExpectedItemValue)
-                    .Returns(secondExpectedItemValue);
-
-                _mocker.GetMock<IElementReaderFactory>()
-                    .Setup(elementReaderFactory => elementReaderFactory.CreateSharedStringTableReader(
-                        sharedStringTablePartMock.Object))
-                    .Returns(sharedStringTableReaderMock.Object);
-
-                var serviceProviderMock = MockServiceProvider();
-                MockForOpenRead(serviceProviderMock);
-
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                sut.OpenRead(stream);
-
-                // Assert
-                var stringIndexerMock = _mocker.GetMock<IStringIndexer>();
-                stringIndexerMock.Verify(stringIndexer => stringIndexer.Add(firstExpectedItemValue));
-                stringIndexerMock.Verify(stringIndexer => stringIndexer.Add(secondExpectedItemValue));
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenStreamIsNull()
-            {
-                // Arrange
-                var stream = default(Stream);
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var exception = Record.Exception(() => sut.OpenRead(stream!));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
         }
     }
 }

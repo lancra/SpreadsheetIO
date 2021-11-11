@@ -169,6 +169,7 @@ dotnet_diagnostic.CA2240.severity = warning
 dotnet_diagnostic.CA2241.severity = warning
 dotnet_diagnostic.CA2242.severity = warning
 dotnet_diagnostic.CA2243.severity = none
+dotnet_diagnostic.IDE0161.severity = error
 dotnet_diagnostic.SA0001.severity = none
 dotnet_diagnostic.SA0002.severity = error
 dotnet_diagnostic.SA1000.severity = error

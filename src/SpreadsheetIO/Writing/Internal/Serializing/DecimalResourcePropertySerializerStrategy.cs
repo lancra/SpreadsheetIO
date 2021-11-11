@@ -1,21 +1,20 @@
 using LanceC.SpreadsheetIO.Mapping;
 
-namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing
-{
-    internal class DecimalResourcePropertySerializerStrategy : IResourcePropertySerializerStrategy
-    {
-        public IReadOnlyCollection<Type> PropertyTypes { get; } =
-            new[]
-            {
-                typeof(decimal),
-            };
+namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 
-        public WritingCellValue Serialize<TResource>(object? value, PropertyMap<TResource> map)
-            where TResource : class
+internal class DecimalResourcePropertySerializerStrategy : IResourcePropertySerializerStrategy
+{
+    public IReadOnlyCollection<Type> PropertyTypes { get; } =
+        new[]
         {
-            var decimalValue = (decimal?)value;
-            var cellValue = new WritingCellValue(decimalValue);
-            return cellValue;
-        }
+                typeof(decimal),
+        };
+
+    public WritingCellValue Serialize<TResource>(object? value, PropertyMap<TResource> map)
+        where TResource : class
+    {
+        var decimalValue = (decimal?)value;
+        var cellValue = new WritingCellValue(decimalValue);
+        return cellValue;
     }
 }

@@ -1,12 +1,11 @@
-namespace LanceC.SpreadsheetIO.Reading.Internal
-{
-    internal class ReadingSpreadsheet : IReadingSpreadsheet
-    {
-        public ReadingSpreadsheet(IReadingSpreadsheetPageCollection pages)
-        {
-            Pages = pages;
-        }
+namespace LanceC.SpreadsheetIO.Reading.Internal;
 
-        public IReadingSpreadsheetPageCollection Pages { get; }
+internal class ReadingSpreadsheet : IReadingSpreadsheet
+{
+    public ReadingSpreadsheet(IReadingSpreadsheetPageCollection pages)
+    {
+        Pages = pages;
     }
+
+    public IReadingSpreadsheetPageCollection Pages { get; }
 }

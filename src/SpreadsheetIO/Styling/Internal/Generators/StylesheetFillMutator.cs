@@ -3,49 +3,48 @@ using LanceC.SpreadsheetIO.Shared.Internal;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
+namespace LanceC.SpreadsheetIO.Styling.Internal.Generators;
+
+internal class StylesheetFillMutator : IStylesheetMutator
 {
-    internal class StylesheetFillMutator : IStylesheetMutator
+    private readonly IFillIndexer _fillIndexer;
+
+    public StylesheetFillMutator(IFillIndexer fillIndexer)
     {
-        private readonly IFillIndexer _fillIndexer;
+        _fillIndexer = fillIndexer;
+    }
 
-        public StylesheetFillMutator(IFillIndexer fillIndexer)
+    public void Mutate(OpenXml.Stylesheet stylesheet)
+        => stylesheet.Fills = GenerateFills(_fillIndexer.Resources);
+
+    private static OpenXml.Fills GenerateFills(IReadOnlyCollection<Fill> fills)
+    {
+        var openXmlFills = new OpenXml.Fills
         {
-            _fillIndexer = fillIndexer;
-        }
+            Count = Convert.ToUInt32(fills.Count),
+        };
 
-        public void Mutate(OpenXml.Stylesheet stylesheet)
-            => stylesheet.Fills = GenerateFills(_fillIndexer.Resources);
-
-        private static OpenXml.Fills GenerateFills(IReadOnlyCollection<Fill> fills)
+        foreach (var fill in fills)
         {
-            var openXmlFills = new OpenXml.Fills
+            var openXmlFill = new OpenXml.Fill
             {
-                Count = Convert.ToUInt32(fills.Count),
+                PatternFill = new OpenXml.PatternFill
+                {
+                    PatternType = fill.Kind.OpenXmlValue,
+                },
             };
 
-            foreach (var fill in fills)
+            if (fill.ForegroundColor != Color.White)
             {
-                var openXmlFill = new OpenXml.Fill
+                openXmlFill.PatternFill.ForegroundColor = new OpenXml.ForegroundColor
                 {
-                    PatternFill = new OpenXml.PatternFill
-                    {
-                        PatternType = fill.Kind.OpenXmlValue,
-                    },
+                    Rgb = fill.ForegroundColor.ToHex(),
                 };
-
-                if (fill.ForegroundColor != Color.White)
-                {
-                    openXmlFill.PatternFill.ForegroundColor = new OpenXml.ForegroundColor
-                    {
-                        Rgb = fill.ForegroundColor.ToHex(),
-                    };
-                }
-
-                openXmlFills.Append(openXmlFill);
             }
 
-            return openXmlFills;
+            openXmlFills.Append(openXmlFill);
         }
+
+        return openXmlFills;
     }
 }

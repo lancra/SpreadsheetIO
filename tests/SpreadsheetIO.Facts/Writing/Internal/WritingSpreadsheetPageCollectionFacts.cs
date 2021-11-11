@@ -4,131 +4,130 @@ using Moq;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Writing.Internal
+namespace LanceC.SpreadsheetIO.Facts.Writing.Internal;
+
+public class WritingSpreadsheetPageCollectionFacts
 {
-    public class WritingSpreadsheetPageCollectionFacts
+    private readonly AutoMocker _mocker = new();
+
+    private static Mock<IWritingSpreadsheetPage> MockSpreadsheetPage(string name = "Name")
     {
-        private readonly AutoMocker _mocker = new();
+        var spreadsheetPageMock = new Mock<IWritingSpreadsheetPage>();
+        spreadsheetPageMock.SetupGet(spreadsheetPage => spreadsheetPage.Name)
+            .Returns(name);
+        return spreadsheetPageMock;
+    }
 
-        private static Mock<IWritingSpreadsheetPage> MockSpreadsheetPage(string name = "Name")
+    private WritingSpreadsheetPageCollection CreateSystemUnderTest()
+        => _mocker.CreateInstance<WritingSpreadsheetPageCollection>();
+
+    public class TheIntegerIndexer : WritingSpreadsheetPageCollectionFacts
+    {
+        [Fact]
+        public void ReturnsPageAtIndex()
         {
-            var spreadsheetPageMock = new Mock<IWritingSpreadsheetPage>();
-            spreadsheetPageMock.SetupGet(spreadsheetPage => spreadsheetPage.Name)
-                .Returns(name);
-            return spreadsheetPageMock;
+            // Arrange
+            var spreadsheetPageMock = MockSpreadsheetPage();
+
+            var sut = CreateSystemUnderTest();
+            sut.Add(spreadsheetPageMock.Object);
+
+            // Act
+            var spreadsheetPage = sut[0];
+
+            // Assert
+            Assert.Equal(spreadsheetPageMock.Object, spreadsheetPage);
+        }
+    }
+
+    public class TheStringIndexer : WritingSpreadsheetPageCollectionFacts
+    {
+        [Fact]
+        public void ReturnsPageForName()
+        {
+            // Arrange
+            var name = "Name";
+            var spreadsheetPageMock = MockSpreadsheetPage(name);
+
+            var sut = CreateSystemUnderTest();
+            sut.Add(spreadsheetPageMock.Object);
+
+            // Act
+            var spreadsheetPage = sut[name];
+
+            // Assert
+            Assert.Equal(spreadsheetPageMock.Object, spreadsheetPage);
         }
 
-        private WritingSpreadsheetPageCollection CreateSystemUnderTest()
-            => _mocker.CreateInstance<WritingSpreadsheetPageCollection>();
-
-        public class TheIntegerIndexer : WritingSpreadsheetPageCollectionFacts
+        [Fact]
+        public void ThrowsArgumentExceptionWhenNoPageIsAddedForName()
         {
-            [Fact]
-            public void ReturnsPageAtIndex()
-            {
-                // Arrange
-                var spreadsheetPageMock = MockSpreadsheetPage();
+            // Arrange
+            var sut = CreateSystemUnderTest();
 
-                var sut = CreateSystemUnderTest();
-                sut.Add(spreadsheetPageMock.Object);
+            // Act
+            var exception = Record.Exception(() => sut["Name"]);
 
-                // Act
-                var spreadsheetPage = sut[0];
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentException>(exception);
+        }
+    }
 
-                // Assert
-                Assert.Equal(spreadsheetPageMock.Object, spreadsheetPage);
-            }
+    public class TheAddMethod : WritingSpreadsheetPageCollectionFacts
+    {
+        [Fact]
+        public void AddsPage()
+        {
+            // Arrange
+            var spreadsheetPageMock = MockSpreadsheetPage();
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            sut.Add(spreadsheetPageMock.Object);
+
+            // Assert
+            Assert.Single(sut);
         }
 
-        public class TheStringIndexer : WritingSpreadsheetPageCollectionFacts
+        [Fact]
+        public void ThrowsArgumentExceptionWhenAnotherPageWithTheSameNameHasAlreadyBeenAdded()
         {
-            [Fact]
-            public void ReturnsPageForName()
-            {
-                // Arrange
-                var name = "Name";
-                var spreadsheetPageMock = MockSpreadsheetPage(name);
+            // Arrange
+            var originalSpreadsheetPageMock = MockSpreadsheetPage(name: "Name");
+            var spreadsheetPageMock = MockSpreadsheetPage(name: "Name");
 
-                var sut = CreateSystemUnderTest();
-                sut.Add(spreadsheetPageMock.Object);
+            var sut = CreateSystemUnderTest();
+            sut.Add(originalSpreadsheetPageMock.Object);
 
-                // Act
-                var spreadsheetPage = sut[name];
+            // Act
+            var exception = Record.Exception(() => sut.Add(spreadsheetPageMock.Object));
 
-                // Assert
-                Assert.Equal(spreadsheetPageMock.Object, spreadsheetPage);
-            }
-
-            [Fact]
-            public void ThrowsArgumentExceptionWhenNoPageIsAddedForName()
-            {
-                // Arrange
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var exception = Record.Exception(() => sut["Name"]);
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentException>(exception);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentException>(exception);
         }
+    }
 
-        public class TheAddMethod : WritingSpreadsheetPageCollectionFacts
+    public class TheDisposeMethod : WritingSpreadsheetPageCollectionFacts
+    {
+        [Fact]
+        public void DisposesPages()
         {
-            [Fact]
-            public void AddsPage()
-            {
-                // Arrange
-                var spreadsheetPageMock = MockSpreadsheetPage();
-                var sut = CreateSystemUnderTest();
+            // Arrange
+            var firstSpreadsheetPageMock = MockSpreadsheetPage(name: "One");
+            var secondSpreadsheetPageMock = MockSpreadsheetPage(name: "Two");
 
-                // Act
-                sut.Add(spreadsheetPageMock.Object);
+            var sut = CreateSystemUnderTest();
+            sut.Add(firstSpreadsheetPageMock.Object);
+            sut.Add(secondSpreadsheetPageMock.Object);
 
-                // Assert
-                Assert.Single(sut);
-            }
+            // Act
+            sut.Dispose();
 
-            [Fact]
-            public void ThrowsArgumentExceptionWhenAnotherPageWithTheSameNameHasAlreadyBeenAdded()
-            {
-                // Arrange
-                var originalSpreadsheetPageMock = MockSpreadsheetPage(name: "Name");
-                var spreadsheetPageMock = MockSpreadsheetPage(name: "Name");
-
-                var sut = CreateSystemUnderTest();
-                sut.Add(originalSpreadsheetPageMock.Object);
-
-                // Act
-                var exception = Record.Exception(() => sut.Add(spreadsheetPageMock.Object));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentException>(exception);
-            }
-        }
-
-        public class TheDisposeMethod : WritingSpreadsheetPageCollectionFacts
-        {
-            [Fact]
-            public void DisposesPages()
-            {
-                // Arrange
-                var firstSpreadsheetPageMock = MockSpreadsheetPage(name: "One");
-                var secondSpreadsheetPageMock = MockSpreadsheetPage(name: "Two");
-
-                var sut = CreateSystemUnderTest();
-                sut.Add(firstSpreadsheetPageMock.Object);
-                sut.Add(secondSpreadsheetPageMock.Object);
-
-                // Act
-                sut.Dispose();
-
-                // Assert
-                firstSpreadsheetPageMock.Verify(spreadsheetPage => spreadsheetPage.Dispose());
-                secondSpreadsheetPageMock.Verify(spreadsheetPage => spreadsheetPage.Dispose());
-            }
+            // Assert
+            firstSpreadsheetPageMock.Verify(spreadsheetPage => spreadsheetPage.Dispose());
+            secondSpreadsheetPageMock.Verify(spreadsheetPage => spreadsheetPage.Dispose());
         }
     }
 }

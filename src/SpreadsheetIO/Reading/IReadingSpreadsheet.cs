@@ -1,13 +1,12 @@
-namespace LanceC.SpreadsheetIO.Reading
+namespace LanceC.SpreadsheetIO.Reading;
+
+/// <summary>
+/// Defines a spreadsheet to be read from.
+/// </summary>
+public interface IReadingSpreadsheet
 {
     /// <summary>
-    /// Defines a spreadsheet to be read from.
+    /// Gets the spreadsheet pages.
     /// </summary>
-    public interface IReadingSpreadsheet
-    {
-        /// <summary>
-        /// Gets the spreadsheet pages.
-        /// </summary>
-        IReadingSpreadsheetPageCollection Pages { get; }
-    }
+    IReadingSpreadsheetPageCollection Pages { get; }
 }

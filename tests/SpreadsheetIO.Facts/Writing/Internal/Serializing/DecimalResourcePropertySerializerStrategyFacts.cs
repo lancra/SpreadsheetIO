@@ -5,97 +5,96 @@ using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Serializing
+namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Serializing;
+
+public class DecimalResourcePropertySerializerStrategyFacts
 {
-    public class DecimalResourcePropertySerializerStrategyFacts
+    private readonly AutoMocker _mocker = new();
+
+    private DecimalResourcePropertySerializerStrategy CreateSystemUnderTest()
+        => _mocker.CreateInstance<DecimalResourcePropertySerializerStrategy>();
+
+    public class ThePropertyTypesProperty : DecimalResourcePropertySerializerStrategyFacts
     {
-        private readonly AutoMocker _mocker = new();
-
-        private DecimalResourcePropertySerializerStrategy CreateSystemUnderTest()
-            => _mocker.CreateInstance<DecimalResourcePropertySerializerStrategy>();
-
-        public class ThePropertyTypesProperty : DecimalResourcePropertySerializerStrategyFacts
+        [Fact]
+        public void ReturnsDecimalType()
         {
-            [Fact]
-            public void ReturnsDecimalType()
+            // Arrange
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var propertyTypes = sut.PropertyTypes;
+
+            // Assert
+            var propertyType = Assert.Single(propertyTypes);
+            Assert.Equal(typeof(decimal), propertyType);
+        }
+    }
+
+    public class TheSerializeMethod : DecimalResourcePropertySerializerStrategyFacts
+    {
+        public static TheoryData<decimal> DataForReturnsDecimalWritingCellValue
+            => new()
             {
-                // Arrange
-                var sut = CreateSystemUnderTest();
+                { 0M },
+                { 1M },
+            };
 
-                // Act
-                var propertyTypes = sut.PropertyTypes;
+        public static TheoryData<decimal?> DataForReturnsNullableDecimalWritingCellValue
+            => new()
+            {
+                { null },
+                { 0M },
+                { 1M },
+            };
 
-                // Assert
-                var propertyType = Assert.Single(propertyTypes);
-                Assert.Equal(typeof(decimal), propertyType);
-            }
+        [Theory]
+        [MemberData(nameof(DataForReturnsDecimalWritingCellValue))]
+        public void ReturnsDecimalWritingCellValue(decimal value)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
+
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
+
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
         }
 
-        public class TheSerializeMethod : DecimalResourcePropertySerializerStrategyFacts
+        [Theory]
+        [MemberData(nameof(DataForReturnsNullableDecimalWritingCellValue))]
+        public void ReturnsNullableDecimalWritingCellValue(decimal? value)
         {
-            public static TheoryData<decimal> DataForReturnsDecimalWritingCellValue
-                => new()
-                {
-                    { 0M },
-                    { 1M },
-                };
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DecimalNullable);
 
-            public static TheoryData<decimal?> DataForReturnsNullableDecimalWritingCellValue
-                => new()
-                {
-                    { null },
-                    { 0M },
-                    { 1M },
-                };
+            var sut = CreateSystemUnderTest();
 
-            [Theory]
-            [MemberData(nameof(DataForReturnsDecimalWritingCellValue))]
-            public void ReturnsDecimalWritingCellValue(decimal value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-                var sut = CreateSystemUnderTest();
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
+        [Fact]
+        public void ThrowsInvalidCastExceptionWhenNonDecimalTypeIsProvided()
+        {
+            // Arrange
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
+            var sut = CreateSystemUnderTest();
 
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
+            // Act
+            var exception = Record.Exception(() => sut.Serialize("foo", map));
 
-            [Theory]
-            [MemberData(nameof(DataForReturnsNullableDecimalWritingCellValue))]
-            public void ReturnsNullableDecimalWritingCellValue(decimal? value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DecimalNullable);
-
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
-
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
-
-            [Fact]
-            public void ThrowsInvalidCastExceptionWhenNonDecimalTypeIsProvided()
-            {
-                // Arrange
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var exception = Record.Exception(() => sut.Serialize("foo", map));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<InvalidCastException>(exception);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<InvalidCastException>(exception);
         }
     }
 }

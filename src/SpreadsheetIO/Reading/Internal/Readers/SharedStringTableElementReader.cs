@@ -2,44 +2,43 @@ using LanceC.SpreadsheetIO.Properties;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace LanceC.SpreadsheetIO.Reading.Internal.Readers
+namespace LanceC.SpreadsheetIO.Reading.Internal.Readers;
+
+internal class SharedStringTableElementReader : ISharedStringTableElementReader
 {
-    internal class SharedStringTableElementReader : ISharedStringTableElementReader
+    private readonly IOpenXmlReaderWrapper _reader;
+
+    public SharedStringTableElementReader(IOpenXmlReaderWrapper reader)
     {
-        private readonly IOpenXmlReaderWrapper _reader;
+        _reader = reader;
+    }
 
-        public SharedStringTableElementReader(IOpenXmlReaderWrapper reader)
+    public bool ReadNextItem()
+        => _reader.ReadNextElement(typeof(OpenXml.SharedStringItem), typeof(OpenXml.SharedStringTable));
+
+    public string GetItemValue()
+    {
+        if (!_reader.IsStartElementOfType(typeof(OpenXml.SharedStringItem)))
         {
-            _reader = reader;
+            throw new InvalidOperationException(Messages.InvalidElementForValue("shared string item value"));
         }
 
-        public bool ReadNextItem()
-            => _reader.ReadNextElement(typeof(OpenXml.SharedStringItem), typeof(OpenXml.SharedStringTable));
+        _reader.ReadNextElement(typeof(OpenXml.Text), typeof(OpenXml.SharedStringItem));
+        var itemValue = _reader.GetText();
+        return itemValue;
+    }
 
-        public string GetItemValue()
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            if (!_reader.IsStartElementOfType(typeof(OpenXml.SharedStringItem)))
-            {
-                throw new InvalidOperationException(Messages.InvalidElementForValue("shared string item value"));
-            }
-
-            _reader.ReadNextElement(typeof(OpenXml.Text), typeof(OpenXml.SharedStringItem));
-            var itemValue = _reader.GetText();
-            return itemValue;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _reader.Dispose();
-            }
+            _reader.Dispose();
         }
     }
 }

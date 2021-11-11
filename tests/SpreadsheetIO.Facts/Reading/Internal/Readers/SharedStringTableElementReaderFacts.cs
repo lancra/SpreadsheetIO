@@ -5,143 +5,142 @@ using Moq.AutoMock;
 using Xunit;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers
+namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers;
+
+public class SharedStringTableElementReaderFacts
 {
-    public class SharedStringTableElementReaderFacts
+    private readonly AutoMocker _mocker = new();
+
+    private SharedStringTableElementReader CreateSystemUnderTest()
+        => _mocker.CreateInstance<SharedStringTableElementReader>();
+
+    public class TheReadNextItemMethod : SharedStringTableElementReaderFacts
     {
-        private readonly AutoMocker _mocker = new();
-
-        private SharedStringTableElementReader CreateSystemUnderTest()
-            => _mocker.CreateInstance<SharedStringTableElementReader>();
-
-        public class TheReadNextItemMethod : SharedStringTableElementReaderFacts
+        [Fact]
+        public void ReturnsTrueWhenTheNextSharedStringItemIsRead()
         {
-            [Fact]
-            public void ReturnsTrueWhenTheNextSharedStringItemIsRead()
+            // Arrange
+            var readerElements = new[]
             {
-                // Arrange
-                var readerElements = new[]
-                {
-                    new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
-                    new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
-                    new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text)),
-                    new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
-                    new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
-                };
+                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
+                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
+                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text)),
+                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
+                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
+            };
 
-                var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
-                _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
+            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var hasNextItem = sut.ReadNextItem();
+            // Act
+            var hasNextItem = sut.ReadNextItem();
 
-                // Assert
-                Assert.True(hasNextItem);
-            }
-
-            [Fact]
-            public void ReturnsFalseWhenTheEndOfTheSharedStringTableIsReached()
-            {
-                // Arrange
-                var readerElements = new[]
-                {
-                    new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
-                    new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
-                    new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text)),
-                    new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
-                    new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
-                };
-
-                var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
-                readerMock.Read();
-                readerMock.Read();
-                _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
-
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var hasNextItem = sut.ReadNextItem();
-
-                // Assert
-                Assert.False(hasNextItem);
-            }
+            // Assert
+            Assert.True(hasNextItem);
         }
 
-        public class TheGetItemValueMethod : SharedStringTableElementReaderFacts
+        [Fact]
+        public void ReturnsFalseWhenTheEndOfTheSharedStringTableIsReached()
         {
-            [Fact]
-            public void ReturnsContentsOfChildTextElement()
+            // Arrange
+            var readerElements = new[]
             {
-                // Arrange
-                var expectedItemValue = "foo";
+                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
+                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
+                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text)),
+                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
+                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
+            };
 
-                var readerElements = new[]
-                {
-                    new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
-                    new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
-                    new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text), text: expectedItemValue),
-                    new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
-                    new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
-                };
+            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            readerMock.Read();
+            readerMock.Read();
+            _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
-                var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
-                _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
+            var sut = CreateSystemUnderTest();
 
-                var sut = CreateSystemUnderTest();
-                sut.ReadNextItem();
+            // Act
+            var hasNextItem = sut.ReadNextItem();
 
-                // Act
-                var actualItemValue = sut.GetItemValue();
+            // Assert
+            Assert.False(hasNextItem);
+        }
+    }
 
-                // Assert
-                Assert.Equal(expectedItemValue, actualItemValue);
-            }
+    public class TheGetItemValueMethod : SharedStringTableElementReaderFacts
+    {
+        [Fact]
+        public void ReturnsContentsOfChildTextElement()
+        {
+            // Arrange
+            var expectedItemValue = "foo";
 
-            [Fact]
-            public void ThrowsInvalidOperationExceptionWhenTheCurrentElementIsNotSharedStringItemStartElement()
+            var readerElements = new[]
             {
-                // Arrange
-                var readerElements = new[]
-                {
-                    new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
-                    new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
-                    new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text)),
-                    new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
-                    new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
-                };
+                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
+                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
+                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text), text: expectedItemValue),
+                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
+                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
+            };
 
-                var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
-                readerMock.Read();
-                _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
+            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
+            sut.ReadNextItem();
 
-                // Act
-                var exception = Record.Exception(() => sut.GetItemValue());
+            // Act
+            var actualItemValue = sut.GetItemValue();
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<InvalidOperationException>(exception);
-            }
+            // Assert
+            Assert.Equal(expectedItemValue, actualItemValue);
         }
 
-        public class TheDisposeMethod : SharedStringTableElementReaderFacts
+        [Fact]
+        public void ThrowsInvalidOperationExceptionWhenTheCurrentElementIsNotSharedStringItemStartElement()
         {
-            [Fact]
-            public void DisposesOpenXmlReader()
+            // Arrange
+            var readerElements = new[]
             {
-                // Arrange
-                var readerMock = _mocker.GetMock<IOpenXmlReaderWrapper>();
-                var sut = CreateSystemUnderTest();
+                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringTable)),
+                new FakeOpenXmlReaderWrapperElement(true, false, typeof(OpenXml.SharedStringItem)),
+                new FakeOpenXmlReaderWrapperElement(true, true, typeof(OpenXml.Text)),
+                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringItem)),
+                new FakeOpenXmlReaderWrapperElement(false, true, typeof(OpenXml.SharedStringTable)),
+            };
 
-                // Act
-                sut.Dispose();
+            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            readerMock.Read();
+            _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
-                // Assert
-                readerMock.Verify(reader => reader.Dispose());
-            }
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var exception = Record.Exception(() => sut.GetItemValue());
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<InvalidOperationException>(exception);
+        }
+    }
+
+    public class TheDisposeMethod : SharedStringTableElementReaderFacts
+    {
+        [Fact]
+        public void DisposesOpenXmlReader()
+        {
+            // Arrange
+            var readerMock = _mocker.GetMock<IOpenXmlReaderWrapper>();
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            sut.Dispose();
+
+            // Assert
+            readerMock.Verify(reader => reader.Dispose());
         }
     }
 }

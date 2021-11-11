@@ -1,9 +1,8 @@
-namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers
+namespace LanceC.SpreadsheetIO.Shared.Internal.Indexers;
+
+/// <summary>
+/// Defines a string indexer.
+/// </summary>
+internal interface IStringIndexer : IReverseIndexer<string>
 {
-    /// <summary>
-    /// Defines a string indexer.
-    /// </summary>
-    internal interface IStringIndexer : IReverseIndexer<string>
-    {
-    }
 }

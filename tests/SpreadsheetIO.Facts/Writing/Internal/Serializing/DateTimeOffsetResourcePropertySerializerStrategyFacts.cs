@@ -7,123 +7,122 @@ using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Serializing
+namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Serializing;
+
+public class DateTimeOffsetResourcePropertySerializerStrategyFacts
 {
-    public class DateTimeOffsetResourcePropertySerializerStrategyFacts
+    private readonly AutoMocker _mocker = new();
+
+    private DateTimeOffsetResourcePropertySerializerStrategy CreateSystemUnderTest()
+        => _mocker.CreateInstance<DateTimeOffsetResourcePropertySerializerStrategy>();
+
+    public class ThePropertyTypesProperty : DateTimeOffsetResourcePropertySerializerStrategyFacts
     {
-        private readonly AutoMocker _mocker = new();
-
-        private DateTimeOffsetResourcePropertySerializerStrategy CreateSystemUnderTest()
-            => _mocker.CreateInstance<DateTimeOffsetResourcePropertySerializerStrategy>();
-
-        public class ThePropertyTypesProperty : DateTimeOffsetResourcePropertySerializerStrategyFacts
+        [Fact]
+        public void ReturnsDateTimeOffsetType()
         {
-            [Fact]
-            public void ReturnsDateTimeOffsetType()
+            // Arrange
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var propertyTypes = sut.PropertyTypes;
+
+            // Assert
+            var propertyType = Assert.Single(propertyTypes);
+            Assert.Equal(typeof(DateTimeOffset), propertyType);
+        }
+    }
+
+    public class TheSerializeMethod : DateTimeOffsetResourcePropertySerializerStrategyFacts
+    {
+        public static TheoryData<DateTimeOffset> DataForReturnsDateTimeOffsetWritingCellValue
+            => new()
             {
-                // Arrange
-                var sut = CreateSystemUnderTest();
+                { default },
+                { new DateTimeOffset(2021, 2, 3, 4, 5, 6, new TimeSpan(-4, 0, 0)) },
+            };
 
-                // Act
-                var propertyTypes = sut.PropertyTypes;
+        public static TheoryData<DateTimeOffset?> DataForReturnsNullableDateTimeOffsetWritingCellValue
+            => new()
+            {
+                { null },
+                { default(DateTimeOffset) },
+                { new DateTimeOffset(2021, 2, 3, 4, 5, 6, new TimeSpan(-4, 0, 0)) },
+            };
 
-                // Assert
-                var propertyType = Assert.Single(propertyTypes);
-                Assert.Equal(typeof(DateTimeOffset), propertyType);
-            }
+        public static TheoryData<DateTimeOffset, CellDateKind> DataForUsesDateKindFromExtensionWhenSpecified
+            => new()
+            {
+                { new DateTimeOffset(2021, 2, 3, 4, 5, 6, new TimeSpan(-4, 0, 0)), CellDateKind.Number },
+                { new DateTimeOffset(2021, 2, 3, 4, 5, 6, new TimeSpan(-4, 0, 0)), CellDateKind.Text },
+            };
+
+        [Theory]
+        [MemberData(nameof(DataForReturnsDateTimeOffsetWritingCellValue))]
+        public void ReturnsDateTimeOffsetWritingCellValue(DateTimeOffset value)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
+
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
+
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
         }
 
-        public class TheSerializeMethod : DateTimeOffsetResourcePropertySerializerStrategyFacts
+        [Theory]
+        [MemberData(nameof(DataForReturnsNullableDateTimeOffsetWritingCellValue))]
+        public void ReturnsNullableDateTimeOffsetWritingCellValue(DateTimeOffset? value)
         {
-            public static TheoryData<DateTimeOffset> DataForReturnsDateTimeOffsetWritingCellValue
-                => new()
-                {
-                    { default },
-                    { new DateTimeOffset(2021, 2, 3, 4, 5, 6, new TimeSpan(-4, 0, 0)) },
-                };
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffsetNullable);
 
-            public static TheoryData<DateTimeOffset?> DataForReturnsNullableDateTimeOffsetWritingCellValue
-                => new()
-                {
-                    { null },
-                    { default(DateTimeOffset) },
-                    { new DateTimeOffset(2021, 2, 3, 4, 5, 6, new TimeSpan(-4, 0, 0)) },
-                };
+            var sut = CreateSystemUnderTest();
 
-            public static TheoryData<DateTimeOffset, CellDateKind> DataForUsesDateKindFromExtensionWhenSpecified
-                => new()
-                {
-                    { new DateTimeOffset(2021, 2, 3, 4, 5, 6, new TimeSpan(-4, 0, 0)), CellDateKind.Number },
-                    { new DateTimeOffset(2021, 2, 3, 4, 5, 6, new TimeSpan(-4, 0, 0)), CellDateKind.Text },
-                };
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-            [Theory]
-            [MemberData(nameof(DataForReturnsDateTimeOffsetWritingCellValue))]
-            public void ReturnsDateTimeOffsetWritingCellValue(DateTimeOffset value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-                var sut = CreateSystemUnderTest();
+        [Theory]
+        [MemberData(nameof(DataForUsesDateKindFromExtensionWhenSpecified))]
+        public void UsesDateKindFromExtensionWhenSpecified(DateTimeOffset value, CellDateKind dateKind)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value, dateKind);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(
+                model => model.DateTimeOffset,
+                new DateKindMapOptionsExtension(dateKind));
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
+            var sut = CreateSystemUnderTest();
 
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-            [Theory]
-            [MemberData(nameof(DataForReturnsNullableDateTimeOffsetWritingCellValue))]
-            public void ReturnsNullableDateTimeOffsetWritingCellValue(DateTimeOffset? value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffsetNullable);
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-                var sut = CreateSystemUnderTest();
+        [Fact]
+        public void ThrowsInvalidCastExceptionWhenNonDateTimeOffsetTypeIsProvided()
+        {
+            // Arrange
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
+            // Act
+            var exception = Record.Exception(() => sut.Serialize("foo", map));
 
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
-
-            [Theory]
-            [MemberData(nameof(DataForUsesDateKindFromExtensionWhenSpecified))]
-            public void UsesDateKindFromExtensionWhenSpecified(DateTimeOffset value, CellDateKind dateKind)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value, dateKind);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(
-                    model => model.DateTimeOffset,
-                    new DateKindMapOptionsExtension(dateKind));
-
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
-
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
-
-            [Fact]
-            public void ThrowsInvalidCastExceptionWhenNonDateTimeOffsetTypeIsProvided()
-            {
-                // Arrange
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var exception = Record.Exception(() => sut.Serialize("foo", map));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<InvalidCastException>(exception);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<InvalidCastException>(exception);
         }
     }
 }

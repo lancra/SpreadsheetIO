@@ -1,11 +1,10 @@
-namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models
+namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
+
+public class FakePropertySetterModel
 {
-    public class FakePropertySetterModel
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
-        public decimal Amount { get; }
-    }
+    public decimal Amount { get; }
 }

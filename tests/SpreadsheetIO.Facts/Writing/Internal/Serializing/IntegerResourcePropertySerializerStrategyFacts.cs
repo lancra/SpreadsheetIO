@@ -5,261 +5,260 @@ using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Serializing
+namespace LanceC.SpreadsheetIO.Facts.Writing.Internal.Serializing;
+
+public class IntegerResourcePropertySerializerStrategyFacts
 {
-    public class IntegerResourcePropertySerializerStrategyFacts
+    private readonly AutoMocker _mocker = new();
+
+    private IntegerResourcePropertySerializerStrategy CreateSystemUnderTest()
+        => _mocker.CreateInstance<IntegerResourcePropertySerializerStrategy>();
+
+    public class ThePropertyTypesProperty : IntegerResourcePropertySerializerStrategyFacts
     {
-        private readonly AutoMocker _mocker = new();
-
-        private IntegerResourcePropertySerializerStrategy CreateSystemUnderTest()
-            => _mocker.CreateInstance<IntegerResourcePropertySerializerStrategy>();
-
-        public class ThePropertyTypesProperty : IntegerResourcePropertySerializerStrategyFacts
+        [Fact]
+        public void ReturnsIntegerTypes()
         {
-            [Fact]
-            public void ReturnsIntegerTypes()
+            // Arrange
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var propertyTypes = sut.PropertyTypes;
+
+            // Assert
+            Assert.Equal(5, propertyTypes.Count);
+            Assert.Single(propertyTypes, propertyType => propertyType == typeof(sbyte));
+            Assert.Single(propertyTypes, propertyType => propertyType == typeof(byte));
+            Assert.Single(propertyTypes, propertyType => propertyType == typeof(short));
+            Assert.Single(propertyTypes, propertyType => propertyType == typeof(ushort));
+            Assert.Single(propertyTypes, propertyType => propertyType == typeof(int));
+        }
+    }
+
+    public class TheSerializeMethod : IntegerResourcePropertySerializerStrategyFacts
+    {
+        public static TheoryData<sbyte?> DataForReturnsNullableIntegerWritingCellValueForNullableSignedByte
+            => new()
             {
-                // Arrange
-                var sut = CreateSystemUnderTest();
+                { null },
+                { 0 },
+                { 1 },
+            };
 
-                // Act
-                var propertyTypes = sut.PropertyTypes;
+        public static TheoryData<byte?> DataForReturnsNullableIntegerWritingCellValueForNullableByte
+            => new()
+            {
+                { null },
+                { 0 },
+                { 1 },
+            };
 
-                // Assert
-                Assert.Equal(5, propertyTypes.Count);
-                Assert.Single(propertyTypes, propertyType => propertyType == typeof(sbyte));
-                Assert.Single(propertyTypes, propertyType => propertyType == typeof(byte));
-                Assert.Single(propertyTypes, propertyType => propertyType == typeof(short));
-                Assert.Single(propertyTypes, propertyType => propertyType == typeof(ushort));
-                Assert.Single(propertyTypes, propertyType => propertyType == typeof(int));
-            }
+        public static TheoryData<short?> DataForReturnsNullableIntegerWritingCellValueForNullableShort
+            => new()
+            {
+                { null },
+                { 0 },
+                { 1 },
+            };
+
+        public static TheoryData<ushort?> DataForReturnsNullableIntegerWritingCellValueForNullableUnsignedShort
+            => new()
+            {
+                { null },
+                { 0 },
+                { 1 },
+            };
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void ReturnsIntegerWritingCellValue(int value)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
+
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
+
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
         }
 
-        public class TheSerializeMethod : IntegerResourcePropertySerializerStrategyFacts
+        [Theory]
+        [InlineData(null)]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void ReturnsNullableIntegerWritingCellValue(int? value)
         {
-            public static TheoryData<sbyte?> DataForReturnsNullableIntegerWritingCellValueForNullableSignedByte
-                => new()
-                {
-                    { null },
-                    { 0 },
-                    { 1 },
-                };
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.IntegerNullable);
 
-            public static TheoryData<byte?> DataForReturnsNullableIntegerWritingCellValueForNullableByte
-                => new()
-                {
-                    { null },
-                    { 0 },
-                    { 1 },
-                };
+            var sut = CreateSystemUnderTest();
 
-            public static TheoryData<short?> DataForReturnsNullableIntegerWritingCellValueForNullableShort
-                => new()
-                {
-                    { null },
-                    { 0 },
-                    { 1 },
-                };
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-            public static TheoryData<ushort?> DataForReturnsNullableIntegerWritingCellValueForNullableUnsignedShort
-                => new()
-                {
-                    { null },
-                    { 0 },
-                    { 1 },
-                };
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-            [Theory]
-            [InlineData(0)]
-            [InlineData(1)]
-            public void ReturnsIntegerWritingCellValue(int value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void ReturnsIntegerWritingCellValueForSignedByte(sbyte value)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
 
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-            [Theory]
-            [InlineData(null)]
-            [InlineData(0)]
-            [InlineData(1)]
-            public void ReturnsNullableIntegerWritingCellValue(int? value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.IntegerNullable);
+        [Theory]
+        [MemberData(nameof(DataForReturnsNullableIntegerWritingCellValueForNullableSignedByte))]
+        public void ReturnsNullableIntegerWritingCellValueForNullableSignedByte(sbyte? value)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByteNullable);
 
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-            [Theory]
-            [InlineData(0)]
-            [InlineData(1)]
-            public void ReturnsIntegerWritingCellValueForSignedByte(sbyte value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void ReturnsIntegerWritingCellValueForByte(byte value)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Byte);
 
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-            [Theory]
-            [MemberData(nameof(DataForReturnsNullableIntegerWritingCellValueForNullableSignedByte))]
-            public void ReturnsNullableIntegerWritingCellValueForNullableSignedByte(sbyte? value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByteNullable);
+        [Theory]
+        [MemberData(nameof(DataForReturnsNullableIntegerWritingCellValueForNullableByte))]
+        public void ReturnsNullableIntegerWritingCellValueForNullableByte(byte? value)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.ByteNullable);
 
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-            [Theory]
-            [InlineData(0)]
-            [InlineData(1)]
-            public void ReturnsIntegerWritingCellValueForByte(byte value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Byte);
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void ReturnsIntegerWritingCellValueForShort(short value)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Short);
 
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-            [Theory]
-            [MemberData(nameof(DataForReturnsNullableIntegerWritingCellValueForNullableByte))]
-            public void ReturnsNullableIntegerWritingCellValueForNullableByte(byte? value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.ByteNullable);
+        [Theory]
+        [MemberData(nameof(DataForReturnsNullableIntegerWritingCellValueForNullableShort))]
+        public void ReturnsNullableIntegerWritingCellValueForNullableShort(short? value)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.ShortNullable);
 
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-            [Theory]
-            [InlineData(0)]
-            [InlineData(1)]
-            public void ReturnsIntegerWritingCellValueForShort(short value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Short);
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void ReturnsIntegerWritingCellValueForUnsignedShort(ushort value)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedShort);
 
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-            [Theory]
-            [MemberData(nameof(DataForReturnsNullableIntegerWritingCellValueForNullableShort))]
-            public void ReturnsNullableIntegerWritingCellValueForNullableShort(short? value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.ShortNullable);
+        [Theory]
+        [MemberData(nameof(DataForReturnsNullableIntegerWritingCellValueForNullableUnsignedShort))]
+        public void ReturnsNullableIntegerWritingCellValueForNullableUnsignedShort(ushort? value)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedShortNullable);
 
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
 
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
 
-            [Theory]
-            [InlineData(0)]
-            [InlineData(1)]
-            public void ReturnsIntegerWritingCellValueForUnsignedShort(ushort value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedShort);
+        [Fact]
+        public void ThrowsFormatExceptionWhenNonIntegerTypeIsProvided()
+        {
+            // Arrange
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
+            var sut = CreateSystemUnderTest();
 
-                var sut = CreateSystemUnderTest();
+            // Act
+            var exception = Record.Exception(() => sut.Serialize("foo", map));
 
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
-
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
-
-            [Theory]
-            [MemberData(nameof(DataForReturnsNullableIntegerWritingCellValueForNullableUnsignedShort))]
-            public void ReturnsNullableIntegerWritingCellValueForNullableUnsignedShort(ushort? value)
-            {
-                // Arrange
-                var expectedCellValue = new WritingCellValue(value);
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedShortNullable);
-
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var actualCellValue = sut.Serialize(value, map);
-
-                // Assert
-                AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
-            }
-
-            [Fact]
-            public void ThrowsFormatExceptionWhenNonIntegerTypeIsProvided()
-            {
-                // Arrange
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var exception = Record.Exception(() => sut.Serialize("foo", map));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<FormatException>(exception);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<FormatException>(exception);
         }
     }
 }

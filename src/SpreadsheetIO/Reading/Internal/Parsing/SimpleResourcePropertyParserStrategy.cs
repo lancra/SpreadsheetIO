@@ -1,34 +1,33 @@
 using LanceC.SpreadsheetIO.Mapping;
 
-namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing
+namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing;
+
+internal abstract class SimpleResourcePropertyParserStrategy<TProperty> : IDefaultResourcePropertyParserStrategy
 {
-    internal abstract class SimpleResourcePropertyParserStrategy<TProperty> : IDefaultResourcePropertyParserStrategy
+    public Type PropertyType { get; } = typeof(TProperty);
+
+    public ResourcePropertyParseResultKind TryParse<TResource>(string cellValue, PropertyMap<TResource> map, out object? value)
+        where TResource : class
     {
-        public Type PropertyType { get; } = typeof(TProperty);
-
-        public ResourcePropertyParseResultKind TryParse<TResource>(string cellValue, PropertyMap<TResource> map, out object? value)
-            where TResource : class
+        var noValue = string.IsNullOrEmpty(cellValue);
+        if (noValue)
         {
-            var noValue = string.IsNullOrEmpty(cellValue);
-            if (noValue)
-            {
-                value = null;
-                return Nullable.GetUnderlyingType(map.Property.PropertyType) is not null
-                    ? ResourcePropertyParseResultKind.Empty
-                    : ResourcePropertyParseResultKind.Missing;
-            }
-
-            var hasTypeValue = TryParseValue(cellValue, out var typeValue);
-            if (!hasTypeValue)
-            {
-                value = null;
-                return ResourcePropertyParseResultKind.Invalid;
-            }
-
-            value = typeValue;
-            return ResourcePropertyParseResultKind.Success;
+            value = null;
+            return Nullable.GetUnderlyingType(map.Property.PropertyType) is not null
+                ? ResourcePropertyParseResultKind.Empty
+                : ResourcePropertyParseResultKind.Missing;
         }
 
-        protected abstract bool TryParseValue(string cellValue, out TProperty value);
+        var hasTypeValue = TryParseValue(cellValue, out var typeValue);
+        if (!hasTypeValue)
+        {
+            value = null;
+            return ResourcePropertyParseResultKind.Invalid;
+        }
+
+        value = typeValue;
+        return ResourcePropertyParseResultKind.Success;
     }
+
+    protected abstract bool TryParseValue(string cellValue, out TProperty value);
 }

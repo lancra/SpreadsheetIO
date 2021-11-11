@@ -1,13 +1,12 @@
-namespace LanceC.SpreadsheetIO.Mapping
+namespace LanceC.SpreadsheetIO.Mapping;
+
+/// <summary>
+/// Defines a map to Excel for a resource.
+/// </summary>
+public interface IResourceMap
 {
     /// <summary>
-    /// Defines a map to Excel for a resource.
+    /// Gets the resource type.
     /// </summary>
-    public interface IResourceMap
-    {
-        /// <summary>
-        /// Gets the resource type.
-        /// </summary>
-        Type ResourceType { get; }
-    }
+    Type ResourceType { get; }
 }
