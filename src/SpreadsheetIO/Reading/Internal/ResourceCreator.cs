@@ -1,117 +1,113 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Mapping.Extensions;
 using LanceC.SpreadsheetIO.Properties;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 
-namespace LanceC.SpreadsheetIO.Reading.Internal
+namespace LanceC.SpreadsheetIO.Reading.Internal;
+
+internal class ResourceCreator : IResourceCreator
 {
-    internal class ResourceCreator : IResourceCreator
+    public TResource? Create<TResource>(ResourceMap<TResource> map, IResourcePropertyValues<TResource> values)
+        where TResource : class
     {
-        public TResource? Create<TResource>(ResourceMap<TResource> map, IResourcePropertyValues<TResource> values)
-            where TResource : class
+        var explicitConstructorExtension = map.Options.FindExtension<ExplicitConstructorResourceMapOptionsExtension>();
+        if (explicitConstructorExtension is not null)
         {
-            var explicitConstructorExtension = map.Options.FindExtension<ExplicitConstructorResourceMapOptionsExtension>();
-            if (explicitConstructorExtension is not null)
-            {
-                return CreateUsingExplicitConstructor(map, values, explicitConstructorExtension);
-            }
-
-            var useImplicitConstructor = map.Options.HasExtension<ImplicitConstructorResourceMapOptionsExtension>();
-            if (useImplicitConstructor)
-            {
-                return CreateUsingImplicitConstructor(map, values);
-            }
-
-            return CreateUsingPropertySetters(map, values);
+            return CreateUsingExplicitConstructor(map, values, explicitConstructorExtension);
         }
 
-        private static TResource? CreateUsingExplicitConstructor<TResource>(
-            ResourceMap<TResource> map,
-            IResourcePropertyValues<TResource> values,
-            ExplicitConstructorResourceMapOptionsExtension constructorCreationExtension)
-            where TResource : class
+        var useImplicitConstructor = map.Options.HasExtension<ImplicitConstructorResourceMapOptionsExtension>();
+        if (useImplicitConstructor)
         {
-            var constructorParameterTypes = new List<Type>();
-            var constructorParameters = new List<object?>();
-
-            foreach (var propertyName in constructorCreationExtension.PropertyNames)
-            {
-                var propertyMap = map.Properties.SingleOrDefault(p => p.Property.Name == propertyName);
-                if (propertyMap is null)
-                {
-                    throw new ArgumentException(Messages.MissingResourcePropertyForConstructorParameter(propertyName));
-                }
-
-                if (!values.TryGetValue(propertyMap, out var value))
-                {
-                    return default;
-                }
-
-                constructorParameterTypes.Add(propertyMap.Property.PropertyType);
-                constructorParameters.Add(value);
-            }
-
-            // TODO: Move this check to `ResourceMapOptionsBuilder<TResource>.UseExplicitConstructor(string[])`.
-            var constructor = typeof(TResource).GetConstructor(constructorParameterTypes.ToArray());
-            if (constructor is null)
-            {
-                throw new ArgumentException(Messages.MissingResourceConstructor(typeof(TResource).Name));
-            }
-
-            var resource = (TResource)constructor.Invoke(constructorParameters.ToArray());
-            return resource;
+            return CreateUsingImplicitConstructor(map, values);
         }
 
-        private static TResource? CreateUsingImplicitConstructor<TResource>(
-            ResourceMap<TResource> map,
-            IResourcePropertyValues<TResource> values)
-            where TResource : class
+        return CreateUsingPropertySetters(map, values);
+    }
+
+    private static TResource? CreateUsingExplicitConstructor<TResource>(
+        ResourceMap<TResource> map,
+        IResourcePropertyValues<TResource> values,
+        ExplicitConstructorResourceMapOptionsExtension constructorCreationExtension)
+        where TResource : class
+    {
+        var constructorParameterTypes = new List<Type>();
+        var constructorParameters = new List<object?>();
+
+        foreach (var propertyName in constructorCreationExtension.PropertyNames)
         {
-            var constructorParameterTypes = new List<Type>();
-            var constructorParameters = new List<object?>();
-
-            foreach (var propertyMap in map.Properties)
+            var propertyMap = map.Properties.SingleOrDefault(p => p.Property.Name == propertyName);
+            if (propertyMap is null)
             {
-                if (!values.TryGetValue(propertyMap, out var value))
-                {
-                    return default;
-                }
-
-                constructorParameterTypes.Add(propertyMap.Property.PropertyType);
-                constructorParameters.Add(value);
+                throw new ArgumentException(Messages.MissingResourcePropertyForConstructorParameter(propertyName));
             }
 
-            // TODO: Move this check to `ResourceMapOptionsBuilder<TResource>.UseImplicitConstructor()`.
-            var constructor = typeof(TResource).GetConstructor(constructorParameterTypes.ToArray());
-            if (constructor is null)
+            if (!values.TryGetValue(propertyMap, out var value))
             {
-                throw new ArgumentException(Messages.MissingResourceConstructor(typeof(TResource).Name));
+                return default;
             }
 
-            var resource = (TResource)constructor.Invoke(constructorParameters.ToArray());
-            return resource;
+            constructorParameterTypes.Add(propertyMap.Property.PropertyType);
+            constructorParameters.Add(value);
         }
 
-        private static TResource? CreateUsingPropertySetters<TResource>(
-            ResourceMap<TResource> map,
-            IResourcePropertyValues<TResource> values)
-            where TResource : class
+        // TODO: Move this check to `ResourceMapOptionsBuilder<TResource>.UseExplicitConstructor(string[])`.
+        var constructor = typeof(TResource).GetConstructor(constructorParameterTypes.ToArray());
+        if (constructor is null)
         {
-            var resource = Activator.CreateInstance<TResource>();
+            throw new ArgumentException(Messages.MissingResourceConstructor(typeof(TResource).Name));
+        }
 
-            foreach (var resourceProperty in map.Properties)
+        var resource = (TResource)constructor.Invoke(constructorParameters.ToArray());
+        return resource;
+    }
+
+    private static TResource? CreateUsingImplicitConstructor<TResource>(
+        ResourceMap<TResource> map,
+        IResourcePropertyValues<TResource> values)
+        where TResource : class
+    {
+        var constructorParameterTypes = new List<Type>();
+        var constructorParameters = new List<object?>();
+
+        foreach (var propertyMap in map.Properties)
+        {
+            if (!values.TryGetValue(propertyMap, out var value))
             {
-                var hasValue = values.TryGetValue(resourceProperty, out var value);
-                if (hasValue)
-                {
-                    resourceProperty.Property.SetValue(resource, value);
-                }
+                return default;
             }
 
-            return resource;
+            constructorParameterTypes.Add(propertyMap.Property.PropertyType);
+            constructorParameters.Add(value);
         }
+
+        // TODO: Move this check to `ResourceMapOptionsBuilder<TResource>.UseImplicitConstructor()`.
+        var constructor = typeof(TResource).GetConstructor(constructorParameterTypes.ToArray());
+        if (constructor is null)
+        {
+            throw new ArgumentException(Messages.MissingResourceConstructor(typeof(TResource).Name));
+        }
+
+        var resource = (TResource)constructor.Invoke(constructorParameters.ToArray());
+        return resource;
+    }
+
+    private static TResource? CreateUsingPropertySetters<TResource>(
+        ResourceMap<TResource> map,
+        IResourcePropertyValues<TResource> values)
+        where TResource : class
+    {
+        var resource = Activator.CreateInstance<TResource>();
+
+        foreach (var resourceProperty in map.Properties)
+        {
+            var hasValue = values.TryGetValue(resourceProperty, out var value);
+            if (hasValue)
+            {
+                resourceProperty.Property.SetValue(resource, value);
+            }
+        }
+
+        return resource;
     }
 }

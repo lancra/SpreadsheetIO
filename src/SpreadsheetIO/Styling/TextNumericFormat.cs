@@ -1,9 +1,8 @@
-namespace LanceC.SpreadsheetIO.Styling
+namespace LanceC.SpreadsheetIO.Styling;
+
+/// <summary>
+/// Represents a numeric formats with numbers shown as text.
+/// </summary>
+public record TextNumericFormat
 {
-    /// <summary>
-    /// Represents a numeric formats with numbers shown as text.
-    /// </summary>
-    public record TextNumericFormat
-    {
-    }
 }

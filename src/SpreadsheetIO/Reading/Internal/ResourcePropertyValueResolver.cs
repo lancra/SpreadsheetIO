@@ -1,30 +1,29 @@
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
 
-namespace LanceC.SpreadsheetIO.Reading.Internal
+namespace LanceC.SpreadsheetIO.Reading.Internal;
+
+internal class ResourcePropertyValueResolver : IResourcePropertyValueResolver
 {
-    internal class ResourcePropertyValueResolver : IResourcePropertyValueResolver
+    private readonly IResourcePropertyParser _resourcePropertyParser;
+    private readonly IResourcePropertyDefaultValueResolver _resourcePropertyDefaultValueResolver;
+
+    public ResourcePropertyValueResolver(
+        IResourcePropertyParser resourcePropertyParser,
+        IResourcePropertyDefaultValueResolver resourcePropertyDefaultValueResolver)
     {
-        private readonly IResourcePropertyParser _resourcePropertyParser;
-        private readonly IResourcePropertyDefaultValueResolver _resourcePropertyDefaultValueResolver;
+        _resourcePropertyParser = resourcePropertyParser;
+        _resourcePropertyDefaultValueResolver = resourcePropertyDefaultValueResolver;
+    }
 
-        public ResourcePropertyValueResolver(
-            IResourcePropertyParser resourcePropertyParser,
-            IResourcePropertyDefaultValueResolver resourcePropertyDefaultValueResolver)
-        {
-            _resourcePropertyParser = resourcePropertyParser;
-            _resourcePropertyDefaultValueResolver = resourcePropertyDefaultValueResolver;
-        }
+    public bool TryResolve<TResource>(string cellValue, PropertyMap<TResource> map, out object? value)
+        where TResource : class
+    {
+        var parseResultKind = _resourcePropertyParser.TryParse(cellValue, map!, out var parseValue);
+        var hasDefaultValue = _resourcePropertyDefaultValueResolver.TryResolve(map!, parseResultKind, out var defaultValue);
 
-        public bool TryResolve<TResource>(string cellValue, PropertyMap<TResource> map, out object? value)
-            where TResource : class
-        {
-            var parseResultKind = _resourcePropertyParser.TryParse(cellValue, map!, out var parseValue);
-            var hasDefaultValue = _resourcePropertyDefaultValueResolver.TryResolve(map!, parseResultKind, out var defaultValue);
-
-            value = !hasDefaultValue ? parseValue : defaultValue;
-            var isResolved = parseResultKind.Valid || hasDefaultValue;
-            return isResolved;
-        }
+        value = !hasDefaultValue ? parseValue : defaultValue;
+        var isResolved = parseResultKind.Valid || hasDefaultValue;
+        return isResolved;
     }
 }

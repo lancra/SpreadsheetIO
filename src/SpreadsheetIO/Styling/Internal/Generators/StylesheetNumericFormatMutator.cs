@@ -1,54 +1,52 @@
-using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Styling.Internal.Indexers;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 
-namespace LanceC.SpreadsheetIO.Styling.Internal.Generators
-{
-    internal class StylesheetNumericFormatMutator : IStylesheetMutator
-    {
-        private readonly INumericFormatIndexer _numericFormatIndexer;
-        private readonly BuiltInNumericFormats _builtInNumericFormats;
+namespace LanceC.SpreadsheetIO.Styling.Internal.Generators;
 
-        public StylesheetNumericFormatMutator(INumericFormatIndexer numericFormatIndexer, BuiltInNumericFormats builtInNumericFormats)
+internal class StylesheetNumericFormatMutator : IStylesheetMutator
+{
+    private readonly INumericFormatIndexer _numericFormatIndexer;
+    private readonly BuiltInNumericFormats _builtInNumericFormats;
+
+    public StylesheetNumericFormatMutator(INumericFormatIndexer numericFormatIndexer, BuiltInNumericFormats builtInNumericFormats)
+    {
+        _numericFormatIndexer = numericFormatIndexer;
+        _builtInNumericFormats = builtInNumericFormats;
+    }
+
+    public void Mutate(OpenXml.Stylesheet stylesheet)
+        => stylesheet.NumberingFormats = GenerateNumberingFormats(_numericFormatIndexer.Resources);
+
+    private OpenXml.NumberingFormats? GenerateNumberingFormats(IReadOnlyCollection<NumericFormat> numericFormats)
+    {
+        if (_numericFormatIndexer.NonBuiltInCount == 0)
         {
-            _numericFormatIndexer = numericFormatIndexer;
-            _builtInNumericFormats = builtInNumericFormats;
+            return default;
         }
 
-        public void Mutate(OpenXml.Stylesheet stylesheet)
-            => stylesheet.NumberingFormats = GenerateNumberingFormats(_numericFormatIndexer.Resources);
-
-        private OpenXml.NumberingFormats? GenerateNumberingFormats(IReadOnlyCollection<NumericFormat> numericFormats)
+        var openXmlNumberingFormats = new OpenXml.NumberingFormats
         {
-            if (_numericFormatIndexer.NonBuiltInCount == 0)
+            Count = _numericFormatIndexer.NonBuiltInCount,
+        };
+
+        foreach (var numericFormat in numericFormats)
+        {
+            var isBuiltIn = _builtInNumericFormats.TryGetValue(numericFormat.Code, out var _);
+            if (isBuiltIn)
             {
-                return default;
+                continue;
             }
 
-            var openXmlNumberingFormats = new OpenXml.NumberingFormats
+            var id = _numericFormatIndexer[numericFormat];
+            var openXmlNumberingFormat = new OpenXml.NumberingFormat
             {
-                Count = _numericFormatIndexer.NonBuiltInCount,
+                NumberFormatId = id,
+                FormatCode = numericFormat.Code,
             };
 
-            foreach (var numericFormat in numericFormats)
-            {
-                var isBuiltIn = _builtInNumericFormats.TryGetValue(numericFormat.Code, out var _);
-                if (isBuiltIn)
-                {
-                    continue;
-                }
-
-                var id = _numericFormatIndexer[numericFormat];
-                var openXmlNumberingFormat = new OpenXml.NumberingFormat
-                {
-                    NumberFormatId = id,
-                    FormatCode = numericFormat.Code,
-                };
-
-                openXmlNumberingFormats.Append(openXmlNumberingFormat);
-            }
-
-            return openXmlNumberingFormats;
+            openXmlNumberingFormats.Append(openXmlNumberingFormat);
         }
+
+        return openXmlNumberingFormats;
     }
 }

@@ -1,125 +1,122 @@
-using System;
-using System.Collections.Generic;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
 using Moq;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Reading.Internal
+namespace LanceC.SpreadsheetIO.Facts.Reading.Internal;
+
+public class ReadingSpreadsheetPageCollectionFacts
 {
-    public class ReadingSpreadsheetPageCollectionFacts
+    private readonly AutoMocker _mocker = new();
+
+    private ReadingSpreadsheetPageCollection CreateSystemUnderTest()
+        => _mocker.CreateInstance<ReadingSpreadsheetPageCollection>();
+
+    public class TheCountProperty : ReadingSpreadsheetPageCollectionFacts
     {
-        private readonly AutoMocker _mocker = new();
-
-        private ReadingSpreadsheetPageCollection CreateSystemUnderTest()
-            => _mocker.CreateInstance<ReadingSpreadsheetPageCollection>();
-
-        public class TheCountProperty : ReadingSpreadsheetPageCollectionFacts
+        [Fact]
+        public void ReturnsTheNumberOfAddedPages()
         {
-            [Fact]
-            public void ReturnsTheNumberOfAddedPages()
-            {
-                // Arrange
-                var firstPage = new Mock<IReadingSpreadsheetPage>();
-                var secondPage = new Mock<IReadingSpreadsheetPage>();
+            // Arrange
+            var firstPage = new Mock<IReadingSpreadsheetPage>();
+            var secondPage = new Mock<IReadingSpreadsheetPage>();
 
-                var sut = CreateSystemUnderTest();
-                sut.Add(firstPage.Object, "Foo");
-                sut.Add(secondPage.Object, "Bar");
+            var sut = CreateSystemUnderTest();
+            sut.Add(firstPage.Object, "Foo");
+            sut.Add(secondPage.Object, "Bar");
 
-                // Act
-                var count = sut.Count;
+            // Act
+            var count = sut.Count;
 
-                // Assert
-                Assert.Equal(2, count);
-            }
-
-            [Fact]
-            public void ReturnsZeroWhenNoPagesHaveBeenAdded()
-            {
-                // Arrange
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var count = sut.Count;
-
-                // Assert
-                Assert.Equal(0, count);
-            }
+            // Assert
+            Assert.Equal(2, count);
         }
 
-        public class TheIndexerByIndex : ReadingSpreadsheetPageCollectionFacts
+        [Fact]
+        public void ReturnsZeroWhenNoPagesHaveBeenAdded()
         {
-            [Fact]
-            public void ReturnsThePageAtTheSpecifiedIndex()
-            {
-                // Arrange
-                var notExpectedPage = new Mock<IReadingSpreadsheetPage>();
-                var expectedPage = new Mock<IReadingSpreadsheetPage>();
+            // Arrange
+            var sut = CreateSystemUnderTest();
 
-                var sut = CreateSystemUnderTest();
-                sut.Add(notExpectedPage.Object, "Foo");
-                sut.Add(expectedPage.Object, "Bar");
+            // Act
+            var count = sut.Count;
 
-                // Act
-                var actualPage = sut[1];
+            // Assert
+            Assert.Equal(0, count);
+        }
+    }
 
-                // Assert
-                Assert.Equal(expectedPage.Object, actualPage);
-            }
+    public class TheIndexerByIndex : ReadingSpreadsheetPageCollectionFacts
+    {
+        [Fact]
+        public void ReturnsThePageAtTheSpecifiedIndex()
+        {
+            // Arrange
+            var notExpectedPage = new Mock<IReadingSpreadsheetPage>();
+            var expectedPage = new Mock<IReadingSpreadsheetPage>();
 
-            [Fact]
-            public void ThrowsArgumentOutOfRangeExceptionWhenIndexIsInvalid()
-            {
-                // Arrange
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
+            sut.Add(notExpectedPage.Object, "Foo");
+            sut.Add(expectedPage.Object, "Bar");
 
-                // Act
-                var exception = Record.Exception(() => sut[int.MaxValue]);
+            // Act
+            var actualPage = sut[1];
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentOutOfRangeException>(exception);
-            }
+            // Assert
+            Assert.Equal(expectedPage.Object, actualPage);
         }
 
-        public class TheIndexerByName : ReadingSpreadsheetPageCollectionFacts
+        [Fact]
+        public void ThrowsArgumentOutOfRangeExceptionWhenIndexIsInvalid()
         {
-            [Fact]
-            public void ReturnsThePageWithTheSpecifiedName()
-            {
-                // Arrange
-                var notExpectedName = "Foo";
-                var notExpectedPage = new Mock<IReadingSpreadsheetPage>();
+            // Arrange
+            var sut = CreateSystemUnderTest();
 
-                var expectedName = "Bar";
-                var expectedPage = new Mock<IReadingSpreadsheetPage>();
+            // Act
+            var exception = Record.Exception(() => sut[int.MaxValue]);
 
-                var sut = CreateSystemUnderTest();
-                sut.Add(notExpectedPage.Object, notExpectedName);
-                sut.Add(expectedPage.Object, expectedName);
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentOutOfRangeException>(exception);
+        }
+    }
 
-                // Act
-                var actualPage = sut[expectedName];
+    public class TheIndexerByName : ReadingSpreadsheetPageCollectionFacts
+    {
+        [Fact]
+        public void ReturnsThePageWithTheSpecifiedName()
+        {
+            // Arrange
+            var notExpectedName = "Foo";
+            var notExpectedPage = new Mock<IReadingSpreadsheetPage>();
 
-                // Assert
-                Assert.Equal(expectedPage.Object, actualPage);
-            }
+            var expectedName = "Bar";
+            var expectedPage = new Mock<IReadingSpreadsheetPage>();
 
-            [Fact]
-            public void ThrowsKeyNotFoundExceptionWhenNoMatchingPageIsFound()
-            {
-                // Arrange
-                var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest();
+            sut.Add(notExpectedPage.Object, notExpectedName);
+            sut.Add(expectedPage.Object, expectedName);
 
-                // Act
-                var exception = Record.Exception(() => sut["Baz"]);
+            // Act
+            var actualPage = sut[expectedName];
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<KeyNotFoundException>(exception);
-            }
+            // Assert
+            Assert.Equal(expectedPage.Object, actualPage);
+        }
+
+        [Fact]
+        public void ThrowsKeyNotFoundExceptionWhenNoMatchingPageIsFound()
+        {
+            // Arrange
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var exception = Record.Exception(() => sut["Baz"]);
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<KeyNotFoundException>(exception);
         }
     }
 }

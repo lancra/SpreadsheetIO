@@ -4,81 +4,80 @@ using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing
+namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Parsing;
+
+public class UnsignedIntegerResourcePropertyParserStrategyFacts
 {
-    public class UnsignedIntegerResourcePropertyParserStrategyFacts
+    private readonly AutoMocker _mocker = new();
+
+    private UnsignedIntegerResourcePropertyParserStrategy CreateSystemUnderTest()
+        => _mocker.CreateInstance<UnsignedIntegerResourcePropertyParserStrategy>();
+
+    public class TheTryParseMethod : UnsignedIntegerResourcePropertyParserStrategyFacts
     {
-        private readonly AutoMocker _mocker = new();
-
-        private UnsignedIntegerResourcePropertyParserStrategy CreateSystemUnderTest()
-            => _mocker.CreateInstance<UnsignedIntegerResourcePropertyParserStrategy>();
-
-        public class TheTryParseMethod : UnsignedIntegerResourcePropertyParserStrategyFacts
+        [Theory]
+        [InlineData(default)]
+        [InlineData("")]
+        public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
         {
-            [Theory]
-            [InlineData(default)]
-            [InlineData("")]
-            public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
-            {
-                // Arrange
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedIntegerNullable);
-                var sut = CreateSystemUnderTest();
+            // Arrange
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedIntegerNullable);
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var parseResult = sut.TryParse(cellValue, map, out var value);
+            // Act
+            var parseResult = sut.TryParse(cellValue, map, out var value);
 
-                // Assert
-                Assert.Equal(ResourcePropertyParseResultKind.Empty, parseResult);
-                Assert.Null(value);
-            }
+            // Assert
+            Assert.Equal(ResourcePropertyParseResultKind.Empty, parseResult);
+            Assert.Null(value);
+        }
 
-            [Theory]
-            [InlineData(default)]
-            [InlineData("")]
-            public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
-            {
-                // Arrange
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedInteger);
-                var sut = CreateSystemUnderTest();
+        [Theory]
+        [InlineData(default)]
+        [InlineData("")]
+        public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
+        {
+            // Arrange
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedInteger);
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var parseResult = sut.TryParse(cellValue, map, out var value);
+            // Act
+            var parseResult = sut.TryParse(cellValue, map, out var value);
 
-                // Assert
-                Assert.Equal(ResourcePropertyParseResultKind.Missing, parseResult);
-                Assert.Null(value);
-            }
+            // Assert
+            Assert.Equal(ResourcePropertyParseResultKind.Missing, parseResult);
+            Assert.Null(value);
+        }
 
-            [Fact]
-            public void ReturnsInvalidParseResultWhenCellValueIsNotUnsignedInteger()
-            {
-                // Arrange
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedInteger);
-                var sut = CreateSystemUnderTest();
+        [Fact]
+        public void ReturnsInvalidParseResultWhenCellValueIsNotUnsignedInteger()
+        {
+            // Arrange
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedInteger);
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var parseResult = sut.TryParse("foo", map, out var value);
+            // Act
+            var parseResult = sut.TryParse("foo", map, out var value);
 
-                // Assert
-                Assert.Equal(ResourcePropertyParseResultKind.Invalid, parseResult);
-                Assert.Null(value);
-            }
+            // Assert
+            Assert.Equal(ResourcePropertyParseResultKind.Invalid, parseResult);
+            Assert.Null(value);
+        }
 
-            [Fact]
-            public void ReturnsSuccessParseResultWhenCellValueIsUnsignedInteger()
-            {
-                // Arrange
-                var expectedValue = 1U;
-                var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedInteger);
-                var sut = CreateSystemUnderTest();
+        [Fact]
+        public void ReturnsSuccessParseResultWhenCellValueIsUnsignedInteger()
+        {
+            // Arrange
+            var expectedValue = 1U;
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedInteger);
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var parseResult = sut.TryParse("1", map, out var actualValue);
+            // Act
+            var parseResult = sut.TryParse("1", map, out var actualValue);
 
-                // Assert
-                Assert.Equal(ResourcePropertyParseResultKind.Success, parseResult);
-                Assert.Equal(expectedValue, actualValue);
-            }
+            // Assert
+            Assert.Equal(ResourcePropertyParseResultKind.Success, parseResult);
+            Assert.Equal(expectedValue, actualValue);
         }
     }
 }

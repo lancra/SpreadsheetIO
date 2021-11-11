@@ -1,142 +1,140 @@
-using System;
 using System.Reflection;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Mapping
+namespace LanceC.SpreadsheetIO.Facts.Mapping;
+
+public class PropertyMapKeyBuilderFacts
 {
-    public class PropertyMapKeyBuilderFacts
+    public static PropertyInfo Property
+        => typeof(FakeModel).GetProperty(nameof(FakeModel.Name))!;
+
+    public class TheConstructor : PropertyMapKeyBuilderFacts
     {
-        public static PropertyInfo Property
-            => typeof(FakeModel).GetProperty(nameof(FakeModel.Name))!;
-
-        public class TheConstructor : PropertyMapKeyBuilderFacts
+        [Fact]
+        public void SetsKeyNameFromProvidedProperty()
         {
-            [Fact]
-            public void SetsKeyNameFromProvidedProperty()
-            {
-                // Arrange
-                var sut = new PropertyMapKeyBuilder(Property);
+            // Arrange
+            var sut = new PropertyMapKeyBuilder(Property);
 
-                // Act
-                var key = sut.Key;
+            // Act
+            var key = sut.Key;
 
-                // Assert
-                Assert.Equal(nameof(FakeModel.Name), key.Name);
-                Assert.Equal(default, key.Number);
-                Assert.Equal(default, key.IsNameIgnored);
-            }
-
-            [Fact]
-            public void ThrowArgumentNullExceptionWhenPropertyIsNull()
-            {
-                // Arrange
-                var property = default(PropertyInfo);
-
-                // Act
-                var exception = Record.Exception(() => new PropertyMapKeyBuilder(property!));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            Assert.Equal(nameof(FakeModel.Name), key.Name);
+            Assert.Equal(default, key.Number);
+            Assert.Equal(default, key.IsNameIgnored);
         }
 
-        public class TheOverrideNameMethod : PropertyMapKeyBuilderFacts
+        [Fact]
+        public void ThrowArgumentNullExceptionWhenPropertyIsNull()
         {
-            [Fact]
-            public void SetsKeyName()
-            {
-                // Arrange
-                var name = "Bar";
-                var sut = new PropertyMapKeyBuilder(Property);
+            // Arrange
+            var property = default(PropertyInfo);
 
-                // Act
-                sut.OverrideName(name);
+            // Act
+            var exception = Record.Exception(() => new PropertyMapKeyBuilder(property!));
 
-                // Assert
-                Assert.Equal(name, sut.Key.Name);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
 
-            [Fact]
-            public void ThrowsArgumentExceptionWhenNameIsEmpty()
-            {
-                // Arrange
-                var name = string.Empty;
-                var sut = new PropertyMapKeyBuilder(Property);
+    public class TheOverrideNameMethod : PropertyMapKeyBuilderFacts
+    {
+        [Fact]
+        public void SetsKeyName()
+        {
+            // Arrange
+            var name = "Bar";
+            var sut = new PropertyMapKeyBuilder(Property);
 
-                // Act
-                var exception = Record.Exception(() => sut.OverrideName(name));
+            // Act
+            sut.OverrideName(name);
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentException>(exception);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenNameIsNull()
-            {
-                // Arrange
-                var name = default(string);
-                var sut = new PropertyMapKeyBuilder(Property);
-
-                // Act
-                var exception = Record.Exception(() => sut.OverrideName(name!));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            Assert.Equal(name, sut.Key.Name);
         }
 
-        public class TheIgnoreNameMethod : PropertyMapKeyBuilderFacts
+        [Fact]
+        public void ThrowsArgumentExceptionWhenNameIsEmpty()
         {
-            [Fact]
-            public void SetsKeyNameAsIgnored()
-            {
-                // Arrange
-                var sut = new PropertyMapKeyBuilder(Property);
+            // Arrange
+            var name = string.Empty;
+            var sut = new PropertyMapKeyBuilder(Property);
 
-                // Act
-                sut.IgnoreName();
+            // Act
+            var exception = Record.Exception(() => sut.OverrideName(name));
 
-                // Assert
-                Assert.True(sut.Key.IsNameIgnored);
-                Assert.Equal(nameof(FakeModel.Name), sut.Key.Name);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentException>(exception);
         }
 
-        public class TheUseNumberMethod : PropertyMapKeyBuilderFacts
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenNameIsNull()
         {
-            [Fact]
-            public void SetsKeyNumber()
-            {
-                // Arrange
-                var number = 1U;
-                var sut = new PropertyMapKeyBuilder(Property);
+            // Arrange
+            var name = default(string);
+            var sut = new PropertyMapKeyBuilder(Property);
 
-                // Act
-                sut.UseNumber(number);
+            // Act
+            var exception = Record.Exception(() => sut.OverrideName(name!));
 
-                // Assert
-                Assert.Equal(number, sut.Key.Number);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
 
-            [Fact]
-            public void ThrowsArgumentExceptionWhenNumberIsZero()
-            {
-                // Arrange
-                var number = 0U;
-                var sut = new PropertyMapKeyBuilder(Property);
+    public class TheIgnoreNameMethod : PropertyMapKeyBuilderFacts
+    {
+        [Fact]
+        public void SetsKeyNameAsIgnored()
+        {
+            // Arrange
+            var sut = new PropertyMapKeyBuilder(Property);
 
-                // Act
-                var exception = Record.Exception(() => sut.UseNumber(number));
+            // Act
+            sut.IgnoreName();
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentException>(exception);
-            }
+            // Assert
+            Assert.True(sut.Key.IsNameIgnored);
+            Assert.Equal(nameof(FakeModel.Name), sut.Key.Name);
+        }
+    }
+
+    public class TheUseNumberMethod : PropertyMapKeyBuilderFacts
+    {
+        [Fact]
+        public void SetsKeyNumber()
+        {
+            // Arrange
+            var number = 1U;
+            var sut = new PropertyMapKeyBuilder(Property);
+
+            // Act
+            sut.UseNumber(number);
+
+            // Assert
+            Assert.Equal(number, sut.Key.Number);
+        }
+
+        [Fact]
+        public void ThrowsArgumentExceptionWhenNumberIsZero()
+        {
+            // Arrange
+            var number = 0U;
+            var sut = new PropertyMapKeyBuilder(Property);
+
+            // Act
+            var exception = Record.Exception(() => sut.UseNumber(number));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentException>(exception);
         }
     }
 }

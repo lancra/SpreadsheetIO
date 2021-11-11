@@ -5,104 +5,103 @@ using LanceC.SpreadsheetIO.Properties;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Mapping.Internal.Validators
+namespace LanceC.SpreadsheetIO.Facts.Mapping.Internal.Validators;
+
+public class PropertySetterCreationValidatorFacts
 {
-    public class PropertySetterCreationValidatorFacts
+    private readonly AutoMocker _mocker = new();
+
+    private PropertySetterCreationValidator CreateSystemUnderTest()
+        => _mocker.CreateInstance<PropertySetterCreationValidator>();
+
+    public class TheCanValidateMethod : PropertySetterCreationValidatorFacts
     {
-        private readonly AutoMocker _mocker = new();
-
-        private PropertySetterCreationValidator CreateSystemUnderTest()
-            => _mocker.CreateInstance<PropertySetterCreationValidator>();
-
-        public class TheCanValidateMethod : PropertySetterCreationValidatorFacts
+        [Fact]
+        public void ReturnsTrueWhenNoConstructorExtensionIsConfigured()
         {
-            [Fact]
-            public void ReturnsTrueWhenNoConstructorExtensionIsConfigured()
-            {
-                // Arrange
-                var map = new FakePropertySetterModelMap();
-                var sut = CreateSystemUnderTest();
+            // Arrange
+            var map = new FakePropertySetterModelMap();
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var canValidate = sut.CanValidate(map);
+            // Act
+            var canValidate = sut.CanValidate(map);
 
-                // Assert
-                Assert.True(canValidate);
-            }
-
-            [Fact]
-            public void ReturnsFalseWhenExplicitConstructorIsConfigured()
-            {
-                // Arrange
-                var map = new FakePropertySetterModelMap(options => options.UseExplicitConstructor());
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var canValidate = sut.CanValidate(map);
-
-                // Assert
-                Assert.False(canValidate);
-            }
-
-            [Fact]
-            public void ReturnsFalseWhenImplicitConstructorIsConfigured()
-            {
-                // Arrange
-                var map = new FakePropertySetterModelMap(options => options.UseImplicitConstructor());
-                var sut = CreateSystemUnderTest();
-
-                // Act
-                var canValidate = sut.CanValidate(map);
-
-                // Assert
-                Assert.False(canValidate);
-            }
+            // Assert
+            Assert.True(canValidate);
         }
 
-        public class TheValidateMethod : PropertySetterCreationValidatorFacts
+        [Fact]
+        public void ReturnsFalseWhenExplicitConstructorIsConfigured()
         {
-            [Fact]
-            public void ReturnsSuccessValidationResultWhenAllMappedPropertiesHavePublicSetter()
-            {
-                // Arrange
-                var map = new FakePropertySetterModelMap();
-                map.Map(model => model.Id);
-                map.Map(model => model.Name);
+            // Arrange
+            var map = new FakePropertySetterModelMap(options => options.UseExplicitConstructor());
+            var sut = CreateSystemUnderTest();
 
-                var sut = CreateSystemUnderTest();
+            // Act
+            var canValidate = sut.CanValidate(map);
 
-                // Act
-                var validationResult = sut.Validate(map);
+            // Assert
+            Assert.False(canValidate);
+        }
 
-                // Assert
-                Assert.True(validationResult.IsValid);
-                Assert.Empty(validationResult.Message);
-                Assert.Empty(validationResult.InnerValidationResults);
-            }
+        [Fact]
+        public void ReturnsFalseWhenImplicitConstructorIsConfigured()
+        {
+            // Arrange
+            var map = new FakePropertySetterModelMap(options => options.UseImplicitConstructor());
+            var sut = CreateSystemUnderTest();
 
-            [Fact]
-            public void ReturnsFailureValidationResultWhenAnyMappedPropertiesDoesNotHavePublicSetter()
-            {
-                // Arrange
-                var map = new FakePropertySetterModelMap();
-                map.Map(model => model.Id);
-                map.Map(model => model.Name);
-                map.Map(model => model.Amount);
+            // Act
+            var canValidate = sut.CanValidate(map);
 
-                var sut = CreateSystemUnderTest();
+            // Assert
+            Assert.False(canValidate);
+        }
+    }
 
-                // Act
-                var validationResult = sut.Validate(map);
+    public class TheValidateMethod : PropertySetterCreationValidatorFacts
+    {
+        [Fact]
+        public void ReturnsSuccessValidationResultWhenAllMappedPropertiesHavePublicSetter()
+        {
+            // Arrange
+            var map = new FakePropertySetterModelMap();
+            map.Map(model => model.Id);
+            map.Map(model => model.Name);
 
-                // Assert
-                Assert.False(validationResult.IsValid);
-                Assert.Equal(
-                    Messages.InvalidPropertyMapsForSetterCreation(
-                        typeof(FakePropertySetterModel).Name,
-                        nameof(FakePropertySetterModel.Amount)),
-                    validationResult.Message);
-                Assert.Empty(validationResult.InnerValidationResults);
-            }
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var validationResult = sut.Validate(map);
+
+            // Assert
+            Assert.True(validationResult.IsValid);
+            Assert.Empty(validationResult.Message);
+            Assert.Empty(validationResult.InnerValidationResults);
+        }
+
+        [Fact]
+        public void ReturnsFailureValidationResultWhenAnyMappedPropertiesDoesNotHavePublicSetter()
+        {
+            // Arrange
+            var map = new FakePropertySetterModelMap();
+            map.Map(model => model.Id);
+            map.Map(model => model.Name);
+            map.Map(model => model.Amount);
+
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var validationResult = sut.Validate(map);
+
+            // Assert
+            Assert.False(validationResult.IsValid);
+            Assert.Equal(
+                Messages.InvalidPropertyMapsForSetterCreation(
+                    typeof(FakePropertySetterModel).Name,
+                    nameof(FakePropertySetterModel.Amount)),
+                validationResult.Message);
+            Assert.Empty(validationResult.InnerValidationResults);
         }
     }
 }

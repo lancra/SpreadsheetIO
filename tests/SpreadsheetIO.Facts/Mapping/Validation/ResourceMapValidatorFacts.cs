@@ -5,36 +5,35 @@ using LanceC.SpreadsheetIO.Mapping.Validation;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Mapping.Validation
+namespace LanceC.SpreadsheetIO.Facts.Mapping.Validation;
+
+public class ResourceMapValidatorFacts
 {
-    public class ResourceMapValidatorFacts
+    private readonly AutoMocker _mocker = new();
+
+    private FakeResourceMapValidator CreateSystemUnderTest()
+        => _mocker.CreateInstance<FakeResourceMapValidator>();
+
+    public class TheCanValidateMethod : ResourceMapValidatorFacts
     {
-        private readonly AutoMocker _mocker = new();
-
-        private FakeResourceMapValidator CreateSystemUnderTest()
-            => _mocker.CreateInstance<FakeResourceMapValidator>();
-
-        public class TheCanValidateMethod : ResourceMapValidatorFacts
+        [Fact]
+        public void ReturnsTrue()
         {
-            [Fact]
-            public void ReturnsTrue()
-            {
-                // Arrange
-                var sut = CreateSystemUnderTest();
+            // Arrange
+            var sut = CreateSystemUnderTest();
 
-                // Act
-                var canValidate = sut.CanValidate(new FakeStringResourceMap());
+            // Act
+            var canValidate = sut.CanValidate(new FakeStringResourceMap());
 
-                // Assert
-                Assert.True(canValidate);
-            }
+            // Assert
+            Assert.True(canValidate);
         }
+    }
 
-        [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Created from AutoMocker.")]
-        private class FakeResourceMapValidator : ResourceMapValidator
-        {
-            public override ResourceMapValidationResult Validate<TResource>(ResourceMap<TResource> map)
-                => ResourceMapValidationResult.Success();
-        }
+    [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Created from AutoMocker.")]
+    private class FakeResourceMapValidator : ResourceMapValidator
+    {
+        public override ResourceMapValidationResult Validate<TResource>(ResourceMap<TResource> map)
+            => ResourceMapValidationResult.Success();
     }
 }

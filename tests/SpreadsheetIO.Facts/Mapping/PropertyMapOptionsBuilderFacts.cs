@@ -9,595 +9,594 @@ using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Mapping
+namespace LanceC.SpreadsheetIO.Facts.Mapping;
+
+public class PropertyMapOptionsBuilderFacts
 {
-    public class PropertyMapOptionsBuilderFacts
+    public class TheConstructorWithResourceMapOptionsParameter : PropertyMapOptionsBuilderFacts
     {
-        public class TheConstructorWithResourceMapOptionsParameter : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenResourceMapOptionsIsNull()
         {
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenResourceMapOptionsIsNull()
-            {
-                // Arrange
-                var resourceOptions = default(ResourceMapOptions<FakeModel>);
+            // Arrange
+            var resourceOptions = default(ResourceMapOptions<FakeModel>);
 
-                // Act
-                var exception = Record.Exception(() => new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions!));
+            // Act
+            var exception = Record.Exception(() => new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions!));
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
+
+    public class TheConstructorWithResourceMapOptionsAndPropertyMapOptionsParameters : PropertyMapOptionsBuilderFacts
+    {
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenResourceMapOptionsIsNull()
+        {
+            // Arrange
+            var resourceOptions = default(ResourceMapOptions<FakeModel>);
+            var propertyOptions = new PropertyMapOptions<FakeModel, string>();
+
+            // Act
+            var exception = Record.Exception(()
+                => new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions!, propertyOptions));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
         }
 
-        public class TheConstructorWithResourceMapOptionsAndPropertyMapOptionsParameters : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenPropertyMapOptionsIsNull()
         {
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenResourceMapOptionsIsNull()
-            {
-                // Arrange
-                var resourceOptions = default(ResourceMapOptions<FakeModel>);
-                var propertyOptions = new PropertyMapOptions<FakeModel, string>();
+            // Arrange
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var propertyOptions = default(PropertyMapOptions<FakeModel, string>);
 
-                // Act
-                var exception = Record.Exception(()
-                    => new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions!, propertyOptions));
+            // Act
+            var exception = Record.Exception(()
+                => new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions, propertyOptions!));
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
 
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenPropertyMapOptionsIsNull()
-            {
-                // Arrange
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var propertyOptions = default(PropertyMapOptions<FakeModel, string>);
+    public class TheHasDefaultMethodWithValueParameter : PropertyMapOptionsBuilderFacts
+    {
+        [Fact]
+        public void AddsOptionsExtensionWithAllResolutions()
+        {
+            // Arrange
+            var value = "foo";
 
-                // Act
-                var exception = Record.Exception(()
-                    => new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions, propertyOptions!));
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Act
+            sut.HasDefault(value);
+
+            // Assert
+            var extension = sut.Options.FindExtension<DefaultValuePropertyMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.Equal(value, extension!.Value);
+            Assert.Equal(SmartEnum<ResourcePropertyDefaultReadingResolution>.List.Count, extension.Resolutions.Count);
         }
 
-        public class TheHasDefaultMethodWithValueParameter : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void AddsOptionsExtensionWithResolutionsFromResourceMapOptionsExtension()
         {
-            [Fact]
-            public void AddsOptionsExtensionWithAllResolutions()
+            // Arrange
+            var value = "foo";
+            var expectedResolution = ResourcePropertyDefaultReadingResolution.Invalid;
+
+            var resourceExtension = new DefaultPropertyReadingResolutionsResourceMapOptionsExtension(expectedResolution);
+            var resourceExtensions = new Dictionary<Type, IResourceMapOptionsExtension>
             {
-                // Arrange
-                var value = "foo";
+                [typeof(DefaultPropertyReadingResolutionsResourceMapOptionsExtension)] = resourceExtension,
+            };
+            var resourceOptions = new ResourceMapOptions<FakeModel>(resourceExtensions);
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.HasDefault(value);
+            // Act
+            sut.HasDefault(value);
 
-                // Assert
-                var extension = sut.Options.FindExtension<DefaultValuePropertyMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(value, extension!.Value);
-                Assert.Equal(SmartEnum<ResourcePropertyDefaultReadingResolution>.List.Count, extension.Resolutions.Count);
-            }
+            // Assert
+            var extension = sut.Options.FindExtension<DefaultValuePropertyMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.Equal(value, extension!.Value);
 
-            [Fact]
-            public void AddsOptionsExtensionWithResolutionsFromResourceMapOptionsExtension()
-            {
-                // Arrange
-                var value = "foo";
-                var expectedResolution = ResourcePropertyDefaultReadingResolution.Invalid;
+            var actualResolution = Assert.Single(extension.Resolutions);
+            Assert.Equal(expectedResolution, actualResolution);
+        }
+    }
 
-                var resourceExtension = new DefaultPropertyReadingResolutionsResourceMapOptionsExtension(expectedResolution);
-                var resourceExtensions = new Dictionary<Type, IResourceMapOptionsExtension>
-                {
-                    [typeof(DefaultPropertyReadingResolutionsResourceMapOptionsExtension)] = resourceExtension,
-                };
-                var resourceOptions = new ResourceMapOptions<FakeModel>(resourceExtensions);
+    public class TheHasDefaultMethodWithValueAndResolutionsParameters : PropertyMapOptionsBuilderFacts
+    {
+        [Fact]
+        public void AddsOptionsExtensionWithSpecifiedResolutions()
+        {
+            // Arrange
+            var value = "foo";
+            var expectedResolution = ResourcePropertyDefaultReadingResolution.Invalid;
 
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.HasDefault(value);
+            // Act
+            sut.HasDefault(value, expectedResolution);
 
-                // Assert
-                var extension = sut.Options.FindExtension<DefaultValuePropertyMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(value, extension!.Value);
+            // Assert
+            var extension = sut.Options.FindExtension<DefaultValuePropertyMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.Equal(value, extension!.Value);
 
-                var actualResolution = Assert.Single(extension.Resolutions);
-                Assert.Equal(expectedResolution, actualResolution);
-            }
+            var actualResolution = Assert.Single(extension.Resolutions);
+            Assert.Equal(expectedResolution, actualResolution);
         }
 
-        public class TheHasDefaultMethodWithValueAndResolutionsParameters : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenResolutionCollectionIsNull()
         {
-            [Fact]
-            public void AddsOptionsExtensionWithSpecifiedResolutions()
-            {
-                // Arrange
-                var value = "foo";
-                var expectedResolution = ResourcePropertyDefaultReadingResolution.Invalid;
+            // Arrange
+            var value = "foo";
+            var resolutions = default(ResourcePropertyDefaultReadingResolution[]);
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.HasDefault(value, expectedResolution);
+            // Act
+            var exception = Record.Exception(() => sut.HasDefault(value, resolutions!));
 
-                // Assert
-                var extension = sut.Options.FindExtension<DefaultValuePropertyMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(value, extension!.Value);
-
-                var actualResolution = Assert.Single(extension.Resolutions);
-                Assert.Equal(expectedResolution, actualResolution);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenResolutionCollectionIsNull()
-            {
-                // Arrange
-                var value = "foo";
-                var resolutions = default(ResourcePropertyDefaultReadingResolution[]);
-
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
-
-                // Act
-                var exception = Record.Exception(() => sut.HasDefault(value, resolutions!));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenAnyResolutionIsNull()
-            {
-                // Arrange
-                var value = "foo";
-                var resolutions = new[]
-                {
-                    ResourcePropertyDefaultReadingResolution.Invalid,
-                    default,
-                };
-
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
-
-                // Act
-                var exception = Record.Exception(() => sut.HasDefault(value, resolutions!));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
         }
 
-        public class TheUseHeaderStyleMethodWithStyleAndNameParameters : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenAnyResolutionIsNull()
         {
-            [Fact]
-            public void AddsOptionsExtensionWithSpecifiedStyle()
+            // Arrange
+            var value = "foo";
+            var resolutions = new[]
             {
-                // Arrange
-                var style = Style.Default;
-                var name = "foo";
+                ResourcePropertyDefaultReadingResolution.Invalid,
+                default,
+            };
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.UseHeaderStyle(style, name);
+            // Act
+            var exception = Record.Exception(() => sut.HasDefault(value, resolutions!));
 
-                // Assert
-                var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(name, extension!.Key.Name);
-                Assert.Equal(IndexerKeyKind.Custom, extension.Key.Kind);
-                Assert.Equal(style, extension.Style);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
 
-            [Fact]
-            public void UsesGuidWhenNameNotProvided()
-            {
-                // Arrange
-                var style = Style.Default;
+    public class TheUseHeaderStyleMethodWithStyleAndNameParameters : PropertyMapOptionsBuilderFacts
+    {
+        [Fact]
+        public void AddsOptionsExtensionWithSpecifiedStyle()
+        {
+            // Arrange
+            var style = Style.Default;
+            var name = "foo";
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.UseHeaderStyle(style);
+            // Act
+            sut.UseHeaderStyle(style, name);
 
-                // Assert
-                var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
-                Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
-                Assert.Equal(style, extension.Style);
-            }
-
-            [Fact]
-            public void UsesGuidWhenNameIsEmpty()
-            {
-                // Arrange
-                var style = Style.Default;
-                var name = string.Empty;
-
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
-
-                // Act
-                sut.UseHeaderStyle(style, name);
-
-                // Assert
-                var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
-                Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
-                Assert.Equal(style, extension.Style);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenStyleIsNull()
-            {
-                // Arrange
-                var style = default(Style);
-                var name = "foo";
-
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
-
-                // Act
-                var exception = Record.Exception(() => sut.UseHeaderStyle(style!, name));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.Equal(name, extension!.Key.Name);
+            Assert.Equal(IndexerKeyKind.Custom, extension.Key.Kind);
+            Assert.Equal(style, extension.Style);
         }
 
-        public class TheUseHeaderStyleMethodWithBuiltInExcelStyleParameter : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void UsesGuidWhenNameNotProvided()
         {
-            [Fact]
-            public void AddsOptionsExtensionWithSpecifiedStyle()
-            {
-                // Arrange
-                var style = BuiltInExcelStyle.Normal;
+            // Arrange
+            var style = Style.Default;
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.UseHeaderStyle(style);
+            // Act
+            sut.UseHeaderStyle(style);
 
-                // Assert
-                var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(style.IndexerKey, extension!.Key);
-                Assert.Equal(style.Style, extension.Style);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenStyleIsNull()
-            {
-                // Arrange
-                var style = default(BuiltInExcelStyle);
-
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
-
-                // Act
-                var exception = Record.Exception(() => sut.UseHeaderStyle(style!));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
+            Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
+            Assert.Equal(style, extension.Style);
         }
 
-        public class TheUseHeaderStyleMethodWithBuiltInPackageStyleParameter : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void UsesGuidWhenNameIsEmpty()
         {
-            [Fact]
-            public void AddsOptionsExtensionWithSpecifiedStyle()
-            {
-                // Arrange
-                var style = BuiltInPackageStyle.Bold;
+            // Arrange
+            var style = Style.Default;
+            var name = string.Empty;
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.UseHeaderStyle(style);
+            // Act
+            sut.UseHeaderStyle(style, name);
 
-                // Assert
-                var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(style.IndexerKey, extension!.Key);
-                Assert.Equal(style.Style, extension.Style);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenStyleIsNull()
-            {
-                // Arrange
-                var style = default(BuiltInPackageStyle);
-
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
-
-                // Act
-                var exception = Record.Exception(() => sut.UseHeaderStyle(style!));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
+            Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
+            Assert.Equal(style, extension.Style);
         }
 
-        public class TheUseBodyStyleMethodWithStyleAndNameParameters : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenStyleIsNull()
         {
-            [Fact]
-            public void AddsOptionsExtensionWithSpecifiedStyle()
-            {
-                // Arrange
-                var style = Style.Default;
-                var name = "foo";
+            // Arrange
+            var style = default(Style);
+            var name = "foo";
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.UseBodyStyle(style, name);
+            // Act
+            var exception = Record.Exception(() => sut.UseHeaderStyle(style!, name));
 
-                // Assert
-                var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(name, extension!.Key.Name);
-                Assert.Equal(IndexerKeyKind.Custom, extension.Key.Kind);
-                Assert.Equal(style, extension.Style);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
 
-            [Fact]
-            public void UsesGuidWhenNameNotProvided()
-            {
-                // Arrange
-                var style = Style.Default;
+    public class TheUseHeaderStyleMethodWithBuiltInExcelStyleParameter : PropertyMapOptionsBuilderFacts
+    {
+        [Fact]
+        public void AddsOptionsExtensionWithSpecifiedStyle()
+        {
+            // Arrange
+            var style = BuiltInExcelStyle.Normal;
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.UseBodyStyle(style);
+            // Act
+            sut.UseHeaderStyle(style);
 
-                // Assert
-                var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
-                Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
-                Assert.Equal(style, extension.Style);
-            }
-
-            [Fact]
-            public void UsesGuidWhenNameIsEmpty()
-            {
-                // Arrange
-                var style = Style.Default;
-                var name = string.Empty;
-
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
-
-                // Act
-                sut.UseBodyStyle(style, name);
-
-                // Assert
-                var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
-                Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
-                Assert.Equal(style, extension.Style);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenStyleIsNull()
-            {
-                // Arrange
-                var style = default(Style);
-                var name = "foo";
-
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
-
-                // Act
-                var exception = Record.Exception(() => sut.UseBodyStyle(style!, name));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.Equal(style.IndexerKey, extension!.Key);
+            Assert.Equal(style.Style, extension.Style);
         }
 
-        public class TheUseBodyStyleMethodWithBuiltInExcelStyleParameter : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenStyleIsNull()
         {
-            [Fact]
-            public void AddsOptionsExtensionWithSpecifiedStyle()
-            {
-                // Arrange
-                var style = BuiltInExcelStyle.Normal;
+            // Arrange
+            var style = default(BuiltInExcelStyle);
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.UseBodyStyle(style);
+            // Act
+            var exception = Record.Exception(() => sut.UseHeaderStyle(style!));
 
-                // Assert
-                var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(style.IndexerKey, extension!.Key);
-                Assert.Equal(style.Style, extension.Style);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
 
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenStyleIsNull()
-            {
-                // Arrange
-                var style = default(BuiltInExcelStyle);
+    public class TheUseHeaderStyleMethodWithBuiltInPackageStyleParameter : PropertyMapOptionsBuilderFacts
+    {
+        [Fact]
+        public void AddsOptionsExtensionWithSpecifiedStyle()
+        {
+            // Arrange
+            var style = BuiltInPackageStyle.Bold;
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                var exception = Record.Exception(() => sut.UseBodyStyle(style!));
+            // Act
+            sut.UseHeaderStyle(style);
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            var extension = sut.Options.FindExtension<HeaderStyleMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.Equal(style.IndexerKey, extension!.Key);
+            Assert.Equal(style.Style, extension.Style);
         }
 
-        public class TheUseBodyStyleMethodWithBuiltInPackageStyleParameter : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenStyleIsNull()
         {
-            [Fact]
-            public void AddsOptionsExtensionWithSpecifiedStyle()
-            {
-                // Arrange
-                var style = BuiltInPackageStyle.Bold;
+            // Arrange
+            var style = default(BuiltInPackageStyle);
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.UseBodyStyle(style);
+            // Act
+            var exception = Record.Exception(() => sut.UseHeaderStyle(style!));
 
-                // Assert
-                var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(style.IndexerKey, extension!.Key);
-                Assert.Equal(style.Style, extension.Style);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
 
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenStyleIsNull()
-            {
-                // Arrange
-                var style = default(BuiltInPackageStyle);
+    public class TheUseBodyStyleMethodWithStyleAndNameParameters : PropertyMapOptionsBuilderFacts
+    {
+        [Fact]
+        public void AddsOptionsExtensionWithSpecifiedStyle()
+        {
+            // Arrange
+            var style = Style.Default;
+            var name = "foo";
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                var exception = Record.Exception(() => sut.UseBodyStyle(style!));
+            // Act
+            sut.UseBodyStyle(style, name);
 
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
+            // Assert
+            var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.Equal(name, extension!.Key.Name);
+            Assert.Equal(IndexerKeyKind.Custom, extension.Key.Kind);
+            Assert.Equal(style, extension.Style);
         }
 
-        public class TheUseDateKindMethod : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void UsesGuidWhenNameNotProvided()
         {
-            [Fact]
-            public void AddsOptionsExtensionWithSpecifiedDateKind()
-            {
-                // Arrange
-                var dateKind = CellDateKind.Number;
+            // Arrange
+            var style = Style.Default;
 
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, DateTime>(resourceOptions);
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.UseDateKind(dateKind);
+            // Act
+            sut.UseBodyStyle(style);
 
-                // Assert
-                var extension = sut.Options.FindExtension<DateKindMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(dateKind, extension!.DateKind);
-            }
-
-            [Fact]
-            public void AllowsNullableDateTime()
-            {
-                // Arrange
-                var dateKind = CellDateKind.Text;
-
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, DateTime?>(resourceOptions);
-
-                // Act
-                sut.UseDateKind(dateKind);
-
-                // Assert
-                var extension = sut.Options.FindExtension<DateKindMapOptionsExtension>();
-                Assert.NotNull(extension);
-                Assert.Equal(dateKind, extension!.DateKind);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenDateKindIsNull()
-            {
-                // Arrange
-                var dateKind = default(CellDateKind);
-
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, DateTime>(resourceOptions);
-
-                // Act
-                var exception = Record.Exception(() => sut.UseDateKind(dateKind!));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<ArgumentNullException>(exception);
-            }
-
-            [Fact]
-            public void ThrowsInvalidOperationExceptionWhenPropertyTypeIsNotDateTimeType()
-            {
-                // Arrange
-                var dateKind = CellDateKind.Number;
-
-                var resourceOptions = new ResourceMapOptions<FakeModel>();
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
-
-                // Act
-                var exception = Record.Exception(() => sut.UseDateKind(dateKind!));
-
-                // Assert
-                Assert.NotNull(exception);
-                Assert.IsType<InvalidOperationException>(exception);
-            }
+            // Assert
+            var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
+            Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
+            Assert.Equal(style, extension.Style);
         }
 
-        public class TheApplyResourceMapOptionsMethod : PropertyMapOptionsBuilderFacts
+        [Fact]
+        public void UsesGuidWhenNameIsEmpty()
         {
-            [Fact]
-            public void AddsSupportedExtensionsFromResourceMapOptionsToPropertyMapOptions()
+            // Arrange
+            var style = Style.Default;
+            var name = string.Empty;
+
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+            // Act
+            sut.UseBodyStyle(style, name);
+
+            // Assert
+            var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.True(Guid.TryParse(extension!.Key.Name, out var _));
+            Assert.Equal(IndexerKeyKind.Custom, extension!.Key.Kind);
+            Assert.Equal(style, extension.Style);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenStyleIsNull()
+        {
+            // Arrange
+            var style = default(Style);
+            var name = "foo";
+
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+            // Act
+            var exception = Record.Exception(() => sut.UseBodyStyle(style!, name));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
+
+    public class TheUseBodyStyleMethodWithBuiltInExcelStyleParameter : PropertyMapOptionsBuilderFacts
+    {
+        [Fact]
+        public void AddsOptionsExtensionWithSpecifiedStyle()
+        {
+            // Arrange
+            var style = BuiltInExcelStyle.Normal;
+
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+            // Act
+            sut.UseBodyStyle(style);
+
+            // Assert
+            var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.Equal(style.IndexerKey, extension!.Key);
+            Assert.Equal(style.Style, extension.Style);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenStyleIsNull()
+        {
+            // Arrange
+            var style = default(BuiltInExcelStyle);
+
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+            // Act
+            var exception = Record.Exception(() => sut.UseBodyStyle(style!));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
+
+    public class TheUseBodyStyleMethodWithBuiltInPackageStyleParameter : PropertyMapOptionsBuilderFacts
+    {
+        [Fact]
+        public void AddsOptionsExtensionWithSpecifiedStyle()
+        {
+            // Arrange
+            var style = BuiltInPackageStyle.Bold;
+
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+            // Act
+            sut.UseBodyStyle(style);
+
+            // Assert
+            var extension = sut.Options.FindExtension<BodyStyleMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.Equal(style.IndexerKey, extension!.Key);
+            Assert.Equal(style.Style, extension.Style);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenStyleIsNull()
+        {
+            // Arrange
+            var style = default(BuiltInPackageStyle);
+
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+            // Act
+            var exception = Record.Exception(() => sut.UseBodyStyle(style!));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
+
+    public class TheUseDateKindMethod : PropertyMapOptionsBuilderFacts
+    {
+        [Fact]
+        public void AddsOptionsExtensionWithSpecifiedDateKind()
+        {
+            // Arrange
+            var dateKind = CellDateKind.Number;
+
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, DateTime>(resourceOptions);
+
+            // Act
+            sut.UseDateKind(dateKind);
+
+            // Assert
+            var extension = sut.Options.FindExtension<DateKindMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.Equal(dateKind, extension!.DateKind);
+        }
+
+        [Fact]
+        public void AllowsNullableDateTime()
+        {
+            // Arrange
+            var dateKind = CellDateKind.Text;
+
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, DateTime?>(resourceOptions);
+
+            // Act
+            sut.UseDateKind(dateKind);
+
+            // Assert
+            var extension = sut.Options.FindExtension<DateKindMapOptionsExtension>();
+            Assert.NotNull(extension);
+            Assert.Equal(dateKind, extension!.DateKind);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenDateKindIsNull()
+        {
+            // Arrange
+            var dateKind = default(CellDateKind);
+
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, DateTime>(resourceOptions);
+
+            // Act
+            var exception = Record.Exception(() => sut.UseDateKind(dateKind!));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+
+        [Fact]
+        public void ThrowsInvalidOperationExceptionWhenPropertyTypeIsNotDateTimeType()
+        {
+            // Arrange
+            var dateKind = CellDateKind.Number;
+
+            var resourceOptions = new ResourceMapOptions<FakeModel>();
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+
+            // Act
+            var exception = Record.Exception(() => sut.UseDateKind(dateKind!));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<InvalidOperationException>(exception);
+        }
+    }
+
+    public class TheApplyResourceMapOptionsMethod : PropertyMapOptionsBuilderFacts
+    {
+        [Fact]
+        public void AddsSupportedExtensionsFromResourceMapOptionsToPropertyMapOptions()
+        {
+            // Arrange
+            var expectedExtension = new FakeMapOptionsExtension();
+            var resourceExtensions = new Dictionary<Type, IResourceMapOptionsExtension>
             {
-                // Arrange
-                var expectedExtension = new FakeMapOptionsExtension();
-                var resourceExtensions = new Dictionary<Type, IResourceMapOptionsExtension>
-                {
-                    [typeof(FakeResourceMapOptionsExtension)] = new FakeResourceMapOptionsExtension(),
-                    [typeof(FakeMapOptionsExtension)] = expectedExtension,
-                };
-                var resourceOptions = new ResourceMapOptions<FakeModel>(resourceExtensions);
+                [typeof(FakeResourceMapOptionsExtension)] = new FakeResourceMapOptionsExtension(),
+                [typeof(FakeMapOptionsExtension)] = expectedExtension,
+            };
+            var resourceOptions = new ResourceMapOptions<FakeModel>(resourceExtensions);
 
-                var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
+            var sut = new PropertyMapOptionsBuilder<FakeModel, string>(resourceOptions);
 
-                // Act
-                sut.ApplyResourceMapOptions();
+            // Act
+            sut.ApplyResourceMapOptions();
 
-                // Assert
-                var actualExtension = Assert.Single(sut.Options.Extensions);
-                Assert.Equal(expectedExtension, actualExtension);
-            }
+            // Assert
+            var actualExtension = Assert.Single(sut.Options.Extensions);
+            Assert.Equal(expectedExtension, actualExtension);
         }
     }
 }

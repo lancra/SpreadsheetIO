@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 using LanceC.SpreadsheetIO.Mapping.Internal;
 using LanceC.SpreadsheetIO.Mapping.Internal.Validators;
@@ -21,111 +20,110 @@ using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 using LanceC.SpreadsheetIO.Writing.Internal.Writers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LanceC.SpreadsheetIO
+namespace LanceC.SpreadsheetIO;
+
+/// <summary>
+/// Provides extensions for service descriptor registration.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Provides extensions for service descriptor registration.
+    /// Registers spreadsheet service descriptors.
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    public static class ServiceCollectionExtensions
+    /// <param name="services">The service collection to modify.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection AddSpreadsheetIO(this IServiceCollection services)
+        => services.AddScoped<ISpreadsheetFactory, SpreadsheetFactory>()
+        .AddSpreadsheetIOMapping()
+        .AddSpreadsheetIOReading()
+        .AddSpreadsheetIOShared()
+        .AddSpreadsheetIOStyling()
+        .AddSpreadsheetIOWriting();
+
+    private static IServiceCollection AddSpreadsheetIOMapping(this IServiceCollection services)
+        => services
+        .AddScoped<IResourceMapAggregateValidator, ResourceMapAggregateValidator>()
+        .AddScoped<IResourceMapManager, ResourceMapManager>()
+        .AddResourceMapValidators();
+
+    private static IServiceCollection AddSpreadsheetIOReading(this IServiceCollection services)
+        => services
+        .AddScoped<IResourceCreator, ResourceCreator>()
+        .AddScoped<IResourcePropertyDefaultValueResolver, ResourcePropertyDefaultValueResolver>()
+        .AddScoped<IResourcePropertyValueResolver, ResourcePropertyValueResolver>()
+        .AddScoped<IResourcePropertyParser, ResourcePropertyParser>()
+        .AddScoped<IResourcePropertyParserStrategy, BooleanResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, ByteResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, CharacterResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, DateTimeOffsetResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, DateTimeResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, DecimalResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, DoubleResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, FloatResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, IntegerResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, LongResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, ShortResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, SignedByteResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, StringResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, UnsignedIntegerResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, UnsignedLongResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyParserStrategy, UnsignedShortResourcePropertyParserStrategy>()
+        .AddScoped<IResourcePropertyCollectionFactory, ResourcePropertyCollectionFactory>()
+        .AddScoped<IElementReaderFactory, ElementReaderFactory>()
+        .AddScoped<IReadingSpreadsheetPageOperationFactory, ReadingSpreadsheetPageOperationFactory>()
+        .AddScoped<ISpreadsheetPageMapReader, SpreadsheetPageMapReader>();
+
+    private static IServiceCollection AddSpreadsheetIOShared(this IServiceCollection services)
+        => services
+        .AddScoped<ISpreadsheetDocumentWrapperFactory, SpreadsheetDocumentWrapperFactory>()
+        .AddScoped<ISpreadsheetGenerator, SharedStringTableGenerator>()
+        .AddScoped<ISpreadsheetGenerator, StylesheetGenerator>()
+        .AddScoped<IStringIndexer, StringIndexer>();
+
+    private static IServiceCollection AddSpreadsheetIOStyling(this IServiceCollection services)
+        => services
+        .AddScoped<IStylesheetMutator, StylesheetBorderMutator>()
+        .AddScoped<IStylesheetMutator, StylesheetFillMutator>()
+        .AddScoped<IStylesheetMutator, StylesheetFontMutator>()
+        .AddScoped<IStylesheetMutator, StylesheetNumericFormatMutator>()
+        .AddScoped<IStylesheetMutator, StylesheetStyleMutator>()
+        .AddScoped<IBorderIndexer, BorderIndexer>()
+        .AddScoped<IFillIndexer, FillIndexer>()
+        .AddScoped<IFontIndexer, FontIndexer>()
+        .AddScoped<BuiltInNumericFormats>()
+        .AddScoped<ConstantNumericFormats>()
+        .AddScoped<INumericFormatIndexer, NumericFormatIndexer>()
+        .AddScoped<IStyleIndexer, StyleIndexer>();
+
+    private static IServiceCollection AddSpreadsheetIOWriting(this IServiceCollection services)
+        => services
+        .AddScoped<IResourcePropertySerializer, ResourcePropertySerializer>()
+        .AddScoped<IResourcePropertySerializerStrategy, BooleanResourcePropertySerializerStrategy>()
+        .AddScoped<IResourcePropertySerializerStrategy, CharacterResourcePropertySerializerStrategy>()
+        .AddScoped<IResourcePropertySerializerStrategy, DateTimeResourcePropertySerializerStrategy>()
+        .AddScoped<IResourcePropertySerializerStrategy, DateTimeOffsetResourcePropertySerializerStrategy>()
+        .AddScoped<IResourcePropertySerializerStrategy, DecimalResourcePropertySerializerStrategy>()
+        .AddScoped<IResourcePropertySerializerStrategy, DoubleResourcePropertySerializerStrategy>()
+        .AddScoped<IResourcePropertySerializerStrategy, IntegerResourcePropertySerializerStrategy>()
+        .AddScoped<IResourcePropertySerializerStrategy, StringResourcePropertySerializerStrategy>()
+        .AddScoped<ISpreadsheetPageMapWriter, SpreadsheetPageMapWriter>();
+
+    private static IServiceCollection AddResourceMapValidators(this IServiceCollection services)
     {
-        /// <summary>
-        /// Registers spreadsheet service descriptors.
-        /// </summary>
-        /// <param name="services">The service collection to modify.</param>
-        /// <returns>The modified service collection.</returns>
-        public static IServiceCollection AddSpreadsheetIO(this IServiceCollection services)
-            => services.AddScoped<ISpreadsheetFactory, SpreadsheetFactory>()
-            .AddSpreadsheetIOMapping()
-            .AddSpreadsheetIOReading()
-            .AddSpreadsheetIOShared()
-            .AddSpreadsheetIOStyling()
-            .AddSpreadsheetIOWriting();
+        var assembly = Assembly.GetAssembly(typeof(ServiceCollectionExtensions));
+        var serviceType = typeof(IResourceMapValidator);
 
-        private static IServiceCollection AddSpreadsheetIOMapping(this IServiceCollection services)
-            => services
-            .AddScoped<IResourceMapAggregateValidator, ResourceMapAggregateValidator>()
-            .AddScoped<IResourceMapManager, ResourceMapManager>()
-            .AddResourceMapValidators();
-
-        private static IServiceCollection AddSpreadsheetIOReading(this IServiceCollection services)
-            => services
-            .AddScoped<IResourceCreator, ResourceCreator>()
-            .AddScoped<IResourcePropertyDefaultValueResolver, ResourcePropertyDefaultValueResolver>()
-            .AddScoped<IResourcePropertyValueResolver, ResourcePropertyValueResolver>()
-            .AddScoped<IResourcePropertyParser, ResourcePropertyParser>()
-            .AddScoped<IResourcePropertyParserStrategy, BooleanResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, ByteResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, CharacterResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, DateTimeOffsetResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, DateTimeResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, DecimalResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, DoubleResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, FloatResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, IntegerResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, LongResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, ShortResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, SignedByteResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, StringResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, UnsignedIntegerResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, UnsignedLongResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyParserStrategy, UnsignedShortResourcePropertyParserStrategy>()
-            .AddScoped<IResourcePropertyCollectionFactory, ResourcePropertyCollectionFactory>()
-            .AddScoped<IElementReaderFactory, ElementReaderFactory>()
-            .AddScoped<IReadingSpreadsheetPageOperationFactory, ReadingSpreadsheetPageOperationFactory>()
-            .AddScoped<ISpreadsheetPageMapReader, SpreadsheetPageMapReader>();
-
-        private static IServiceCollection AddSpreadsheetIOShared(this IServiceCollection services)
-            => services
-            .AddScoped<ISpreadsheetDocumentWrapperFactory, SpreadsheetDocumentWrapperFactory>()
-            .AddScoped<ISpreadsheetGenerator, SharedStringTableGenerator>()
-            .AddScoped<ISpreadsheetGenerator, StylesheetGenerator>()
-            .AddScoped<IStringIndexer, StringIndexer>();
-
-        private static IServiceCollection AddSpreadsheetIOStyling(this IServiceCollection services)
-            => services
-            .AddScoped<IStylesheetMutator, StylesheetBorderMutator>()
-            .AddScoped<IStylesheetMutator, StylesheetFillMutator>()
-            .AddScoped<IStylesheetMutator, StylesheetFontMutator>()
-            .AddScoped<IStylesheetMutator, StylesheetNumericFormatMutator>()
-            .AddScoped<IStylesheetMutator, StylesheetStyleMutator>()
-            .AddScoped<IBorderIndexer, BorderIndexer>()
-            .AddScoped<IFillIndexer, FillIndexer>()
-            .AddScoped<IFontIndexer, FontIndexer>()
-            .AddScoped<BuiltInNumericFormats>()
-            .AddScoped<ConstantNumericFormats>()
-            .AddScoped<INumericFormatIndexer, NumericFormatIndexer>()
-            .AddScoped<IStyleIndexer, StyleIndexer>();
-
-        private static IServiceCollection AddSpreadsheetIOWriting(this IServiceCollection services)
-            => services
-            .AddScoped<IResourcePropertySerializer, ResourcePropertySerializer>()
-            .AddScoped<IResourcePropertySerializerStrategy, BooleanResourcePropertySerializerStrategy>()
-            .AddScoped<IResourcePropertySerializerStrategy, CharacterResourcePropertySerializerStrategy>()
-            .AddScoped<IResourcePropertySerializerStrategy, DateTimeResourcePropertySerializerStrategy>()
-            .AddScoped<IResourcePropertySerializerStrategy, DateTimeOffsetResourcePropertySerializerStrategy>()
-            .AddScoped<IResourcePropertySerializerStrategy, DecimalResourcePropertySerializerStrategy>()
-            .AddScoped<IResourcePropertySerializerStrategy, DoubleResourcePropertySerializerStrategy>()
-            .AddScoped<IResourcePropertySerializerStrategy, IntegerResourcePropertySerializerStrategy>()
-            .AddScoped<IResourcePropertySerializerStrategy, StringResourcePropertySerializerStrategy>()
-            .AddScoped<ISpreadsheetPageMapWriter, SpreadsheetPageMapWriter>();
-
-        private static IServiceCollection AddResourceMapValidators(this IServiceCollection services)
+        var implementationTypes = assembly!.GetTypes()
+            .Where(type => type.GetInterface(serviceType.Name) != null)
+            .Where(type => type.IsClass)
+            .Where(type => !type.IsAbstract)
+            .ToArray();
+        foreach (var implementationType in implementationTypes)
         {
-            var assembly = Assembly.GetAssembly(typeof(ServiceCollectionExtensions));
-            var serviceType = typeof(IResourceMapValidator);
-
-            var implementationTypes = assembly!.GetTypes()
-                .Where(type => type.GetInterface(serviceType.Name) != null)
-                .Where(type => type.IsClass)
-                .Where(type => !type.IsAbstract)
-                .ToArray();
-            foreach (var implementationType in implementationTypes)
-            {
-                services.AddScoped(serviceType, implementationType);
-            }
-
-            return services;
+            services.AddScoped(serviceType, implementationType);
         }
+
+        return services;
     }
 }

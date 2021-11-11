@@ -1,15 +1,12 @@
-using System;
+namespace LanceC.SpreadsheetIO.Tests.Testing;
 
-namespace LanceC.SpreadsheetIO.Tests.Testing
+[AttributeUsage(AttributeTargets.Method)]
+public sealed class ExcelSourceFileAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Method)]
-    public sealed class ExcelSourceFileAttribute : Attribute
+    public ExcelSourceFileAttribute(string fileName)
     {
-        public ExcelSourceFileAttribute(string fileName)
-        {
-            FileName = fileName;
-        }
-
-        public string FileName { get; }
+        FileName = fileName;
     }
+
+    public string FileName { get; }
 }

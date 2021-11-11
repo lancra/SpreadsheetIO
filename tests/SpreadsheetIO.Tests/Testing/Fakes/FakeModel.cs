@@ -1,19 +1,16 @@
-using System;
+namespace LanceC.SpreadsheetIO.Tests.Testing.Fakes;
 
-namespace LanceC.SpreadsheetIO.Tests.Testing.Fakes
+public class FakeModel
 {
-    public class FakeModel
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
-        public string? DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 
-        public DateTime Date { get; set; }
+    public DateTime Date { get; set; }
 
-        public decimal Amount { get; set; }
+    public decimal Amount { get; set; }
 
-        public char Letter { get; set; }
-    }
+    public char Letter { get; set; }
 }

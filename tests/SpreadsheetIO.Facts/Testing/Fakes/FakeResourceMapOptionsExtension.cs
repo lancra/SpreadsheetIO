@@ -1,8 +1,7 @@
 using LanceC.SpreadsheetIO.Mapping;
 
-namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes
+namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes;
+
+public class FakeResourceMapOptionsExtension : IResourceMapOptionsExtension
 {
-    public class FakeResourceMapOptionsExtension : IResourceMapOptionsExtension
-    {
-    }
 }

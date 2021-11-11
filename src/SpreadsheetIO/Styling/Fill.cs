@@ -1,27 +1,26 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 
-namespace LanceC.SpreadsheetIO.Styling
+namespace LanceC.SpreadsheetIO.Styling;
+
+/// <summary>
+/// Represents a fill.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public record Fill(FillKind Kind, Color ForegroundColor)
 {
     /// <summary>
-    /// Represents a fill.
+    /// Gets the default fill.
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    public record Fill(FillKind Kind, Color ForegroundColor)
-    {
-        /// <summary>
-        /// Gets the default fill.
-        /// </summary>
-        public static readonly Fill Default = new(FillKind.None, Color.White);
+    public static readonly Fill Default = new(FillKind.None, Color.White);
 
-        /// <summary>
-        /// Gets the fill kind.
-        /// </summary>
-        public FillKind Kind { get; init; } = Kind;
+    /// <summary>
+    /// Gets the fill kind.
+    /// </summary>
+    public FillKind Kind { get; init; } = Kind;
 
-        /// <summary>
-        /// Gets the fill foreground color.
-        /// </summary>
-        public Color ForegroundColor { get; init; } = ForegroundColor;
-    }
+    /// <summary>
+    /// Gets the fill foreground color.
+    /// </summary>
+    public Color ForegroundColor { get; init; } = ForegroundColor;
 }

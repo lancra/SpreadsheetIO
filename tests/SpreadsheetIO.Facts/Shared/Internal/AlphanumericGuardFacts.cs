@@ -1,115 +1,113 @@
-using System;
 using Ardalis.GuardClauses;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Shared.Internal
+namespace LanceC.SpreadsheetIO.Facts.Shared.Internal;
+
+public class AlphanumericGuardFacts
 {
-    public class AlphanumericGuardFacts
+    public class TheNonAlphabeticMethod
     {
-        public class TheNonAlphabeticMethod
+        [Theory]
+        [InlineData("A,")]
+        [InlineData("A1")]
+        [InlineData("A@")]
+        [InlineData("()")]
+        [InlineData("1")]
+        public void ThrowsArgumentExceptionWhenInputIsNonAlphabetic(string input)
         {
-            [Theory]
-            [InlineData("A,")]
-            [InlineData("A1")]
-            [InlineData("A@")]
-            [InlineData("()")]
-            [InlineData("1")]
-            public void ThrowsArgumentExceptionWhenInputIsNonAlphabetic(string input)
-            {
-                // Arrange
-                var parameterName = "input";
+            // Arrange
+            var parameterName = "input";
 
-                // Act
-                var exception = Record.Exception(() => Guard.Against.NonAlphabetic(input, parameterName));
+            // Act
+            var exception = Record.Exception(() => Guard.Against.NonAlphabetic(input, parameterName));
 
-                // Assert
-                Assert.NotNull(exception);
-                var argumentException = Assert.IsType<ArgumentException>(exception);
-                Assert.Equal(parameterName, argumentException.ParamName);
-            }
-
-            [Fact]
-            public void DoesNotThrowExceptionWhenInputIsAlphabetic()
-            {
-                // Arrange
-                var input = "AaZz";
-
-                // Act
-                var exception = Record.Exception(() => Guard.Against.NonAlphabetic(input, "input"));
-
-                // Assert
-                Assert.Null(exception);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            var argumentException = Assert.IsType<ArgumentException>(exception);
+            Assert.Equal(parameterName, argumentException.ParamName);
         }
 
-        public class TheNonAlphanumericMethod
+        [Fact]
+        public void DoesNotThrowExceptionWhenInputIsAlphabetic()
         {
-            [Theory]
-            [InlineData("A,")]
-            [InlineData("A@")]
-            [InlineData("()")]
-            public void ThrowsArgumentExceptionWhenInputIsNonAlphanumeric(string input)
-            {
-                // Arrange
-                var parameterName = "input";
+            // Arrange
+            var input = "AaZz";
 
-                // Act
-                var exception = Record.Exception(() => Guard.Against.NonAlphanumeric(input, parameterName));
+            // Act
+            var exception = Record.Exception(() => Guard.Against.NonAlphabetic(input, "input"));
 
-                // Assert
-                Assert.NotNull(exception);
-                var argumentException = Assert.IsType<ArgumentException>(exception);
-                Assert.Equal(parameterName, argumentException.ParamName);
-            }
+            // Assert
+            Assert.Null(exception);
+        }
+    }
 
-            [Fact]
-            public void DoesNotThrowExceptionWhenInputIsAlphanumeric()
-            {
-                // Arrange
-                var input = "AaZz10";
+    public class TheNonAlphanumericMethod
+    {
+        [Theory]
+        [InlineData("A,")]
+        [InlineData("A@")]
+        [InlineData("()")]
+        public void ThrowsArgumentExceptionWhenInputIsNonAlphanumeric(string input)
+        {
+            // Arrange
+            var parameterName = "input";
 
-                // Act
-                var exception = Record.Exception(() => Guard.Against.NonAlphanumeric(input, "input"));
+            // Act
+            var exception = Record.Exception(() => Guard.Against.NonAlphanumeric(input, parameterName));
 
-                // Assert
-                Assert.Null(exception);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            var argumentException = Assert.IsType<ArgumentException>(exception);
+            Assert.Equal(parameterName, argumentException.ParamName);
         }
 
-        public class TheNonNumericMethod
+        [Fact]
+        public void DoesNotThrowExceptionWhenInputIsAlphanumeric()
         {
-            [Theory]
-            [InlineData("A,")]
-            [InlineData("A1")]
-            [InlineData("A@")]
-            [InlineData("()")]
-            [InlineData("A")]
-            public void ThrowsArgumentExceptionWhenInputIsNonNumeric(string input)
-            {
-                // Arrange
-                var parameterName = "input";
+            // Arrange
+            var input = "AaZz10";
 
-                // Act
-                var exception = Record.Exception(() => Guard.Against.NonNumeric(input, parameterName));
+            // Act
+            var exception = Record.Exception(() => Guard.Against.NonAlphanumeric(input, "input"));
 
-                // Assert
-                Assert.NotNull(exception);
-                var argumentException = Assert.IsType<ArgumentException>(exception);
-                Assert.Equal(parameterName, argumentException.ParamName);
-            }
+            // Assert
+            Assert.Null(exception);
+        }
+    }
 
-            [Fact]
-            public void DoesNotThrowExceptionWhenInputIsNumeric()
-            {
-                // Arrange
-                var input = "1234567890";
+    public class TheNonNumericMethod
+    {
+        [Theory]
+        [InlineData("A,")]
+        [InlineData("A1")]
+        [InlineData("A@")]
+        [InlineData("()")]
+        [InlineData("A")]
+        public void ThrowsArgumentExceptionWhenInputIsNonNumeric(string input)
+        {
+            // Arrange
+            var parameterName = "input";
 
-                // Act
-                var exception = Record.Exception(() => Guard.Against.NonNumeric(input, "input"));
+            // Act
+            var exception = Record.Exception(() => Guard.Against.NonNumeric(input, parameterName));
 
-                // Assert
-                Assert.Null(exception);
-            }
+            // Assert
+            Assert.NotNull(exception);
+            var argumentException = Assert.IsType<ArgumentException>(exception);
+            Assert.Equal(parameterName, argumentException.ParamName);
+        }
+
+        [Fact]
+        public void DoesNotThrowExceptionWhenInputIsNumeric()
+        {
+            // Arrange
+            var input = "1234567890";
+
+            // Act
+            var exception = Record.Exception(() => Guard.Against.NonNumeric(input, "input"));
+
+            // Assert
+            Assert.Null(exception);
         }
     }
 }

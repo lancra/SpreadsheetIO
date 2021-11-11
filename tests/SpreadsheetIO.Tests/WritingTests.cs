@@ -1,4 +1,3 @@
-using System;
 using System.Drawing;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Styling;
@@ -9,445 +8,444 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace LanceC.SpreadsheetIO.Tests
+namespace LanceC.SpreadsheetIO.Tests;
+
+public class WritingTests : IDisposable
 {
-    public class WritingTests : IDisposable
+    private readonly ExcelFixture _excelFixture;
+
+    public WritingTests(ITestOutputHelper output)
     {
-        private readonly ExcelFixture _excelFixture;
+        _excelFixture = new(output);
+    }
 
-        public WritingTests(ITestOutputHelper output)
+    [Fact]
+    [ExcelSourceFile("ManualSingle.xlsx")]
+    public void ManualSpreadsheetPage()
+    {
+        // Act
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet())
         {
-            _excelFixture = new(output);
+            spreadsheet.AddPage("Manual")
+                .AddCell("Foo")
+                .AddCell("Bar")
+                .AdvanceColumn()
+                .AddCell("Baz")
+                .AdvanceRow()
+                .AddCell("One")
+                .AdvanceColumn()
+                .AddCell("Two")
+                .AddCell("Three")
+                .AdvanceRow()
+                .AdvanceRow()
+                .AdvanceColumn()
+                .AddCell("Four")
+                .AddCell("Five")
+                .AddCell("Six");
         }
 
-        [Fact]
-        [ExcelSourceFile("ManualSingle.xlsx")]
-        public void ManualSpreadsheetPage()
-        {
-            // Act
-            using (var spreadsheet = _excelFixture.CreateSpreadsheet())
-            {
-                spreadsheet.AddPage("Manual")
-                    .AddCell("Foo")
-                    .AddCell("Bar")
-                    .AdvanceColumn()
-                    .AddCell("Baz")
-                    .AdvanceRow()
-                    .AddCell("One")
-                    .AdvanceColumn()
-                    .AddCell("Two")
-                    .AddCell("Three")
-                    .AdvanceRow()
-                    .AdvanceRow()
-                    .AdvanceColumn()
-                    .AddCell("Four")
-                    .AddCell("Five")
-                    .AddCell("Six");
-            }
+        // Assert
+        _excelFixture.EquivalentToSource();
+    }
 
-            // Assert
-            _excelFixture.EquivalentToSource();
+    [Fact]
+    [ExcelSourceFile("ManualSingleNumbers.xlsx")]
+    public void ManualSpreadsheetPageWithNumbersOnly()
+    {
+        // Act
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet())
+        {
+            spreadsheet.AddPage("Manual Numbers")
+                .AddCell(new WritingCell(new(11)))
+                .AddCell(new WritingCell(new(21L)))
+                .AddCell(new WritingCell(new(31M)))
+                .AdvanceRow()
+                .AdvanceColumn()
+                .AddCell(new WritingCell(new(22D)))
+                .AdvanceRows(1)
+                .AddCell(new WritingCell(new(13U)))
+                .AdvanceToColumn(3)
+                .AddCell(new WritingCell(new(33)))
+                .AdvanceToRow(4)
+                .AddCell(new WritingCell(new(14)));
         }
 
-        [Fact]
-        [ExcelSourceFile("ManualSingleNumbers.xlsx")]
-        public void ManualSpreadsheetPageWithNumbersOnly()
-        {
-            // Act
-            using (var spreadsheet = _excelFixture.CreateSpreadsheet())
-            {
-                spreadsheet.AddPage("Manual Numbers")
-                    .AddCell(new WritingCell(new(11)))
-                    .AddCell(new WritingCell(new(21L)))
-                    .AddCell(new WritingCell(new(31M)))
-                    .AdvanceRow()
-                    .AdvanceColumn()
-                    .AddCell(new WritingCell(new(22D)))
-                    .AdvanceRows(1)
-                    .AddCell(new WritingCell(new(13U)))
-                    .AdvanceToColumn(3)
-                    .AddCell(new WritingCell(new(33)))
-                    .AdvanceToRow(4)
-                    .AddCell(new WritingCell(new(14)));
-            }
+        // Assert
+        _excelFixture.EquivalentToSource();
+    }
 
-            // Assert
-            _excelFixture.EquivalentToSource();
+    [Fact]
+    [ExcelSourceFile("ManualMultiple.xlsx")]
+    public void ManualSpreadsheetPages()
+    {
+        // Act
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet())
+        {
+            spreadsheet.AddPage("One")
+                .AddCell("One")
+                .AddCell("Two")
+                .AddCell("Three")
+                .AdvanceToRow(3)
+                .AddCell("Uno")
+                .AddCell("Dos")
+                .AddCell("Tres")
+                .AdvanceToRow(6)
+                .AdvanceToColumn("D")
+                .AddCell("Un")
+                .AddCell("Deux")
+                .AddCell("Trois");
+
+            spreadsheet.AddPage("Two")
+                .AdvanceRows(1)
+                .AddCell("One")
+                .AdvanceColumns(2)
+                .AddCell("Two")
+                .AdvanceToColumn(6)
+                .AddCell("Three");
         }
 
-        [Fact]
-        [ExcelSourceFile("ManualMultiple.xlsx")]
-        public void ManualSpreadsheetPages()
+        // Assert
+        _excelFixture.EquivalentToSource();
+    }
+
+    [Fact]
+    [ExcelSourceFile("MapSimple.xlsx")]
+    public void MappedSimpleSpreadsheetPage()
+    {
+        // Arrange
+        var models = new[]
         {
-            // Act
-            using (var spreadsheet = _excelFixture.CreateSpreadsheet())
+            new FakeModel
             {
-                spreadsheet.AddPage("One")
-                    .AddCell("One")
-                    .AddCell("Two")
-                    .AddCell("Three")
-                    .AdvanceToRow(3)
-                    .AddCell("Uno")
-                    .AddCell("Dos")
-                    .AddCell("Tres")
-                    .AdvanceToRow(6)
-                    .AdvanceToColumn("D")
-                    .AddCell("Un")
-                    .AddCell("Deux")
-                    .AddCell("Trois");
+                Id = 1,
+                Name = "One",
+                DisplayName = "Uno",
+                Date = new DateTime(2021, 1, 1),
+                Amount = 1.1100000000000001M,
+                Letter = 'O',
+            },
+            new FakeModel
+            {
+                Id = 2,
+                Name = "Two",
+                Date = new DateTime(2021, 2, 22),
+                Amount = 22M,
+                Letter = 'T',
+            },
+            new FakeModel
+            {
+                Id = 3,
+                Name = "Three",
+                DisplayName = "Tres",
+                Date = new DateTime(2021, 3, 3),
+                Amount = 3M,
+                Letter = 'T',
+            },
+        };
 
-                spreadsheet.AddPage("Two")
-                    .AdvanceRows(1)
-                    .AddCell("One")
-                    .AdvanceColumns(2)
-                    .AddCell("Two")
-                    .AdvanceToColumn(6)
-                    .AddCell("Three");
-            }
-
-            // Assert
-            _excelFixture.EquivalentToSource();
+        // Act
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet(services => services.AddSingleton<IResourceMap, FakeModelMap>()))
+        {
+            spreadsheet.WritePage("Map", models);
         }
 
-        [Fact]
-        [ExcelSourceFile("MapSimple.xlsx")]
-        public void MappedSimpleSpreadsheetPage()
+        // Assert
+        _excelFixture.EquivalentToSource();
+    }
+
+    [Fact]
+    [ExcelSourceFile("StyleAlignment.xlsx")]
+    public void StylingAlignments()
+    {
+        // Arrange
+        static Style CreateHorizontalStyle(HorizontalAlignmentKind horizontalAlignmentKind)
+            => Style.Default with { Alignment = Alignment.Default with { HorizontalKind = horizontalAlignmentKind, } };
+        static Style CreateVerticalStyle(VerticalAlignmentKind verticalAlignmentKind)
+            => Style.Default with { Alignment = Alignment.Default with { VerticalKind = verticalAlignmentKind, } };
+        static Style CreateStyle(HorizontalAlignmentKind horizontalAlignmentKind, VerticalAlignmentKind verticalAlignmentKind)
+            => Style.Default with { Alignment = new(horizontalAlignmentKind, verticalAlignmentKind), };
+
+        // Act
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet())
         {
-            // Arrange
-            var models = new[]
-            {
-                new FakeModel
-                {
-                    Id = 1,
-                    Name = "One",
-                    DisplayName = "Uno",
-                    Date = new DateTime(2021, 1, 1),
-                    Amount = 1.1100000000000001M,
-                    Letter = 'O',
-                },
-                new FakeModel
-                {
-                    Id = 2,
-                    Name = "Two",
-                    Date = new DateTime(2021, 2, 22),
-                    Amount = 22M,
-                    Letter = 'T',
-                },
-                new FakeModel
-                {
-                    Id = 3,
-                    Name = "Three",
-                    DisplayName = "Tres",
-                    Date = new DateTime(2021, 3, 3),
-                    Amount = 3M,
-                    Letter = 'T',
-                },
-            };
+            spreadsheet
+                .AddStyle("HLeft", CreateHorizontalStyle(HorizontalAlignmentKind.Left))
+                .AddStyle("HCenter", CreateHorizontalStyle(HorizontalAlignmentKind.Center))
+                .AddStyle("HRight", CreateHorizontalStyle(HorizontalAlignmentKind.Right))
+                .AddStyle("HFill", CreateHorizontalStyle(HorizontalAlignmentKind.Fill))
+                .AddStyle("HJustify", CreateHorizontalStyle(HorizontalAlignmentKind.Justify))
+                .AddStyle("HCenterContinuous", CreateHorizontalStyle(HorizontalAlignmentKind.CenterContinuous))
+                .AddStyle("HDistributed", CreateHorizontalStyle(HorizontalAlignmentKind.Distributed))
+                .AddStyle("HJustifyDistributed", CreateHorizontalStyle(HorizontalAlignmentKind.JustifyDistributed))
+                .AddStyle("VTop", CreateVerticalStyle(VerticalAlignmentKind.Top))
+                .AddStyle("VCenter", CreateVerticalStyle(VerticalAlignmentKind.Center))
+                .AddStyle("VBottom", CreateVerticalStyle(VerticalAlignmentKind.Bottom))
+                .AddStyle("VJustify", CreateVerticalStyle(VerticalAlignmentKind.Justify))
+                .AddStyle("VDistributed", CreateVerticalStyle(VerticalAlignmentKind.Distributed))
+                .AddStyle("HLeftVTop", CreateStyle(HorizontalAlignmentKind.Left, VerticalAlignmentKind.Top))
+                .AddStyle("HCenterVCenter", CreateStyle(HorizontalAlignmentKind.Center, VerticalAlignmentKind.Center))
+                .AddStyle("HRightVJustify", CreateStyle(HorizontalAlignmentKind.Right, VerticalAlignmentKind.Justify));
 
-            // Act
-            using (var spreadsheet = _excelFixture.CreateSpreadsheet(services => services.AddSingleton<IResourceMap, FakeModelMap>()))
-            {
-                spreadsheet.WritePage("Map", models);
-            }
-
-            // Assert
-            _excelFixture.EquivalentToSource();
+            spreadsheet.AddPage("Alignment")
+                .AddCell("HLeft", "HLeft")
+                .AddCell("HCenter", "HCenter")
+                .AddCell("HRight", "HRight")
+                .AddCell("HFill", "HFill")
+                .AddCell("HJustify", "HJustify")
+                .AddCell("HCenterContinuous", "HCenterContinuous")
+                .AddCell("HDistributed", "HDistributed")
+                .AddCell("HJustifyDistributed", "HJustifyDistributed")
+                .AdvanceRow()
+                .AddCell("VTop", "VTop")
+                .AddCell("VCenter", "VCenter")
+                .AddCell("VBottom", "VBottom")
+                .AddCell("VJustify", "VJustify")
+                .AddCell("VDistributed", "VDistributed")
+                .AdvanceRow()
+                .AddCell("HLeftVTop", "HLeftVTop")
+                .AddCell("HCenterVCenter", "HCenterVCenter")
+                .AddCell("HRightVJustify", "HRightVJustify");
         }
 
-        [Fact]
-        [ExcelSourceFile("StyleAlignment.xlsx")]
-        public void StylingAlignments()
+        // Assert
+        _excelFixture.EquivalentToSource();
+    }
+
+    [Fact]
+    [ExcelSourceFile("StyleBorder.xlsx")]
+    public void StylingBorders()
+    {
+        // Arrange
+        static Style CreateLeftStyle(Color color, BorderLineKind borderLineKind)
+            => Style.Default with { Border = Border.Default with { LeftLine = new BorderLine(color, borderLineKind), }, };
+        static Style CreateRightStyle(Color color, BorderLineKind borderLineKind)
+            => Style.Default with { Border = Border.Default with { RightLine = new BorderLine(color, borderLineKind), }, };
+        static Style CreateTopStyle(Color color, BorderLineKind borderLineKind)
+            => Style.Default with { Border = Border.Default with { TopLine = new BorderLine(color, borderLineKind), }, };
+        static Style CreateBottomStyle(Color color, BorderLineKind borderLineKind)
+            => Style.Default with { Border = Border.Default with { BottomLine = new BorderLine(color, borderLineKind), }, };
+        static Style CreateStyle(Color color, BorderLineKind borderLineKind)
+            => Style.Default with { Border = new(new(color, borderLineKind)), };
+
+        // Act
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet())
         {
-            // Arrange
-            static Style CreateHorizontalStyle(HorizontalAlignmentKind horizontalAlignmentKind)
-                => Style.Default with { Alignment = Alignment.Default with { HorizontalKind = horizontalAlignmentKind, } };
-            static Style CreateVerticalStyle(VerticalAlignmentKind verticalAlignmentKind)
-                => Style.Default with { Alignment = Alignment.Default with { VerticalKind = verticalAlignmentKind, } };
-            static Style CreateStyle(HorizontalAlignmentKind horizontalAlignmentKind, VerticalAlignmentKind verticalAlignmentKind)
-                => Style.Default with { Alignment = new(horizontalAlignmentKind, verticalAlignmentKind), };
+            spreadsheet
+                .AddStyle("LBlackThin", CreateLeftStyle(Color.Black, BorderLineKind.Thin))
+                .AddStyle("LRedThin", CreateLeftStyle(Color.Red, BorderLineKind.Thin))
+                .AddStyle("ROrangeThick", CreateRightStyle(Color.Orange, BorderLineKind.Thick))
+                .AddStyle("RYellowDashed", CreateRightStyle(Color.Yellow, BorderLineKind.Dashed))
+                .AddStyle("TGreenDotted", CreateTopStyle(Color.Green, BorderLineKind.Dotted))
+                .AddStyle("TBlueDotted", CreateTopStyle(Color.Blue, BorderLineKind.Dotted))
+                .AddStyle("BPurpleDouble", CreateBottomStyle(Color.Purple, BorderLineKind.Double))
+                .AddStyle("BSaddleBrownDouble", CreateBottomStyle(Color.SaddleBrown, BorderLineKind.Double))
+                .AddStyle("OBlackThick", CreateStyle(Color.Black, BorderLineKind.Thick))
+                .AddStyle("OOliveDashed", CreateStyle(Color.Olive, BorderLineKind.Dashed));
 
-            // Act
-            using (var spreadsheet = _excelFixture.CreateSpreadsheet())
-            {
-                spreadsheet
-                    .AddStyle("HLeft", CreateHorizontalStyle(HorizontalAlignmentKind.Left))
-                    .AddStyle("HCenter", CreateHorizontalStyle(HorizontalAlignmentKind.Center))
-                    .AddStyle("HRight", CreateHorizontalStyle(HorizontalAlignmentKind.Right))
-                    .AddStyle("HFill", CreateHorizontalStyle(HorizontalAlignmentKind.Fill))
-                    .AddStyle("HJustify", CreateHorizontalStyle(HorizontalAlignmentKind.Justify))
-                    .AddStyle("HCenterContinuous", CreateHorizontalStyle(HorizontalAlignmentKind.CenterContinuous))
-                    .AddStyle("HDistributed", CreateHorizontalStyle(HorizontalAlignmentKind.Distributed))
-                    .AddStyle("HJustifyDistributed", CreateHorizontalStyle(HorizontalAlignmentKind.JustifyDistributed))
-                    .AddStyle("VTop", CreateVerticalStyle(VerticalAlignmentKind.Top))
-                    .AddStyle("VCenter", CreateVerticalStyle(VerticalAlignmentKind.Center))
-                    .AddStyle("VBottom", CreateVerticalStyle(VerticalAlignmentKind.Bottom))
-                    .AddStyle("VJustify", CreateVerticalStyle(VerticalAlignmentKind.Justify))
-                    .AddStyle("VDistributed", CreateVerticalStyle(VerticalAlignmentKind.Distributed))
-                    .AddStyle("HLeftVTop", CreateStyle(HorizontalAlignmentKind.Left, VerticalAlignmentKind.Top))
-                    .AddStyle("HCenterVCenter", CreateStyle(HorizontalAlignmentKind.Center, VerticalAlignmentKind.Center))
-                    .AddStyle("HRightVJustify", CreateStyle(HorizontalAlignmentKind.Right, VerticalAlignmentKind.Justify));
-
-                spreadsheet.AddPage("Alignment")
-                    .AddCell("HLeft", "HLeft")
-                    .AddCell("HCenter", "HCenter")
-                    .AddCell("HRight", "HRight")
-                    .AddCell("HFill", "HFill")
-                    .AddCell("HJustify", "HJustify")
-                    .AddCell("HCenterContinuous", "HCenterContinuous")
-                    .AddCell("HDistributed", "HDistributed")
-                    .AddCell("HJustifyDistributed", "HJustifyDistributed")
-                    .AdvanceRow()
-                    .AddCell("VTop", "VTop")
-                    .AddCell("VCenter", "VCenter")
-                    .AddCell("VBottom", "VBottom")
-                    .AddCell("VJustify", "VJustify")
-                    .AddCell("VDistributed", "VDistributed")
-                    .AdvanceRow()
-                    .AddCell("HLeftVTop", "HLeftVTop")
-                    .AddCell("HCenterVCenter", "HCenterVCenter")
-                    .AddCell("HRightVJustify", "HRightVJustify");
-            }
-
-            // Assert
-            _excelFixture.EquivalentToSource();
+            spreadsheet.AddPage("Border")
+                .AddCell("LBlackThin", "LBlackThin")
+                .AdvanceColumn()
+                .AddCell("LRedThin", "LRedThin")
+                .AdvanceRows(2)
+                .AddCell("ROrangeThick", "ROrangeThick")
+                .AdvanceColumn()
+                .AddCell("RYellowDashed", "RYellowDashed")
+                .AdvanceRows(2)
+                .AddCell("TGreenDotted", "TGreenDotted")
+                .AdvanceColumn()
+                .AddCell("TBlueDotted", "TBlueDotted")
+                .AdvanceRows(2)
+                .AddCell("BPurpleDouble", "BPurpleDouble")
+                .AdvanceColumn()
+                .AddCell("BSaddleBrownDouble", "BSaddleBrownDouble")
+                .AdvanceRows(2)
+                .AddCell("OBlackThick", "OBlackThick")
+                .AdvanceColumn()
+                .AddCell("OOliveDashed", "OOliveDashed");
         }
 
-        [Fact]
-        [ExcelSourceFile("StyleBorder.xlsx")]
-        public void StylingBorders()
+        // Assert
+        _excelFixture.EquivalentToSource();
+    }
+
+    [Fact]
+    [ExcelSourceFile("StyleFill.xlsx")]
+    public void StylingFills()
+    {
+        // Arrange
+        static Style CreateStyle(FillKind fillKind, Color foregroundColor)
+            => Style.Default with { Fill = new(fillKind, foregroundColor), };
+
+        // Act
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet())
         {
-            // Arrange
-            static Style CreateLeftStyle(Color color, BorderLineKind borderLineKind)
-                => Style.Default with { Border = Border.Default with { LeftLine = new BorderLine(color, borderLineKind), }, };
-            static Style CreateRightStyle(Color color, BorderLineKind borderLineKind)
-                => Style.Default with { Border = Border.Default with { RightLine = new BorderLine(color, borderLineKind), }, };
-            static Style CreateTopStyle(Color color, BorderLineKind borderLineKind)
-                => Style.Default with { Border = Border.Default with { TopLine = new BorderLine(color, borderLineKind), }, };
-            static Style CreateBottomStyle(Color color, BorderLineKind borderLineKind)
-                => Style.Default with { Border = Border.Default with { BottomLine = new BorderLine(color, borderLineKind), }, };
-            static Style CreateStyle(Color color, BorderLineKind borderLineKind)
-                => Style.Default with { Border = new(new(color, borderLineKind)), };
+            spreadsheet
+                .AddStyle("Red", CreateStyle(FillKind.Solid, Color.Red))
+                .AddStyle("Orange", CreateStyle(FillKind.Solid, Color.Orange))
+                .AddStyle("Yellow", CreateStyle(FillKind.Solid, Color.Yellow))
+                .AddStyle("Green", CreateStyle(FillKind.Solid, Color.Green))
+                .AddStyle("Blue", CreateStyle(FillKind.Solid, Color.Blue))
+                .AddStyle("Purple", CreateStyle(FillKind.Solid, Color.Purple));
 
-            // Act
-            using (var spreadsheet = _excelFixture.CreateSpreadsheet())
-            {
-                spreadsheet
-                    .AddStyle("LBlackThin", CreateLeftStyle(Color.Black, BorderLineKind.Thin))
-                    .AddStyle("LRedThin", CreateLeftStyle(Color.Red, BorderLineKind.Thin))
-                    .AddStyle("ROrangeThick", CreateRightStyle(Color.Orange, BorderLineKind.Thick))
-                    .AddStyle("RYellowDashed", CreateRightStyle(Color.Yellow, BorderLineKind.Dashed))
-                    .AddStyle("TGreenDotted", CreateTopStyle(Color.Green, BorderLineKind.Dotted))
-                    .AddStyle("TBlueDotted", CreateTopStyle(Color.Blue, BorderLineKind.Dotted))
-                    .AddStyle("BPurpleDouble", CreateBottomStyle(Color.Purple, BorderLineKind.Double))
-                    .AddStyle("BSaddleBrownDouble", CreateBottomStyle(Color.SaddleBrown, BorderLineKind.Double))
-                    .AddStyle("OBlackThick", CreateStyle(Color.Black, BorderLineKind.Thick))
-                    .AddStyle("OOliveDashed", CreateStyle(Color.Olive, BorderLineKind.Dashed));
-
-                spreadsheet.AddPage("Border")
-                    .AddCell("LBlackThin", "LBlackThin")
-                    .AdvanceColumn()
-                    .AddCell("LRedThin", "LRedThin")
-                    .AdvanceRows(2)
-                    .AddCell("ROrangeThick", "ROrangeThick")
-                    .AdvanceColumn()
-                    .AddCell("RYellowDashed", "RYellowDashed")
-                    .AdvanceRows(2)
-                    .AddCell("TGreenDotted", "TGreenDotted")
-                    .AdvanceColumn()
-                    .AddCell("TBlueDotted", "TBlueDotted")
-                    .AdvanceRows(2)
-                    .AddCell("BPurpleDouble", "BPurpleDouble")
-                    .AdvanceColumn()
-                    .AddCell("BSaddleBrownDouble", "BSaddleBrownDouble")
-                    .AdvanceRows(2)
-                    .AddCell("OBlackThick", "OBlackThick")
-                    .AdvanceColumn()
-                    .AddCell("OOliveDashed", "OOliveDashed");
-            }
-
-            // Assert
-            _excelFixture.EquivalentToSource();
+            spreadsheet.AddPage("Fill")
+                .AddCell("Red", "Red").AdvanceRow()
+                .AddCell("Orange", "Orange").AdvanceRow()
+                .AddCell("Yellow", "Yellow").AdvanceRow()
+                .AddCell("Green", "Green").AdvanceRow()
+                .AddCell("Blue", "Blue").AdvanceRow()
+                .AddCell("Purple", "Purple");
         }
 
-        [Fact]
-        [ExcelSourceFile("StyleFill.xlsx")]
-        public void StylingFills()
+        // Assert
+        _excelFixture.EquivalentToSource();
+    }
+
+    [Fact]
+    [ExcelSourceFile("StyleFont.xlsx")]
+    public void StylingFonts()
+    {
+        // Arrange
+        static Style CreateNameStyle(string name)
+            => Style.Default with { Font = Font.Default with { Name = name, }, };
+        static Style CreateSizeStyle(double size)
+            => Style.Default with { Font = Font.Default with { Size = size, }, };
+        static Style CreateColorStyle(Color color)
+            => Style.Default with { Font = Font.Default with { Color = color, }, };
+        static Style CreateStyle(string name, double size, Color color, bool isBold, bool isItalic)
+            => Style.Default with { Font = new(name, size, color, isBold, isItalic), };
+
+        // Act
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet())
         {
-            // Arrange
-            static Style CreateStyle(FillKind fillKind, Color foregroundColor)
-                => Style.Default with { Fill = new(fillKind, foregroundColor), };
+            // Excel performs some kind of sorting when creating font styles. Since the result is functionally identical, we will
+            // add the styles in the expected order.
+            spreadsheet
+                .AddStyle("Red", CreateColorStyle(Color.Red))
+                .AddStyle("Bold", CreateStyle("Calibri", 11D, Color.Black, true, false))
+                .AddStyle("Arial", CreateNameStyle("Arial"))
+                .AddStyle("Consolas", CreateNameStyle("Consolas"))
+                .AddStyle("Times New Roman", CreateNameStyle("Times New Roman"))
+                .AddStyle("Twelve", CreateSizeStyle(12D))
+                .AddStyle("Fourteen", CreateSizeStyle(14D))
+                .AddStyle("Twenty", CreateSizeStyle(20D))
+                .AddStyle("Yellow", CreateColorStyle(Color.Yellow))
+                .AddStyle("Green", CreateColorStyle(Color.Green))
+                .AddStyle("Italic", CreateStyle("Calibri", 11D, Color.Black, false, true))
+                .AddStyle("ArialTwelveRedBold", CreateStyle("Arial", 12D, Color.Red, true, false))
+                .AddStyle("ConsolasFourteenGreenItalic", CreateStyle("Consolas", 14D, Color.Green, false, true));
 
-            // Act
-            using (var spreadsheet = _excelFixture.CreateSpreadsheet())
-            {
-                spreadsheet
-                    .AddStyle("Red", CreateStyle(FillKind.Solid, Color.Red))
-                    .AddStyle("Orange", CreateStyle(FillKind.Solid, Color.Orange))
-                    .AddStyle("Yellow", CreateStyle(FillKind.Solid, Color.Yellow))
-                    .AddStyle("Green", CreateStyle(FillKind.Solid, Color.Green))
-                    .AddStyle("Blue", CreateStyle(FillKind.Solid, Color.Blue))
-                    .AddStyle("Purple", CreateStyle(FillKind.Solid, Color.Purple));
-
-                spreadsheet.AddPage("Fill")
-                    .AddCell("Red", "Red").AdvanceRow()
-                    .AddCell("Orange", "Orange").AdvanceRow()
-                    .AddCell("Yellow", "Yellow").AdvanceRow()
-                    .AddCell("Green", "Green").AdvanceRow()
-                    .AddCell("Blue", "Blue").AdvanceRow()
-                    .AddCell("Purple", "Purple");
-            }
-
-            // Assert
-            _excelFixture.EquivalentToSource();
+            spreadsheet.AddPage("Font")
+                .AddCell("Arial", "Arial")
+                .AddCell("Consolas", "Consolas")
+                .AddCell("Times New Roman", "Times New Roman")
+                .AdvanceRow()
+                .AddCell("Twelve", "Twelve")
+                .AddCell("Fourteen", "Fourteen")
+                .AddCell("Twenty", "Twenty")
+                .AdvanceRows(1)
+                .AddCell("Red", "Red")
+                .AddCell("Yellow", "Yellow")
+                .AddCell("Green", "Green")
+                .AdvanceToRow(4)
+                .AddCell("Bold", "Bold")
+                .AddCell("Italic", "Italic")
+                .AdvanceRow()
+                .AddCell("ArialTwelveRedBold", "ArialTwelveRedBold")
+                .AddCell("ConsolasFourteenGreenItalic", "ConsolasFourteenGreenItalic");
         }
 
-        [Fact]
-        [ExcelSourceFile("StyleFont.xlsx")]
-        public void StylingFonts()
+        // Assert
+        _excelFixture.EquivalentToSource();
+    }
+
+    [Fact]
+    [ExcelSourceFile("StyleNumericFormat.xlsx")]
+    public void StylingNumericFormats()
+    {
+        // Arrange
+        static Style CreateStyle(NumericFormat numericFormat)
+            => Style.Default with { NumericFormat = numericFormat, };
+        static void AddCells(IWritingSpreadsheetPage spreadsheetPage, string styleName, bool advanceRow = true)
         {
-            // Arrange
-            static Style CreateNameStyle(string name)
-                => Style.Default with { Font = Font.Default with { Name = name, }, };
-            static Style CreateSizeStyle(double size)
-                => Style.Default with { Font = Font.Default with { Size = size, }, };
-            static Style CreateColorStyle(Color color)
-                => Style.Default with { Font = Font.Default with { Color = color, }, };
-            static Style CreateStyle(string name, double size, Color color, bool isBold, bool isItalic)
-                => Style.Default with { Font = new(name, size, color, isBold, isItalic), };
+            // Excel stores floating point numbers in an odd way, so this must be emulated for values to match.
+            spreadsheetPage
+                .AddCell(new WritingCell(new(12.345599999999999M), new(styleName)))
+                .AddCell(new WritingCell(new(-78.900000000000006M), new(styleName)))
+                .AddCell(new WritingCell(new(50D), new(styleName)))
+                .AddCell(new WritingCell(new(-100.123D), new(styleName)));
 
-            // Act
-            using (var spreadsheet = _excelFixture.CreateSpreadsheet())
+            if (advanceRow)
             {
-                // Excel performs some kind of sorting when creating font styles. Since the result is functionally identical, we will
-                // add the styles in the expected order.
-                spreadsheet
-                    .AddStyle("Red", CreateColorStyle(Color.Red))
-                    .AddStyle("Bold", CreateStyle("Calibri", 11D, Color.Black, true, false))
-                    .AddStyle("Arial", CreateNameStyle("Arial"))
-                    .AddStyle("Consolas", CreateNameStyle("Consolas"))
-                    .AddStyle("Times New Roman", CreateNameStyle("Times New Roman"))
-                    .AddStyle("Twelve", CreateSizeStyle(12D))
-                    .AddStyle("Fourteen", CreateSizeStyle(14D))
-                    .AddStyle("Twenty", CreateSizeStyle(20D))
-                    .AddStyle("Yellow", CreateColorStyle(Color.Yellow))
-                    .AddStyle("Green", CreateColorStyle(Color.Green))
-                    .AddStyle("Italic", CreateStyle("Calibri", 11D, Color.Black, false, true))
-                    .AddStyle("ArialTwelveRedBold", CreateStyle("Arial", 12D, Color.Red, true, false))
-                    .AddStyle("ConsolasFourteenGreenItalic", CreateStyle("Consolas", 14D, Color.Green, false, true));
-
-                spreadsheet.AddPage("Font")
-                    .AddCell("Arial", "Arial")
-                    .AddCell("Consolas", "Consolas")
-                    .AddCell("Times New Roman", "Times New Roman")
-                    .AdvanceRow()
-                    .AddCell("Twelve", "Twelve")
-                    .AddCell("Fourteen", "Fourteen")
-                    .AddCell("Twenty", "Twenty")
-                    .AdvanceRows(1)
-                    .AddCell("Red", "Red")
-                    .AddCell("Yellow", "Yellow")
-                    .AddCell("Green", "Green")
-                    .AdvanceToRow(4)
-                    .AddCell("Bold", "Bold")
-                    .AddCell("Italic", "Italic")
-                    .AdvanceRow()
-                    .AddCell("ArialTwelveRedBold", "ArialTwelveRedBold")
-                    .AddCell("ConsolasFourteenGreenItalic", "ConsolasFourteenGreenItalic");
+                spreadsheetPage.AdvanceRow();
             }
-
-            // Assert
-            _excelFixture.EquivalentToSource();
         }
 
-        [Fact]
-        [ExcelSourceFile("StyleNumericFormat.xlsx")]
-        public void StylingNumericFormats()
+        // Act
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet())
         {
-            // Arrange
-            static Style CreateStyle(NumericFormat numericFormat)
-                => Style.Default with { NumericFormat = numericFormat, };
-            static void AddCells(IWritingSpreadsheetPage spreadsheetPage, string styleName, bool advanceRow = true)
-            {
-                // Excel stores floating point numbers in an odd way, so this must be emulated for values to match.
-                spreadsheetPage
-                    .AddCell(new WritingCell(new(12.345599999999999M), new(styleName)))
-                    .AddCell(new WritingCell(new(-78.900000000000006M), new(styleName)))
-                    .AddCell(new WritingCell(new(50D), new(styleName)))
-                    .AddCell(new WritingCell(new(-100.123D), new(styleName)));
+            spreadsheet
+                .AddStyle("AccountingTwoDollarSymbol", CreateStyle(new AccountingNumericFormat(2, "$").ToNumericFormat()))
+                .AddStyle("AccountingFourNone", CreateStyle(new AccountingNumericFormat(4, string.Empty).ToNumericFormat()))
+                .AddStyle("AccountingFiveUsd", CreateStyle(new AccountingNumericFormat(5, "USD").ToNumericFormat()))
+                .AddStyle("AccountingSixEur", CreateStyle(new AccountingNumericFormat(6, "EUR").ToNumericFormat()))
+                .AddStyle(
+                    "CurrencyTwoDollarSymbolDefault",
+                    CreateStyle(new CurrencyNumericFormat(2, "$", NegativeNumericFormatKind.Default).ToNumericFormat()))
+                .AddStyle(
+                    "CurrencyFourNoneParentheses",
+                    CreateStyle(
+                        new CurrencyNumericFormat(4, string.Empty, NegativeNumericFormatKind.Parentheses).ToNumericFormat()))
+                .AddStyle(
+                    "CurrencyFiveUsdRed",
+                    CreateStyle(new CurrencyNumericFormat(5, "USD", NegativeNumericFormatKind.Red).ToNumericFormat()))
+                .AddStyle(
+                    "CurrencySixEurRedParentheses",
+                    CreateStyle(new CurrencyNumericFormat(6, "EUR", NegativeNumericFormatKind.RedParentheses).ToNumericFormat()))
+                .AddStyle(
+                    "NumberTwoNoDefault",
+                    CreateStyle(new NumberNumericFormat(2, false, NegativeNumericFormatKind.Default).ToNumericFormat()))
+                .AddStyle(
+                    "NumberFourYesParentheses",
+                    CreateStyle(new NumberNumericFormat(4, true, NegativeNumericFormatKind.Parentheses).ToNumericFormat()))
+                .AddStyle(
+                    "NumberFiveNoRed",
+                    CreateStyle(new NumberNumericFormat(5, false, NegativeNumericFormatKind.Red).ToNumericFormat()))
+                .AddStyle(
+                    "NumberSixYesRedParentheses",
+                    CreateStyle(new NumberNumericFormat(6, true, NegativeNumericFormatKind.RedParentheses).ToNumericFormat()))
+                .AddStyle("Text", CreateStyle(new TextNumericFormat().ToNumericFormat()));
 
-                if (advanceRow)
-                {
-                    spreadsheetPage.AdvanceRow();
-                }
-            }
-
-            // Act
-            using (var spreadsheet = _excelFixture.CreateSpreadsheet())
-            {
-                spreadsheet
-                    .AddStyle("AccountingTwoDollarSymbol", CreateStyle(new AccountingNumericFormat(2, "$").ToNumericFormat()))
-                    .AddStyle("AccountingFourNone", CreateStyle(new AccountingNumericFormat(4, string.Empty).ToNumericFormat()))
-                    .AddStyle("AccountingFiveUsd", CreateStyle(new AccountingNumericFormat(5, "USD").ToNumericFormat()))
-                    .AddStyle("AccountingSixEur", CreateStyle(new AccountingNumericFormat(6, "EUR").ToNumericFormat()))
-                    .AddStyle(
-                        "CurrencyTwoDollarSymbolDefault",
-                        CreateStyle(new CurrencyNumericFormat(2, "$", NegativeNumericFormatKind.Default).ToNumericFormat()))
-                    .AddStyle(
-                        "CurrencyFourNoneParentheses",
-                        CreateStyle(
-                            new CurrencyNumericFormat(4, string.Empty, NegativeNumericFormatKind.Parentheses).ToNumericFormat()))
-                    .AddStyle(
-                        "CurrencyFiveUsdRed",
-                        CreateStyle(new CurrencyNumericFormat(5, "USD", NegativeNumericFormatKind.Red).ToNumericFormat()))
-                    .AddStyle(
-                        "CurrencySixEurRedParentheses",
-                        CreateStyle(new CurrencyNumericFormat(6, "EUR", NegativeNumericFormatKind.RedParentheses).ToNumericFormat()))
-                    .AddStyle(
-                        "NumberTwoNoDefault",
-                        CreateStyle(new NumberNumericFormat(2, false, NegativeNumericFormatKind.Default).ToNumericFormat()))
-                    .AddStyle(
-                        "NumberFourYesParentheses",
-                        CreateStyle(new NumberNumericFormat(4, true, NegativeNumericFormatKind.Parentheses).ToNumericFormat()))
-                    .AddStyle(
-                        "NumberFiveNoRed",
-                        CreateStyle(new NumberNumericFormat(5, false, NegativeNumericFormatKind.Red).ToNumericFormat()))
-                    .AddStyle(
-                        "NumberSixYesRedParentheses",
-                        CreateStyle(new NumberNumericFormat(6, true, NegativeNumericFormatKind.RedParentheses).ToNumericFormat()))
-                    .AddStyle("Text", CreateStyle(new TextNumericFormat().ToNumericFormat()));
-
-                var spreadsheetPage = spreadsheet.AddPage("Numeric Format");
-                AddCells(spreadsheetPage, "AccountingTwoDollarSymbol");
-                AddCells(spreadsheetPage, "AccountingFourNone");
-                AddCells(spreadsheetPage, "AccountingFiveUsd");
-                AddCells(spreadsheetPage, "AccountingSixEur");
-                AddCells(spreadsheetPage, "CurrencyTwoDollarSymbolDefault");
-                AddCells(spreadsheetPage, "CurrencyFourNoneParentheses");
-                AddCells(spreadsheetPage, "CurrencyFiveUsdRed");
-                AddCells(spreadsheetPage, "CurrencySixEurRedParentheses");
-                AddCells(spreadsheetPage, "NumberTwoNoDefault");
-                AddCells(spreadsheetPage, "NumberFourYesParentheses");
-                AddCells(spreadsheetPage, "NumberFiveNoRed");
-                AddCells(spreadsheetPage, "NumberSixYesRedParentheses");
-                AddCells(spreadsheetPage, "Text", false);
-            }
-
-            // Assert
-            _excelFixture.EquivalentToSource();
+            var spreadsheetPage = spreadsheet.AddPage("Numeric Format");
+            AddCells(spreadsheetPage, "AccountingTwoDollarSymbol");
+            AddCells(spreadsheetPage, "AccountingFourNone");
+            AddCells(spreadsheetPage, "AccountingFiveUsd");
+            AddCells(spreadsheetPage, "AccountingSixEur");
+            AddCells(spreadsheetPage, "CurrencyTwoDollarSymbolDefault");
+            AddCells(spreadsheetPage, "CurrencyFourNoneParentheses");
+            AddCells(spreadsheetPage, "CurrencyFiveUsdRed");
+            AddCells(spreadsheetPage, "CurrencySixEurRedParentheses");
+            AddCells(spreadsheetPage, "NumberTwoNoDefault");
+            AddCells(spreadsheetPage, "NumberFourYesParentheses");
+            AddCells(spreadsheetPage, "NumberFiveNoRed");
+            AddCells(spreadsheetPage, "NumberSixYesRedParentheses");
+            AddCells(spreadsheetPage, "Text", false);
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        // Assert
+        _excelFixture.EquivalentToSource();
+    }
 
-        protected virtual void Dispose(bool disposing)
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            if (disposing)
-            {
-                _excelFixture.Dispose();
-            }
+            _excelFixture.Dispose();
         }
     }
 }

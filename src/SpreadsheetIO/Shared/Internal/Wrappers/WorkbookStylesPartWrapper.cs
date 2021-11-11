@@ -2,21 +2,20 @@ using System.Diagnostics.CodeAnalysis;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
+namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
+
+[ExcludeFromCodeCoverage]
+internal class WorkbookStylesPartWrapper : IWorkbookStylesPartWrapper
 {
-    [ExcludeFromCodeCoverage]
-    internal class WorkbookStylesPartWrapper : IWorkbookStylesPartWrapper
+    private readonly WorkbookStylesPart _workbookStylesPart;
+
+    public WorkbookStylesPartWrapper(WorkbookStylesPart workbookStylesPart)
     {
-        private readonly WorkbookStylesPart _workbookStylesPart;
+        _workbookStylesPart = workbookStylesPart;
+    }
 
-        public WorkbookStylesPartWrapper(WorkbookStylesPart workbookStylesPart)
-        {
-            _workbookStylesPart = workbookStylesPart;
-        }
-
-        public void SetStylesheet(Stylesheet stylesheet)
-        {
-            _workbookStylesPart.Stylesheet = stylesheet;
-        }
+    public void SetStylesheet(Stylesheet stylesheet)
+    {
+        _workbookStylesPart.Stylesheet = stylesheet;
     }
 }

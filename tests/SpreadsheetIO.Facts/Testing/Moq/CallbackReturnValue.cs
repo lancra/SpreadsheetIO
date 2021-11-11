@@ -1,17 +1,14 @@
-using System;
+namespace LanceC.SpreadsheetIO.Facts.Testing.Moq;
 
-namespace LanceC.SpreadsheetIO.Facts.Testing.Moq
+public class CallbackReturnValue<TResult>
 {
-    public class CallbackReturnValue<TResult>
+    public CallbackReturnValue(TResult value, Action? callback = default)
     {
-        public CallbackReturnValue(TResult value, Action? callback = default)
-        {
-            Value = value;
-            Callback = callback;
-        }
-
-        public TResult Value { get; }
-
-        public Action? Callback { get; }
+        Value = value;
+        Callback = callback;
     }
+
+    public TResult Value { get; }
+
+    public Action? Callback { get; }
 }

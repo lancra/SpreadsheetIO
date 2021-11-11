@@ -1,8 +1,7 @@
 using LanceC.SpreadsheetIO.Mapping;
 
-namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps
+namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps;
+
+public class FakeOtherStringResourceMap : ResourceMap<string>
 {
-    public class FakeOtherStringResourceMap : ResourceMap<string>
-    {
-    }
 }

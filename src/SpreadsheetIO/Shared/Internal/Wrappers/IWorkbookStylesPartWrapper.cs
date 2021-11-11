@@ -1,16 +1,15 @@
 using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers
+namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
+
+/// <summary>
+/// Defines a wrapper for a workbook styles part.
+/// </summary>
+internal interface IWorkbookStylesPartWrapper
 {
     /// <summary>
-    /// Defines a wrapper for a workbook styles part.
+    /// Sets the internal stylesheet.
     /// </summary>
-    internal interface IWorkbookStylesPartWrapper
-    {
-        /// <summary>
-        /// Sets the internal stylesheet.
-        /// </summary>
-        /// <param name="stylesheet">The stylesheet.</param>
-        void SetStylesheet(Stylesheet stylesheet);
-    }
+    /// <param name="stylesheet">The stylesheet.</param>
+    void SetStylesheet(Stylesheet stylesheet);
 }
