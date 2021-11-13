@@ -10,18 +10,18 @@ internal class ReadingSpreadsheetPageOperation<TResource> : IReadingSpreadsheetP
     private readonly IWorksheetElementReader _worksheetReader;
     private readonly HeaderRowReadingResult<TResource> _headerRowResult;
     private readonly ResourceMap<TResource> _map;
-    private readonly ISpreadsheetPageMapReader _spreadsheetPageMapReader;
+    private readonly IMappedBodyRowReader _mappedBodyRowReader;
 
     public ReadingSpreadsheetPageOperation(
         IWorksheetElementReader worksheetReader,
         HeaderRowReadingResult<TResource> headerRowResult,
         ResourceMap<TResource> map,
-        ISpreadsheetPageMapReader spreadsheetPageMapReader)
+        IMappedBodyRowReader mappedBodyRowReader)
     {
         _worksheetReader = worksheetReader;
         _headerRowResult = headerRowResult;
         _map = map;
-        _spreadsheetPageMapReader = spreadsheetPageMapReader;
+        _mappedBodyRowReader = mappedBodyRowReader;
     }
 
     public HeaderReadingFailure? HeaderFailure => _headerRowResult.Failure;
@@ -36,7 +36,7 @@ internal class ReadingSpreadsheetPageOperation<TResource> : IReadingSpreadsheetP
         }
 
         var hasRow = _worksheetReader.ReadNextRow();
-        CurrentResult = hasRow ? _spreadsheetPageMapReader.ReadBodyRow(_worksheetReader, _map, _headerRowResult.Headers) : default;
+        CurrentResult = hasRow ? _mappedBodyRowReader.Read(_worksheetReader, _map, _headerRowResult.Headers) : default;
         return hasRow;
     }
 

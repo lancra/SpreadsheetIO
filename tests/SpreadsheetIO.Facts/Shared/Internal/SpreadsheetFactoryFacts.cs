@@ -60,8 +60,8 @@ public class SpreadsheetFactoryFacts
             .Returns(_mocker.GetMock<IElementReaderFactory>().Object);
         serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IResourceMapManager)))
             .Returns(_mocker.GetMock<IResourceMapManager>().Object);
-        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ISpreadsheetPageMapReader)))
-            .Returns(_mocker.GetMock<ISpreadsheetPageMapReader>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IMappedHeaderRowReader)))
+            .Returns(_mocker.GetMock<IMappedHeaderRowReader>().Object);
         serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IReadingSpreadsheetPageOperationFactory)))
             .Returns(_mocker.GetMock<IReadingSpreadsheetPageOperationFactory>().Object);
         serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IStringIndexer)))

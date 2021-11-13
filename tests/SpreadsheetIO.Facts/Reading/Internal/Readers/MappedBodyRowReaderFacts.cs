@@ -1,3 +1,4 @@
+using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps;
 using LanceC.SpreadsheetIO.Mapping;
@@ -6,18 +7,17 @@ using LanceC.SpreadsheetIO.Reading.Internal;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 using LanceC.SpreadsheetIO.Shared.Internal;
-using Moq;
 using Moq.AutoMock;
 using Xunit;
 
 namespace LanceC.SpreadsheetIO.Facts.Reading.Internal.Readers;
 
-public class SpreadsheetPageMapReaderFacts
+public class MappedBodyRowReaderFacts
 {
     private readonly AutoMocker _mocker = new();
 
-    private SpreadsheetPageMapReader CreateSystemUnderTest()
-        => _mocker.CreateInstance<SpreadsheetPageMapReader>();
+    private MappedBodyRowReader CreateSystemUnderTest()
+        => _mocker.CreateInstance<MappedBodyRowReader>();
 
     private void MockWorksheetElementReaderCells(params FakeWorksheetCell[] cells)
     {
@@ -36,295 +36,7 @@ public class SpreadsheetPageMapReaderFacts
         readNextSequence.Returns(false);
     }
 
-    public class TheReadHeaderRowMethod : SpreadsheetPageMapReaderFacts
-    {
-        public static TheoryData<PropertyElementKind>
-            DataForDoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderOptionsExtension
-            => new()
-            {
-                { PropertyElementKind.All },
-                { PropertyElementKind.Header },
-            };
-
-        [Fact]
-        public void ReturnsReadingResultWithoutFailuresWhenAllRequiredPropertyMapsAreFound()
-        {
-            // Arrange
-            var readerMock = _mocker.GetMock<IWorksheetElementReader>();
-            readerMock.Setup(reader => reader.ReadToRow(1U))
-                .Returns(true);
-
-            MockWorksheetElementReaderCells(
-                new FakeWorksheetCell(new CellLocation("A1"), nameof(FakeModel.Id)),
-                new FakeWorksheetCell(new CellLocation("B1"), nameof(FakeModel.Name)),
-                new FakeWorksheetCell(new CellLocation("C1"), nameof(FakeModel.Decimal)));
-
-            var map = new FakeModelMap()
-                .Map(model => model.Id)
-                .Map(model => model.Name)
-                .Map(model => model.Decimal);
-
-            var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
-            var namePropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Name));
-            var decimalPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Decimal));
-
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
-            resourcePropertyHeadersMock
-                .Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(It.IsAny<PropertyMap<FakeModel>>()))
-                .Returns(true);
-
-            _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
-                .Returns(resourcePropertyHeadersMock.Object);
-
-            var sut = CreateSystemUnderTest();
-
-            // Act
-            var readingResult = sut.ReadHeaderRow(readerMock.Object, map);
-
-            // Assert
-            resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
-            resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(namePropertyMap, 2U));
-            resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(decimalPropertyMap, 3U));
-
-            Assert.Null(readingResult.Failure);
-        }
-
-        [Fact]
-        public void ReturnsReadingResultWithMissingFailureWhenRequiredPropertyMapNotFound()
-        {
-            // Arrange
-            var readerMock = _mocker.GetMock<IWorksheetElementReader>();
-            readerMock.Setup(reader => reader.ReadToRow(1U))
-                .Returns(true);
-
-            MockWorksheetElementReaderCells(new FakeWorksheetCell(new CellLocation("A1"), nameof(FakeModel.Id)));
-
-            var map = new FakeModelMap()
-                .Map(model => model.Id)
-                .Map(model => model.Name);
-
-            var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
-            var namePropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Name));
-
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
-            resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(idPropertyMap))
-                .Returns(true);
-            resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(namePropertyMap))
-                .Returns(false);
-
-            _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
-                .Returns(resourcePropertyHeadersMock.Object);
-
-            var sut = CreateSystemUnderTest();
-
-            // Act
-            var readingResult = sut.ReadHeaderRow(readerMock.Object, map);
-
-            // Assert
-            resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
-
-            Assert.NotNull(readingResult.Failure);
-            var missingFailure = Assert.Single(readingResult.Failure!.MissingHeaders);
-            Assert.Equal(nameof(FakeModel.Name), missingFailure.MapKey.Name);
-        }
-
-        [Fact]
-        public void ReturnsReadingResultWithInvalidFailureWhenMultipleConflictingPropertyMapsFoundForSameColumn()
-        {
-            // Arrange
-            var readerMock = _mocker.GetMock<IWorksheetElementReader>();
-            readerMock.Setup(reader => reader.ReadToRow(1U))
-                .Returns(true);
-
-            MockWorksheetElementReaderCells(
-                new FakeWorksheetCell(new CellLocation("A1"), nameof(FakeModel.Id)),
-                new FakeWorksheetCell(new CellLocation("B1"), nameof(FakeModel.Name)));
-
-            var map = new FakeModelMap()
-                .Map(model => model.Id)
-                .Map(model => model.Name)
-                .Map(model => model.Decimal, keyAction => keyAction.IgnoreName().UseNumber(2U));
-
-            var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
-            var namePropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Name));
-            var decimalPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Decimal));
-
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
-            resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(idPropertyMap))
-                .Returns(true);
-            resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(namePropertyMap))
-                .Returns(false);
-            resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(decimalPropertyMap))
-                .Returns(false);
-
-            _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
-                .Returns(resourcePropertyHeadersMock.Object);
-
-            var sut = CreateSystemUnderTest();
-
-            // Act
-            var readingResult = sut.ReadHeaderRow(readerMock.Object, map);
-
-            // Assert
-            resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
-
-            Assert.NotNull(readingResult.Failure);
-            var invalidFailure = Assert.Single(readingResult.Failure!.InvalidHeaders);
-            Assert.Equal(nameof(FakeModel.Name), invalidFailure.NameMapKey.Name);
-            Assert.Equal(default, invalidFailure.NameMapKey.Number);
-            Assert.Equal(nameof(FakeModel.Decimal), invalidFailure.NumberMapKey.Name);
-            Assert.Equal(2U, invalidFailure.NumberMapKey.Number);
-        }
-
-        [Fact]
-        public void ReturnsReadingResultWithMissingHeaderRowFailureWhenSpecifiedRowNotFound()
-        {
-            // Arrange
-            var readerMock = _mocker.GetMock<IWorksheetElementReader>();
-            readerMock.Setup(reader => reader.ReadToRow(1U))
-                .Returns(false);
-
-            var map = new FakeModelMap()
-                .Map(model => model.Id)
-                .Map(model => model.Name);
-
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
-
-            _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
-                .Returns(resourcePropertyHeadersMock.Object);
-
-            var sut = CreateSystemUnderTest();
-
-            // Act
-            var readingResult = sut.ReadHeaderRow(readerMock.Object, map);
-
-            // Assert
-            resourcePropertyHeadersMock
-                .Verify(
-                    resourcePropertyHeaders => resourcePropertyHeaders.Add(It.IsAny<PropertyMap<FakeModel>>(), It.IsAny<uint>()),
-                    Times.Never);
-
-            Assert.NotNull(readingResult.Failure);
-            Assert.True(readingResult.Failure!.MissingHeaderRow);
-        }
-
-        [Fact]
-        public void UsesOverriddenHeaderRowNumberWhenOptionsExtensionIsDefined()
-        {
-            // Arrange
-            var headerRowNumber = 2U;
-
-            var readerMock = _mocker.GetMock<IWorksheetElementReader>();
-            readerMock.Setup(reader => reader.ReadToRow(headerRowNumber))
-                .Returns(true);
-
-            MockWorksheetElementReaderCells(new FakeWorksheetCell(new CellLocation("A1"), nameof(FakeModel.Id)));
-
-            var map = new FakeModelMap(optionsBuilderAction => optionsBuilderAction.OverrideHeaderRowNumber(headerRowNumber))
-                .Map(model => model.Id);
-
-            var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
-
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
-            resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(idPropertyMap))
-                .Returns(true);
-
-            _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
-                .Returns(resourcePropertyHeadersMock.Object);
-
-            var sut = CreateSystemUnderTest();
-
-            // Act
-            var readingResult = sut.ReadHeaderRow(readerMock.Object, map);
-
-            // Assert
-            resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
-
-            Assert.Null(readingResult.Failure);
-        }
-
-        [Theory]
-        [MemberData(nameof(DataForDoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderOptionsExtension))]
-        public void DoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderOptionsExtension(PropertyElementKind kind)
-        {
-            // Arrange
-            var readerMock = _mocker.GetMock<IWorksheetElementReader>();
-            readerMock.Setup(reader => reader.ReadToRow(1U))
-                .Returns(true);
-
-            MockWorksheetElementReaderCells(new FakeWorksheetCell(new CellLocation("A1"), nameof(FakeModel.Id)));
-
-            var map = new FakeModelMap()
-                .Map(model => model.Id)
-                .Map(model => model.Name, optionsAction => optionsAction.MarkAsOptional(kind));
-
-            var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
-            var namePropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Name));
-
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
-            resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(idPropertyMap))
-                .Returns(true);
-            resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(namePropertyMap))
-                .Returns(false);
-
-            _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
-                .Returns(resourcePropertyHeadersMock.Object);
-
-            var sut = CreateSystemUnderTest();
-
-            // Act
-            var readingResult = sut.ReadHeaderRow(readerMock.Object, map);
-
-            // Assert
-            resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
-
-            Assert.Null(readingResult.Failure);
-        }
-
-        [Fact]
-        public void SkipsUnmappedCell()
-        {
-            // Arrange
-            var readerMock = _mocker.GetMock<IWorksheetElementReader>();
-            readerMock.Setup(reader => reader.ReadToRow(1U))
-                .Returns(true);
-
-            MockWorksheetElementReaderCells(
-                new FakeWorksheetCell(new CellLocation("A1"), nameof(FakeModel.Id)),
-                new FakeWorksheetCell(new CellLocation("B1"), "foo"));
-
-            var map = new FakeModelMap()
-                .Map(model => model.Id);
-
-            var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
-
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
-            resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(idPropertyMap))
-                .Returns(true);
-
-            _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
-                .Returns(resourcePropertyHeadersMock.Object);
-
-            var sut = CreateSystemUnderTest();
-
-            // Act
-            var readingResult = sut.ReadHeaderRow(readerMock.Object, map);
-
-            // Assert
-            resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
-
-            Assert.Null(readingResult.Failure);
-        }
-    }
-
-    public class TheReadBodyRowMethod : SpreadsheetPageMapReaderFacts
+    public class TheReadMethod : MappedBodyRowReaderFacts
     {
         public static TheoryData<PropertyElementKind> DataForUsesResolvedDefaultValueForEmptyOptionalPropertyMap
             => new()
@@ -386,7 +98,7 @@ public class SpreadsheetPageMapReaderFacts
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
+            var readingResult = sut.Read(readerMock.Object, map, propertyHeadersMock.Object);
 
             // Assert
             Assert.Equal(rowNumber, readingResult.NumberedResource!.RowNumber);
@@ -448,7 +160,7 @@ public class SpreadsheetPageMapReaderFacts
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
+            var readingResult = sut.Read(readerMock.Object, map, propertyHeadersMock.Object);
 
             // Assert
             Assert.Null(readingResult.NumberedResource);
@@ -519,7 +231,7 @@ public class SpreadsheetPageMapReaderFacts
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
+            var readingResult = sut.Read(readerMock.Object, map, propertyHeadersMock.Object);
 
             // Assert
             Assert.Null(readingResult.NumberedResource);
@@ -578,7 +290,7 @@ public class SpreadsheetPageMapReaderFacts
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
+            var readingResult = sut.Read(readerMock.Object, map, propertyHeadersMock.Object);
 
             // Assert
             Assert.Equal(rowNumber, readingResult.NumberedResource!.RowNumber);
@@ -632,7 +344,7 @@ public class SpreadsheetPageMapReaderFacts
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
+            var readingResult = sut.Read(readerMock.Object, map, propertyHeadersMock.Object);
 
             // Assert
             Assert.NotNull(readingResult.NumberedResource);
@@ -688,7 +400,7 @@ public class SpreadsheetPageMapReaderFacts
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.ReadBodyRow(readerMock.Object, map, propertyHeadersMock.Object);
+            var readingResult = sut.Read(readerMock.Object, map, propertyHeadersMock.Object);
 
             // Assert
             Assert.NotNull(readingResult.NumberedResource);
@@ -718,18 +430,5 @@ public class SpreadsheetPageMapReaderFacts
 
             return new FakeWorksheetCell(new CellLocation(rowNumber, columnNumber), cellValue);
         }
-    }
-
-    private class FakeWorksheetCell
-    {
-        public FakeWorksheetCell(CellLocation location, string value)
-        {
-            Location = location;
-            Value = value;
-        }
-
-        public CellLocation Location { get; }
-
-        public string Value { get; }
     }
 }

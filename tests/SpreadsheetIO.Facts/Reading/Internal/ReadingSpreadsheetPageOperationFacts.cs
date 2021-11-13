@@ -106,11 +106,8 @@ public class ReadingSpreadsheetPageOperationFacts
             _mocker.Use<ResourceMap<FakeModel>>(map);
 
             var resourceReadingResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
-            _mocker.GetMock<ISpreadsheetPageMapReader>()
-                .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
-                    worksheetReaderMock.Object,
-                    map,
-                    headersMock.Object))
+            _mocker.GetMock<IMappedBodyRowReader>()
+                .Setup(mappedBodyRowReader => mappedBodyRowReader.Read(worksheetReaderMock.Object, map, headersMock.Object))
                 .Returns(resourceReadingResult);
 
             var sut = CreateSystemUnderTest();

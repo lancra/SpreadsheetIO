@@ -72,7 +72,8 @@ public static class ServiceCollectionExtensions
         .AddScoped<IResourcePropertyCollectionFactory, ResourcePropertyCollectionFactory>()
         .AddScoped<IElementReaderFactory, ElementReaderFactory>()
         .AddScoped<IReadingSpreadsheetPageOperationFactory, ReadingSpreadsheetPageOperationFactory>()
-        .AddScoped<ISpreadsheetPageMapReader, SpreadsheetPageMapReader>();
+        .AddScoped<IMappedHeaderRowReader, MappedHeaderRowReader>()
+        .AddScoped<IMappedBodyRowReader, MappedBodyRowReader>();
 
     private static IServiceCollection AddSpreadsheetIOShared(this IServiceCollection services)
         => services

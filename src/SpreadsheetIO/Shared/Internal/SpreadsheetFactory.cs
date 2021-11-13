@@ -92,7 +92,7 @@ internal class SpreadsheetFactory : ISpreadsheetFactory
     {
         var elementReaderFactory = scope.ServiceProvider.GetRequiredService<IElementReaderFactory>();
         var resourceMapManager = scope.ServiceProvider.GetRequiredService<IResourceMapManager>();
-        var spreadsheetPageMapReader = scope.ServiceProvider.GetRequiredService<ISpreadsheetPageMapReader>();
+        var mappedHeaderRowReader = scope.ServiceProvider.GetRequiredService<IMappedHeaderRowReader>();
         var operationFactory = scope.ServiceProvider.GetRequiredService<IReadingSpreadsheetPageOperationFactory>();
 
         var stringIndexer = scope.ServiceProvider.GetRequiredService<IStringIndexer>();
@@ -106,7 +106,7 @@ internal class SpreadsheetFactory : ISpreadsheetFactory
                 worksheetPart,
                 elementReaderFactory,
                 resourceMapManager,
-                spreadsheetPageMapReader,
+                mappedHeaderRowReader,
                 operationFactory);
             spreadsheetPages.Add(spreadsheetPage, worksheetPart.Name);
         }

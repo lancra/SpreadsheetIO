@@ -12,20 +12,20 @@ internal class ReadingSpreadsheetPage : IReadingSpreadsheetPage
     private readonly IWorksheetPartWrapper _worksheetPart;
     private readonly IElementReaderFactory _elementReaderFactory;
     private readonly IResourceMapManager _resourceMapManager;
-    private readonly ISpreadsheetPageMapReader _spreadsheetPageMapReader;
+    private readonly IMappedHeaderRowReader _mappedHeaderRowReader;
     private readonly IReadingSpreadsheetPageOperationFactory _operationFactory;
 
     public ReadingSpreadsheetPage(
         IWorksheetPartWrapper worksheetPart,
         IElementReaderFactory elementReaderFactory,
         IResourceMapManager resourceMapManager,
-        ISpreadsheetPageMapReader spreadsheetPageMapReader,
+        IMappedHeaderRowReader mappedHeaderRowReader,
         IReadingSpreadsheetPageOperationFactory operationFactory)
     {
         _worksheetPart = worksheetPart;
         _elementReaderFactory = elementReaderFactory;
         _resourceMapManager = resourceMapManager;
-        _spreadsheetPageMapReader = spreadsheetPageMapReader;
+        _mappedHeaderRowReader = mappedHeaderRowReader;
         _operationFactory = operationFactory;
     }
 
@@ -107,7 +107,7 @@ internal class ReadingSpreadsheetPage : IReadingSpreadsheetPage
         where TResource : class
     {
         var worksheetReader = _elementReaderFactory.CreateWorksheetReader(_worksheetPart);
-        var headerRowResult = _spreadsheetPageMapReader.ReadHeaderRow(worksheetReader, map);
+        var headerRowResult = _mappedHeaderRowReader.Read(worksheetReader, map);
         var operation = _operationFactory.Create(worksheetReader, headerRowResult, map);
         return operation;
     }
