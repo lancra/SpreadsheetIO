@@ -5,6 +5,7 @@ using LanceC.SpreadsheetIO.Mapping.Internal.Validators;
 using LanceC.SpreadsheetIO.Mapping.Validation;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
+using LanceC.SpreadsheetIO.Reading.Internal.Creation;
 using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
@@ -50,6 +51,9 @@ public static class ServiceCollectionExtensions
     private static IServiceCollection AddSpreadsheetIOReading(this IServiceCollection services)
         => services
         .AddScoped<IResourceCreator, ResourceCreator>()
+        .AddScoped<IResourceCreationStrategy, ExplicitConstructorResourceCreationStrategy>()
+        .AddScoped<IResourceCreationStrategy, ImplicitConstructorResourceCreationStrategy>()
+        .AddScoped<IResourceCreationStrategy, PropertySettersResourceCreationStrategy>()
         .AddScoped<IResourcePropertyDefaultValueResolver, ResourcePropertyDefaultValueResolver>()
         .AddScoped<IResourcePropertyValueResolver, ResourcePropertyValueResolver>()
         .AddScoped<IResourcePropertyParser, ResourcePropertyParser>()

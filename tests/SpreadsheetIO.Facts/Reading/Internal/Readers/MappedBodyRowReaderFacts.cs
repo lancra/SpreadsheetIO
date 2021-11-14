@@ -4,6 +4,7 @@ using LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
+using LanceC.SpreadsheetIO.Reading.Internal.Creation;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 using LanceC.SpreadsheetIO.Shared.Internal;
