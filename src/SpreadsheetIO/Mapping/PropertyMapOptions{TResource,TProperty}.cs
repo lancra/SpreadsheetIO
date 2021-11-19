@@ -37,7 +37,7 @@ public class PropertyMapOptions<TResource, TProperty> : PropertyMapOptions<TReso
     /// <exception cref="InvalidOperationException">
     /// Thrown when the property type is not allowed or when the options are frozen.
     /// </exception>
-    public override PropertyMapOptions<TResource> WithExtension<TExtension>(TExtension extension)
+    internal override PropertyMapOptions<TResource> WithExtension<TExtension>(TExtension extension)
     {
         Guard.Against.Null(extension, nameof(extension));
 
@@ -55,7 +55,7 @@ public class PropertyMapOptions<TResource, TProperty> : PropertyMapOptions<TReso
         return new PropertyMapOptions<TResource, TProperty>(extensions);
     }
 
-    internal PropertyMapOptions<TResource> WithExtensionInternal(IPropertyMapOptionsExtension extension)
+    internal PropertyMapOptions<TResource> WithExtensionNoOverwrite(IPropertyMapOptionsExtension extension)
     {
         Guard.Against.Null(extension, nameof(extension));
 

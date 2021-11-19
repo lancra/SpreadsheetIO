@@ -190,7 +190,7 @@ public class PropertyMapOptionsBuilder<TResource, TProperty>
         {
             if (resourceExtension is IPropertyMapOptionsExtension propertyExtension)
             {
-                Options = (PropertyMapOptions<TResource, TProperty>)Options.WithExtensionInternal(propertyExtension);
+                Options = (PropertyMapOptions<TResource, TProperty>)Options.WithExtensionNoOverwrite(propertyExtension);
             }
         }
 

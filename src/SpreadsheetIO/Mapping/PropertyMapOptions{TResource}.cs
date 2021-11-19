@@ -27,7 +27,7 @@ public abstract class PropertyMapOptions<TResource>
     /// <summary>
     /// Gets the value that determines whether the options are frozen against changes.
     /// </summary>
-    public bool IsFrozen { get; private set; }
+    internal bool IsFrozen { get; private set; }
 
     /// <summary>
     /// Finds the extension of the specified type.
@@ -56,12 +56,12 @@ public abstract class PropertyMapOptions<TResource>
     /// <exception cref="InvalidOperationException">
     /// Thrown when the property type is not allowed or when the options are frozen.
     /// </exception>
-    public abstract PropertyMapOptions<TResource> WithExtension<TExtension>(TExtension extension)
+    internal abstract PropertyMapOptions<TResource> WithExtension<TExtension>(TExtension extension)
         where TExtension : class, IPropertyMapOptionsExtension;
 
     /// <summary>
     /// Freezes the options against changes.
     /// </summary>
-    public void Freeze()
+    internal void Freeze()
         => IsFrozen = true;
 }

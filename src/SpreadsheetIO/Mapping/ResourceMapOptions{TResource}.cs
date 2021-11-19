@@ -34,7 +34,7 @@ public class ResourceMapOptions<TResource> : ResourceMapOptions
     /// <param name="extension">The extension to add.</param>
     /// <returns>The new options instance with the given extension added.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the options are frozen.</exception>
-    public override ResourceMapOptions WithExtension<TExtension>(TExtension extension)
+    internal override ResourceMapOptions WithExtension<TExtension>(TExtension extension)
     {
         Guard.Against.Null(extension, nameof(extension));
 

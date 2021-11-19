@@ -25,7 +25,7 @@ public abstract class ResourceMapOptions
     /// <summary>
     /// Gets the value that determines whether the options are frozen against changes.
     /// </summary>
-    public bool IsFrozen { get; private set; }
+    internal bool IsFrozen { get; private set; }
 
     /// <summary>
     /// Finds the extension of the specified type.
@@ -52,12 +52,12 @@ public abstract class ResourceMapOptions
     /// <param name="extension">The extension to add.</param>
     /// <returns>The new options instance with the given extension added.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the options are frozen.</exception>
-    public abstract ResourceMapOptions WithExtension<TExtension>(TExtension extension)
+    internal abstract ResourceMapOptions WithExtension<TExtension>(TExtension extension)
         where TExtension : class, IResourceMapOptionsExtension;
 
     /// <summary>
     /// Freezes the options against changes.
     /// </summary>
-    public void Freeze()
+    internal void Freeze()
         => IsFrozen = true;
 }

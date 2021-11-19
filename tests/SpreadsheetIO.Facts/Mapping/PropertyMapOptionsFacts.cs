@@ -228,7 +228,7 @@ public class PropertyMapOptionsFacts
         }
     }
 
-    public class TheWithExtensionInternalMethod : PropertyMapOptionsFacts
+    public class TheWithExtensionNoOverwriteMethod : PropertyMapOptionsFacts
     {
         [Fact]
         public void ReturnsNewOptionsInstanceWithAddedExtension()
@@ -238,7 +238,7 @@ public class PropertyMapOptionsFacts
             var sut = new PropertyMapOptions<FakeModel, string>();
 
             // Act
-            var newOptions = sut.WithExtensionInternal(expectedExtension);
+            var newOptions = sut.WithExtensionNoOverwrite(expectedExtension);
 
             // Assert
             Assert.Empty(sut.Extensions);
@@ -261,7 +261,7 @@ public class PropertyMapOptionsFacts
             var overriddenExtension = new FakePropertyMapOptionsExtension();
 
             // Act
-            var newOptions = sut.WithExtensionInternal(overriddenExtension);
+            var newOptions = sut.WithExtensionNoOverwrite(overriddenExtension);
 
             // Assert
             Assert.Equal(sut, newOptions);
@@ -278,7 +278,7 @@ public class PropertyMapOptionsFacts
             var sut = new PropertyMapOptions<FakeModel, string>();
 
             // Act
-            var newOptions = sut.WithExtensionInternal(extension);
+            var newOptions = sut.WithExtensionNoOverwrite(extension);
 
             // Assert
             Assert.Equal(sut, newOptions);
@@ -293,7 +293,7 @@ public class PropertyMapOptionsFacts
             var sut = new PropertyMapOptions<FakeModel, string>();
 
             // Act
-            var exception = Record.Exception(() => sut.WithExtensionInternal(extension!));
+            var exception = Record.Exception(() => sut.WithExtensionNoOverwrite(extension!));
 
             // Assert
             Assert.NotNull(exception);
@@ -310,7 +310,7 @@ public class PropertyMapOptionsFacts
             sut.Freeze();
 
             // Act
-            var exception = Record.Exception(() => sut.WithExtensionInternal(extension));
+            var exception = Record.Exception(() => sut.WithExtensionNoOverwrite(extension));
 
             // Assert
             Assert.NotNull(exception);
