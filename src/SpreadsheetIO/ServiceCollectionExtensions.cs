@@ -93,8 +93,7 @@ public static class ServiceCollectionExtensions
     private static IServiceCollection AddSpreadsheetIOReading(this IServiceCollection services)
         => services
         .AddScoped<IResourceCreator, ResourceCreator>()
-        .AddScoped<IResourceCreationStrategy, ExplicitConstructorResourceCreationStrategy>()
-        .AddScoped<IResourceCreationStrategy, ImplicitConstructorResourceCreationStrategy>()
+        .AddScoped<IResourceCreationStrategy, ConstructorResourceCreationStrategy>()
         .AddScoped<IResourceCreationStrategy, PropertySettersResourceCreationStrategy>()
         .AddScoped<IResourcePropertyDefaultValueResolver, ResourcePropertyDefaultValueResolver>()
         .AddScoped<IResourcePropertyValueResolver, ResourcePropertyValueResolver>()

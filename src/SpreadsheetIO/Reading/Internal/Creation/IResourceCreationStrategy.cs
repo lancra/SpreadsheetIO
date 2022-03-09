@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Creation;
 
@@ -8,7 +8,7 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Creation;
 internal interface IResourceCreationStrategy : IResourceCreator
 {
     /// <summary>
-    /// Gets the handler for determining whether this strategy is applicable to the provided resource map options.
+    /// Gets the handler for determining whether this strategy is applicable to the provided resource map.
     /// </summary>
-    Func<ResourceMapOptions, bool> ApplicabilityHandler { get; }
+    Func<ResourceMap, bool> ApplicabilityHandler { get; }
 }

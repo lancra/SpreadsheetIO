@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 
 namespace LanceC.SpreadsheetIO.Reading.Failures;
 

@@ -40,7 +40,7 @@ public class CharacterResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
 
             var sut = CreateSystemUnderTest();
 
@@ -59,7 +59,7 @@ public class CharacterResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.CharacterNullable);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.CharacterNullable);
 
             var sut = CreateSystemUnderTest();
 
@@ -74,7 +74,7 @@ public class CharacterResourcePropertySerializerStrategyFacts
         public void ThrowsInvalidCastExceptionWhenNonCharacterTypeIsProvided()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
             var sut = CreateSystemUnderTest();
 
             // Act

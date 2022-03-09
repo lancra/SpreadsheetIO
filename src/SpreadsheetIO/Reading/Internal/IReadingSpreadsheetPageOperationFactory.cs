@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal;
@@ -19,6 +19,6 @@ internal interface IReadingSpreadsheetPageOperationFactory
     IReadingSpreadsheetPageOperation<TResource> Create<TResource>(
         IWorksheetElementReader worksheetReader,
         HeaderRowReadingResult<TResource> headerRowResult,
-        ResourceMap<TResource> map)
+        ResourceMap map)
         where TResource : class;
 }

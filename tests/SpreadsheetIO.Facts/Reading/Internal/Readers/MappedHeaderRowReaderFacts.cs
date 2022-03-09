@@ -1,7 +1,8 @@
+using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps;
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
+using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 using LanceC.SpreadsheetIO.Shared.Internal;
@@ -58,28 +59,31 @@ public class MappedHeaderRowReaderFacts
                 new FakeWorksheetCell(new CellLocation("B1"), nameof(FakeModel.Name)),
                 new FakeWorksheetCell(new CellLocation("C1"), nameof(FakeModel.Decimal)));
 
-            var map = new FakeModelMap()
-                .Map(model => model.Id)
-                .Map(model => model.Name)
-                .Map(model => model.Decimal);
+            var map = ResourceMapCreator.Create<FakeModel>(
+                new[]
+                {
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Decimal),
+                });
 
             var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
             var namePropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Name));
             var decimalPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Decimal));
 
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             resourcePropertyHeadersMock
-                .Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(It.IsAny<PropertyMap<FakeModel>>()))
+                .Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(It.IsAny<PropertyMap>()))
                 .Returns(true);
 
             _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
+                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders())
                 .Returns(resourcePropertyHeadersMock.Object);
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.Read(readerMock.Object, map);
+            var readingResult = sut.Read<FakeModel>(readerMock.Object, map);
 
             // Assert
             resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
@@ -99,27 +103,30 @@ public class MappedHeaderRowReaderFacts
 
             MockWorksheetElementReaderCells(new FakeWorksheetCell(new CellLocation("A1"), nameof(FakeModel.Id)));
 
-            var map = new FakeModelMap()
-                .Map(model => model.Id)
-                .Map(model => model.Name);
+            var map = ResourceMapCreator.Create<FakeModel>(
+                new[]
+                {
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
+                });
 
             var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
             var namePropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Name));
 
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(idPropertyMap))
                 .Returns(true);
             resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(namePropertyMap))
                 .Returns(false);
 
             _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
+                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders())
                 .Returns(resourcePropertyHeadersMock.Object);
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.Read(readerMock.Object, map);
+            var readingResult = sut.Read<FakeModel>(readerMock.Object, map);
 
             // Assert
             resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
@@ -141,16 +148,19 @@ public class MappedHeaderRowReaderFacts
                 new FakeWorksheetCell(new CellLocation("A1"), nameof(FakeModel.Id)),
                 new FakeWorksheetCell(new CellLocation("B1"), nameof(FakeModel.Name)));
 
-            var map = new FakeModelMap()
-                .Map(model => model.Id)
-                .Map(model => model.Name)
-                .Map(model => model.Decimal, keyAction => keyAction.IgnoreName().UseNumber(2U));
+            var map = ResourceMapCreator.Create<FakeModel>(
+                new[]
+                {
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Decimal, keyAction: key => key.WithoutName().WithNumber(2U)),
+                });
 
             var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
             var namePropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Name));
             var decimalPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Decimal));
 
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(idPropertyMap))
                 .Returns(true);
             resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(namePropertyMap))
@@ -159,13 +169,13 @@ public class MappedHeaderRowReaderFacts
                 .Returns(false);
 
             _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
+                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders())
                 .Returns(resourcePropertyHeadersMock.Object);
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.Read(readerMock.Object, map);
+            var readingResult = sut.Read<FakeModel>(readerMock.Object, map);
 
             // Assert
             resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
@@ -186,25 +196,28 @@ public class MappedHeaderRowReaderFacts
             readerMock.Setup(reader => reader.ReadToRow(1U))
                 .Returns(false);
 
-            var map = new FakeModelMap()
-                .Map(model => model.Id)
-                .Map(model => model.Name);
+            var map = ResourceMapCreator.Create<FakeModel>(
+                new[]
+                {
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
+                });
 
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders>();
 
             _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
+                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders())
                 .Returns(resourcePropertyHeadersMock.Object);
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.Read(readerMock.Object, map);
+            var readingResult = sut.Read<FakeModel>(readerMock.Object, map);
 
             // Assert
             resourcePropertyHeadersMock
                 .Verify(
-                    resourcePropertyHeaders => resourcePropertyHeaders.Add(It.IsAny<PropertyMap<FakeModel>>(), It.IsAny<uint>()),
+                    resourcePropertyHeaders => resourcePropertyHeaders.Add(It.IsAny<PropertyMap>(), It.IsAny<uint>()),
                     Times.Never);
 
             Assert.NotNull(readingResult.Failure);
@@ -223,23 +236,27 @@ public class MappedHeaderRowReaderFacts
 
             MockWorksheetElementReaderCells(new FakeWorksheetCell(new CellLocation("A1"), nameof(FakeModel.Id)));
 
-            var map = new FakeModelMap(optionsBuilderAction => optionsBuilderAction.OverrideHeaderRowNumber(headerRowNumber))
-                .Map(model => model.Id);
+            var map = ResourceMapCreator.Create<FakeModel>(
+                new[]
+                {
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
+                },
+                new HeaderRowNumberResourceMapOption(headerRowNumber));
 
             var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
 
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(idPropertyMap))
                 .Returns(true);
 
             _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
+                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders())
                 .Returns(resourcePropertyHeadersMock.Object);
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.Read(readerMock.Object, map);
+            var readingResult = sut.Read<FakeModel>(readerMock.Object, map);
 
             // Assert
             resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
@@ -258,27 +275,30 @@ public class MappedHeaderRowReaderFacts
 
             MockWorksheetElementReaderCells(new FakeWorksheetCell(new CellLocation("A1"), nameof(FakeModel.Id)));
 
-            var map = new FakeModelMap()
-                .Map(model => model.Id)
-                .Map(model => model.Name, optionsAction => optionsAction.MarkAsOptional(kind));
+            var map = ResourceMapCreator.Create<FakeModel>(
+                new[]
+                {
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Name, options: new OptionalPropertyMapOption(kind)),
+                });
 
             var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
             var namePropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Name));
 
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(idPropertyMap))
                 .Returns(true);
             resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(namePropertyMap))
                 .Returns(false);
 
             _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
+                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders())
                 .Returns(resourcePropertyHeadersMock.Object);
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.Read(readerMock.Object, map);
+            var readingResult = sut.Read<FakeModel>(readerMock.Object, map);
 
             // Assert
             resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
@@ -298,23 +318,26 @@ public class MappedHeaderRowReaderFacts
                 new FakeWorksheetCell(new CellLocation("A1"), nameof(FakeModel.Id)),
                 new FakeWorksheetCell(new CellLocation("B1"), "foo"));
 
-            var map = new FakeModelMap()
-                .Map(model => model.Id);
+            var map = ResourceMapCreator.Create<FakeModel>(
+                new[]
+                {
+                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
+                });
 
             var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
 
-            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(idPropertyMap))
                 .Returns(true);
 
             _mocker.GetMock<IResourcePropertyCollectionFactory>()
-                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders<FakeModel>())
+                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders())
                 .Returns(resourcePropertyHeadersMock.Object);
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var readingResult = sut.Read(readerMock.Object, map);
+            var readingResult = sut.Read<FakeModel>(readerMock.Object, map);
 
             // Assert
             resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));

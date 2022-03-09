@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 
@@ -14,8 +14,7 @@ internal class DoubleResourcePropertySerializerStrategy : IResourcePropertySeria
                 typeof(double),
         };
 
-    public WritingCellValue Serialize<TResource>(object? value, PropertyMap<TResource> map)
-        where TResource : class
+    public WritingCellValue Serialize(object? value, PropertyMap map)
     {
         if (value is null)
         {

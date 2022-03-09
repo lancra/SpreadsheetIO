@@ -21,7 +21,7 @@ public class ResourcePropertyValueResolverFacts
         {
             // Arrange
             var cellValue = "1";
-            var map = PropertyMapCreator.CreateForFakeModel(model => model.Id);
+            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
 
             var parseResultKind = ResourcePropertyParseResultKind.Success;
             object? parsedValue = 1;
@@ -49,7 +49,7 @@ public class ResourcePropertyValueResolverFacts
         {
             // Arrange
             var cellValue = "foo";
-            var map = PropertyMapCreator.CreateForFakeModel(model => model.Id);
+            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
 
             var parseResultKind = ResourcePropertyParseResultKind.Invalid;
             object? parsedValue = null;
@@ -77,7 +77,7 @@ public class ResourcePropertyValueResolverFacts
         {
             // Arrange
             var cellValue = "foo";
-            var map = PropertyMapCreator.CreateForFakeModel(model => model.Id);
+            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
 
             var parseResultKind = ResourcePropertyParseResultKind.Invalid;
             object? parsedValue = default;

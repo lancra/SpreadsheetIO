@@ -1,6 +1,8 @@
 using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping2;
+using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal.Writers;
@@ -17,7 +19,7 @@ internal class SpreadsheetPageMapWriter : ISpreadsheetPageMapWriter
     public void Write<TResource>(
         IWritingSpreadsheetPage spreadsheetPage,
         IEnumerable<TResource> resources,
-        ResourceMap<TResource> map)
+        ResourceMap map)
         where TResource : class
     {
         Guard.Against.Null(spreadsheetPage, nameof(spreadsheetPage));
@@ -25,10 +27,10 @@ internal class SpreadsheetPageMapWriter : ISpreadsheetPageMapWriter
 
         var numberedPropertyMaps = GetNumberedPropertyMaps(map);
 
-        var headerRowNumberExtension = map.Options.FindExtension<HeaderRowNumberResourceMapOptionsExtension>();
-        if (headerRowNumberExtension is not null && spreadsheetPage.CurrentRowNumber != headerRowNumberExtension.Number)
+        var headerRowNumberOption = map.Options.Find<HeaderRowNumberResourceMapOption>();
+        if (headerRowNumberOption is not null && spreadsheetPage.CurrentRowNumber != headerRowNumberOption.Number)
         {
-            spreadsheetPage.AdvanceToRow(headerRowNumberExtension.Number);
+            spreadsheetPage.AdvanceToRow(headerRowNumberOption.Number);
         }
 
         foreach (var (columnNumber, propertyMap) in numberedPropertyMaps)
@@ -36,10 +38,10 @@ internal class SpreadsheetPageMapWriter : ISpreadsheetPageMapWriter
             AdvanceToColumnIfUnmatched(spreadsheetPage, columnNumber);
 
             var cellStyle = default(WritingCellStyle?);
-            var headerStyleExtension = propertyMap.Options.FindExtension<HeaderStyleMapOptionsExtension>();
-            if (headerStyleExtension is not null)
+            var headerStyleOption = propertyMap.Options.Find<HeaderStyleMapOption>();
+            if (headerStyleOption is not null)
             {
-                cellStyle = new WritingCellStyle(headerStyleExtension!.Key);
+                cellStyle = new WritingCellStyle(headerStyleOption!.Key);
             }
 
             var cellValue = new WritingCellValue(propertyMap.Key.Name);
@@ -57,10 +59,10 @@ internal class SpreadsheetPageMapWriter : ISpreadsheetPageMapWriter
                 AdvanceToColumnIfUnmatched(spreadsheetPage, columnNumber);
 
                 var cellStyle = default(WritingCellStyle?);
-                var bodyStyleExtension = propertyMap.Options.FindExtension<BodyStyleMapOptionsExtension>();
-                if (bodyStyleExtension is not null)
+                var bodyStyleOption = propertyMap.Options.Find<BodyStyleMapOption>();
+                if (bodyStyleOption is not null)
                 {
-                    cellStyle = new WritingCellStyle(bodyStyleExtension!.Key);
+                    cellStyle = new WritingCellStyle(bodyStyleOption!.Key);
                 }
 
                 var cellValue = _resourcePropertySerializer.Serialize(resource, propertyMap);
@@ -73,9 +75,7 @@ internal class SpreadsheetPageMapWriter : ISpreadsheetPageMapWriter
         }
     }
 
-    private static IReadOnlyCollection<(uint Number, PropertyMap<TResource> Map)> GetNumberedPropertyMaps<TResource>(
-        ResourceMap<TResource> map)
-        where TResource : class
+    private static IReadOnlyCollection<(uint Number, PropertyMap Map)> GetNumberedPropertyMaps(ResourceMap map)
     {
         var numberedPropertyMaps = map.Properties.Where(propertyMap => propertyMap.Key.Number.HasValue)
             .Select(propertyMap => (Number: propertyMap.Key.Number!.Value, Map: propertyMap))

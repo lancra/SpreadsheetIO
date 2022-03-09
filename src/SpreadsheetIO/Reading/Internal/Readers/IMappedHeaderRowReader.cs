@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Readers;
 
@@ -14,6 +14,6 @@ internal interface IMappedHeaderRowReader
     /// <param name="reader">The worksheet element reader.</param>
     /// <param name="map">The resource map.</param>
     /// <returns>The header row reading result.</returns>
-    HeaderRowReadingResult<TResource> Read<TResource>(IWorksheetElementReader reader, ResourceMap<TResource> map)
+    HeaderRowReadingResult<TResource> Read<TResource>(IWorksheetElementReader reader, ResourceMap map)
         where TResource : class;
 }

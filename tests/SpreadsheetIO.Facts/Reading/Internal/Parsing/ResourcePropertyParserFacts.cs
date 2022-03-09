@@ -1,6 +1,5 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
 using Moq;
@@ -110,7 +109,7 @@ public class ResourcePropertyParserFacts
         {
             // Arrange
             var cellValue = "foo";
-            var map = PropertyMapCreator.CreateForFakeModel(model => model.Name);
+            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Name);
 
             var expectedResult = ResourcePropertyParseResultKind.Success;
             object? expectedValue = "bar";
@@ -143,7 +142,7 @@ public class ResourcePropertyParserFacts
         {
             // Arrange
             var cellValue = "foo";
-            var map = PropertyMapCreator.CreateForFakeModel(model => model.DateTime);
+            var map = PropertyMapCreator2.CreateForFakeModel(model => model.DateTime);
 
             var expectedResult = ResourcePropertyParseResultKind.Success;
             object? expectedValue = new DateTime(2021, 1, 1);
@@ -174,7 +173,7 @@ public class ResourcePropertyParserFacts
                 .Verify(
                     strategy => strategy.TryParse(
                         It.IsAny<string>(),
-                        It.IsAny<PropertyMap<FakeModel>>(),
+                        It.IsAny<PropertyMap>(),
                         out expectedValue),
                     Times.Never);
         }
@@ -184,7 +183,7 @@ public class ResourcePropertyParserFacts
         {
             // Arrange
             var cellValue = "foo";
-            var map = PropertyMapCreator.CreateForFakeModel(model => model.Name);
+            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Name);
 
             var integerStrategyMock = MockStrategy(typeof(int));
             _mocker.Use<IEnumerable<IResourcePropertyParserStrategy>>(new[] { integerStrategyMock.Object, });

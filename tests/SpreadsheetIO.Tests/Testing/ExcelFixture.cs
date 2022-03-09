@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using LanceC.SpreadsheetIO.Reading;
+using LanceC.SpreadsheetIO.Tests.Testing.Fakes;
 using LanceC.SpreadsheetIO.Writing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
@@ -47,7 +48,7 @@ public class ExcelFixture : IDisposable
     private static ISpreadsheetFactory GetSpreadsheetFactory(Action<IServiceCollection>? additionalServices = default)
     {
         var services = new ServiceCollection()
-            .AddSpreadsheetIO();
+            .AddSpreadsheetIO2(map => map.ApplyConfiguration(new FakeModelMapConfiguration()));
 
         additionalServices?.Invoke(services);
 

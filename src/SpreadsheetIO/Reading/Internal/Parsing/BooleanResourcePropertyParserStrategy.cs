@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing;
 
@@ -6,8 +6,7 @@ internal class BooleanResourcePropertyParserStrategy : IDefaultResourcePropertyP
 {
     public Type PropertyType { get; } = typeof(bool);
 
-    public ResourcePropertyParseResultKind TryParse<TResource>(string cellValue, PropertyMap<TResource> map, out object? value)
-        where TResource : class
+    public ResourcePropertyParseResultKind TryParse(string cellValue, PropertyMap map, out object? value)
     {
         var noValue = string.IsNullOrEmpty(cellValue);
         if (noValue)

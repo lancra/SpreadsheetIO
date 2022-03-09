@@ -1,10 +1,8 @@
 using System.Drawing;
-using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Tests.Testing;
 using LanceC.SpreadsheetIO.Tests.Testing.Fakes;
 using LanceC.SpreadsheetIO.Writing;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -144,7 +142,7 @@ public class WritingTests : IDisposable
         };
 
         // Act
-        using (var spreadsheet = _excelFixture.CreateSpreadsheet(services => services.AddSingleton<IResourceMap, FakeModelMap>()))
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet())
         {
             spreadsheet.WritePage("Map", models);
         }

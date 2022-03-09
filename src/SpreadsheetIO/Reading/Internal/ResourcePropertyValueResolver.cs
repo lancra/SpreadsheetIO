@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal;
@@ -16,8 +16,7 @@ internal class ResourcePropertyValueResolver : IResourcePropertyValueResolver
         _resourcePropertyDefaultValueResolver = resourcePropertyDefaultValueResolver;
     }
 
-    public bool TryResolve<TResource>(string cellValue, PropertyMap<TResource> map, out object? value)
-        where TResource : class
+    public bool TryResolve(string cellValue, PropertyMap map, out object? value)
     {
         var parseResultKind = _resourcePropertyParser.TryParse(cellValue, map!, out var parseValue);
         var hasDefaultValue = _resourcePropertyDefaultValueResolver.TryResolve(map!, parseResultKind, out var defaultValue);

@@ -21,7 +21,7 @@ public class IntegerResourcePropertyParserStrategyFacts
         public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.IntegerNullable);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.IntegerNullable);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -38,7 +38,7 @@ public class IntegerResourcePropertyParserStrategyFacts
         public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -53,7 +53,7 @@ public class IntegerResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenCellValueIsNotInteger()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -69,7 +69,7 @@ public class IntegerResourcePropertyParserStrategyFacts
         {
             // Arrange
             var expectedValue = 1;
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
             var sut = CreateSystemUnderTest();
 
             // Act

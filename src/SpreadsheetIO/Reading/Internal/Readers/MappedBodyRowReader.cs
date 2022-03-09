@@ -1,5 +1,5 @@
-using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping2;
+using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Reading.Failures;
 using LanceC.SpreadsheetIO.Reading.Internal.Creation;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
@@ -27,11 +27,11 @@ internal class MappedBodyRowReader : IMappedBodyRowReader
 
     public ResourceReadingResult<TResource> Read<TResource>(
         IWorksheetElementReader reader,
-        ResourceMap<TResource> map,
-        IResourcePropertyHeaders<TResource> propertyHeaders)
+        ResourceMap map,
+        IResourcePropertyHeaders propertyHeaders)
         where TResource : class
     {
-        var propertyValues = _resourcePropertyCollectionFactory.CreateValues<TResource>();
+        var propertyValues = _resourcePropertyCollectionFactory.CreateValues();
         var missingPropertyFailures = new List<MissingResourcePropertyReadingFailure>();
         var invalidPropertyFailures = new List<InvalidResourcePropertyReadingFailure>();
 
@@ -73,7 +73,7 @@ internal class MappedBodyRowReader : IMappedBodyRowReader
 
             var propertyMap = propertyHeaders.GetMap(columnNumber);
 
-            var optionalExtension = propertyMap.Options.FindExtension<OptionalPropertyMapOptionsExtension>();
+            var optionalExtension = propertyMap.Options.Find<OptionalPropertyMapOption>();
             var isRequired = optionalExtension is null ||
                 (optionalExtension.Kind != PropertyElementKind.All && optionalExtension.Kind != PropertyElementKind.Body);
 
@@ -98,7 +98,7 @@ internal class MappedBodyRowReader : IMappedBodyRowReader
         var resourceFailure = default(ResourceReadingFailure?);
         if (!missingPropertyFailures.Any() && !invalidPropertyFailures.Any())
         {
-            resource = new NumberedResource<TResource>(rowNumber, _resourceCreator.Create(map, propertyValues));
+            resource = new NumberedResource<TResource>(rowNumber, _resourceCreator.Create<TResource>(map, propertyValues));
         }
         else
         {

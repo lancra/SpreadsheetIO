@@ -21,7 +21,7 @@ public class FloatResourcePropertyParserStrategyFacts
         public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.FloatNullable);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.FloatNullable);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -38,7 +38,7 @@ public class FloatResourcePropertyParserStrategyFacts
         public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Float);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Float);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -53,7 +53,7 @@ public class FloatResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenCellValueIsNotFloat()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Float);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Float);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -69,7 +69,7 @@ public class FloatResourcePropertyParserStrategyFacts
         {
             // Arrange
             var expectedValue = 1.5F;
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Float);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Float);
             var sut = CreateSystemUnderTest();
 
             // Act

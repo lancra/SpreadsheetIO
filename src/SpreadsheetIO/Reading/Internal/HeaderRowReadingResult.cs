@@ -8,13 +8,13 @@ namespace LanceC.SpreadsheetIO.Reading.Internal;
 internal class HeaderRowReadingResult<TResource>
     where TResource : class
 {
-    public HeaderRowReadingResult(IResourcePropertyHeaders<TResource> headers, HeaderReadingFailure? failure)
+    public HeaderRowReadingResult(IResourcePropertyHeaders headers, HeaderReadingFailure? failure)
     {
         Headers = headers;
         Failure = failure;
     }
 
-    public IResourcePropertyHeaders<TResource> Headers { get; }
+    public IResourcePropertyHeaders Headers { get; }
 
     public HeaderReadingFailure? Failure { get; }
 }

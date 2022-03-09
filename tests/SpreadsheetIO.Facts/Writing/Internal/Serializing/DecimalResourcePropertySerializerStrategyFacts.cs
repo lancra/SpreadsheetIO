@@ -54,7 +54,7 @@ public class DecimalResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
 
             var sut = CreateSystemUnderTest();
 
@@ -71,7 +71,7 @@ public class DecimalResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DecimalNullable);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DecimalNullable);
 
             var sut = CreateSystemUnderTest();
 
@@ -86,7 +86,7 @@ public class DecimalResourcePropertySerializerStrategyFacts
         public void ThrowsInvalidCastExceptionWhenNonDecimalTypeIsProvided()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
             var sut = CreateSystemUnderTest();
 
             // Act

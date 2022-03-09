@@ -1,8 +1,6 @@
-using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Tests.Testing;
 using LanceC.SpreadsheetIO.Tests.Testing.Fakes;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -52,8 +50,7 @@ public class ReadingTests : IDisposable
             },
         };
 
-        var spreadsheet = _excelFixture.OpenReadSpreadsheet(services => services
-            .AddSingleton<IResourceMap, FakeModelMap>());
+        var spreadsheet = _excelFixture.OpenReadSpreadsheet();
         var spreadsheetPage = spreadsheet.Pages["Map"];
 
         // Act

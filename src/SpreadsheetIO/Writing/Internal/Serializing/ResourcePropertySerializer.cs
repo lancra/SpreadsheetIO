@@ -1,5 +1,5 @@
-using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping2;
+using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing;
@@ -41,7 +41,7 @@ internal class ResourcePropertySerializer : IResourcePropertySerializer
         }
     }
 
-    public WritingCellValue Serialize<TResource>(TResource resource, PropertyMap<TResource> map)
+    public WritingCellValue Serialize<TResource>(TResource resource, PropertyMap map)
         where TResource : class
     {
         var propertyType = Nullable.GetUnderlyingType(map.Property.PropertyType) ?? map.Property.PropertyType;
@@ -56,10 +56,10 @@ internal class ResourcePropertySerializer : IResourcePropertySerializer
         var propertyValue = map.Property.GetValue(resource);
         if (propertyValue is null)
         {
-            var defaultValueExtension = map.Options.FindExtension<DefaultValuePropertyMapOptionsExtension>();
-            if (defaultValueExtension is not null)
+            var defaultValueOption = map.Options.Find<DefaultValuePropertyMapOption>();
+            if (defaultValueOption is not null)
             {
-                propertyValue = defaultValueExtension.Value;
+                propertyValue = defaultValueOption.Value;
             }
         }
 

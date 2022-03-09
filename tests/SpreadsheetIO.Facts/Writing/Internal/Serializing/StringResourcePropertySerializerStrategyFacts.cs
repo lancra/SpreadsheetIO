@@ -41,7 +41,7 @@ public class StringResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.String);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.String);
 
             var sut = CreateSystemUnderTest();
 

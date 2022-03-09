@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 
@@ -10,8 +10,7 @@ internal class StringResourcePropertySerializerStrategy : IResourcePropertySeria
                 typeof(string),
         };
 
-    public WritingCellValue Serialize<TResource>(object? value, PropertyMap<TResource> map)
-        where TResource : class
+    public WritingCellValue Serialize(object? value, PropertyMap map)
     {
         var stringValue = value?.ToString();
         var cellValue = new WritingCellValue(stringValue);

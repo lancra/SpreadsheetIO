@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing;
@@ -37,8 +37,7 @@ internal class ResourcePropertyParser : IResourcePropertyParser
         }
     }
 
-    public ResourcePropertyParseResultKind TryParse<TResource>(string cellValue, PropertyMap<TResource> map, out object? value)
-        where TResource : class
+    public ResourcePropertyParseResultKind TryParse(string cellValue, PropertyMap map, out object? value)
     {
         var propertyType = Nullable.GetUnderlyingType(map.Property.PropertyType) ?? map.Property.PropertyType;
 

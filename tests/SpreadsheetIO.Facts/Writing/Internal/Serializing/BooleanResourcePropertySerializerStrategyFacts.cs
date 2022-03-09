@@ -40,7 +40,7 @@ public class BooleanResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
 
             var sut = CreateSystemUnderTest();
 
@@ -59,7 +59,7 @@ public class BooleanResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.BooleanNullable);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.BooleanNullable);
 
             var sut = CreateSystemUnderTest();
 
@@ -74,7 +74,7 @@ public class BooleanResourcePropertySerializerStrategyFacts
         public void ThrowsInvalidCastExceptionWhenNonBooleanTypeIsProvided()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
             var sut = CreateSystemUnderTest();
 
             // Act

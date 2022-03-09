@@ -1,16 +1,14 @@
-using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping2;
+using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Creation;
 
 internal class PropertySettersResourceCreationStrategy : IResourceCreationStrategy
 {
-    public Func<ResourceMapOptions, bool> ApplicabilityHandler { get; } =
-        options => !options.HasExtension<ExplicitConstructorResourceMapOptionsExtension>() &&
-            !options.HasExtension<ImplicitConstructorResourceMapOptionsExtension>();
+    public Func<ResourceMap, bool> ApplicabilityHandler { get; } = map => !map.Options.Has<ConstructorResourceMapOption>();
 
-    public TResource? Create<TResource>(ResourceMap<TResource> map, IResourcePropertyValues<TResource> values)
+    public TResource? Create<TResource>(ResourceMap map, IResourcePropertyValues values)
         where TResource : class
     {
         var resource = Activator.CreateInstance<TResource>();

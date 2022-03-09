@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Readers;
@@ -18,7 +18,7 @@ internal interface IMappedBodyRowReader
     /// <returns>The resource reading result.</returns>
     ResourceReadingResult<TResource> Read<TResource>(
         IWorksheetElementReader reader,
-        ResourceMap<TResource> map,
-        IResourcePropertyHeaders<TResource> propertyHeaders)
+        ResourceMap map,
+        IResourcePropertyHeaders propertyHeaders)
         where TResource : class;
 }

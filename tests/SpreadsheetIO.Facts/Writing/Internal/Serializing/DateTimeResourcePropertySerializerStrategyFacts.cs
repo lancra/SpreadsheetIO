@@ -1,6 +1,6 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Assertions;
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Shared;
 using LanceC.SpreadsheetIO.Writing;
 using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
@@ -63,7 +63,7 @@ public class DateTimeResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTime);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DateTime);
 
             var sut = CreateSystemUnderTest();
 
@@ -80,7 +80,7 @@ public class DateTimeResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeNullable);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeNullable);
 
             var sut = CreateSystemUnderTest();
 
@@ -97,9 +97,9 @@ public class DateTimeResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value, dateKind);
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(
                 model => model.DateTime,
-                new DateKindMapOptionsExtension(dateKind));
+                new DateKindMapOption(dateKind));
 
             var sut = CreateSystemUnderTest();
 
@@ -114,7 +114,7 @@ public class DateTimeResourcePropertySerializerStrategyFacts
         public void ThrowsInvalidCastExceptionWhenNonDateTimeTypeIsProvided()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTime);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DateTime);
             var sut = CreateSystemUnderTest();
 
             // Act

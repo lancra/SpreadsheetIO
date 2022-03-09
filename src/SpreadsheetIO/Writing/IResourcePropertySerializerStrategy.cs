@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 
 namespace LanceC.SpreadsheetIO.Writing;
 
@@ -15,10 +15,8 @@ public interface IResourcePropertySerializerStrategy
     /// <summary>
     /// Serializes a resource property into a cell value using the provided map.
     /// </summary>
-    /// <typeparam name="TResource">The type of resource that the <paramref name="map"/> applies to.</typeparam>
     /// <param name="value">The value of the resource property.</param>
     /// <param name="map">The resource property map.</param>
     /// <returns>The serialized cell value.</returns>
-    WritingCellValue Serialize<TResource>(object? value, PropertyMap<TResource> map)
-        where TResource : class;
+    WritingCellValue Serialize(object? value, PropertyMap map);
 }

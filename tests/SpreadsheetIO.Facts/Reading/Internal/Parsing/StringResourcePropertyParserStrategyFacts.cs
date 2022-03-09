@@ -21,7 +21,7 @@ public class StringResourcePropertyParserStrategyFacts
         public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmpty(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.String);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.String);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -38,7 +38,7 @@ public class StringResourcePropertyParserStrategyFacts
             // Arrange
             var cellValue = "foo";
 
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.String);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.String);
             var sut = CreateSystemUnderTest();
 
             // Act

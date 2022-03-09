@@ -1,7 +1,7 @@
+using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
-using LanceC.SpreadsheetIO.Properties;
+using LanceC.SpreadsheetIO.Mapping2;
+using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Reading.Internal.Creation;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using Moq;
@@ -23,19 +23,21 @@ public class ResourceCreatorFacts
         public void ReturnsMatchingStrategyResult()
         {
             // Arrange
-            var resourceMap = new FakeConstructionModelMap(options => options.ExitOnResourceReadingFailure());
-            var fakeValues = _mocker.GetMock<IResourcePropertyValues<FakeConstructionModel>>();
+            var resourceMap = ResourceMapCreator.Create<FakeConstructionModel>(
+                Array.Empty<PropertyMap>(),
+                new ExitOnResourceReadingFailureResourceMapOption());
+            var fakeValues = _mocker.GetMock<IResourcePropertyValues>();
             var expectedModel = new FakeConstructionModel(1, "One", 1.11M);
 
             var matchingStrategy = new Mock<IResourceCreationStrategy>();
             matchingStrategy.SetupGet(strategy => strategy.ApplicabilityHandler)
-                .Returns(options => options.HasExtension<ExitOnResourceReadingFailureResourceMapOptionsExtension>());
-            matchingStrategy.Setup(strategy => strategy.Create(resourceMap, fakeValues.Object))
+                .Returns(map => map.Options.Has<ExitOnResourceReadingFailureResourceMapOption>());
+            matchingStrategy.Setup(strategy => strategy.Create<FakeConstructionModel>(resourceMap, fakeValues.Object))
                 .Returns(expectedModel);
 
             var unmatchingStrategy = new Mock<IResourceCreationStrategy>();
             unmatchingStrategy.SetupGet(strategy => strategy.ApplicabilityHandler)
-                .Returns(options => !options.HasExtension<ExitOnResourceReadingFailureResourceMapOptionsExtension>());
+                .Returns(map => !map.Options.Has<ExitOnResourceReadingFailureResourceMapOption>());
 
             _mocker.Use<IEnumerable<IResourceCreationStrategy>>(
                 new[]
@@ -47,7 +49,7 @@ public class ResourceCreatorFacts
             var sut = CreateSystemUnderTest();
 
             // Act
-            var actualModel = sut.Create(resourceMap, fakeValues.Object);
+            var actualModel = sut.Create<FakeConstructionModel>(resourceMap, fakeValues.Object);
 
             // Assert
             Assert.Equal(expectedModel, actualModel);

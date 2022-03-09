@@ -21,7 +21,7 @@ public class DecimalResourcePropertyParserStrategyFacts
         public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DecimalNullable);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DecimalNullable);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -38,7 +38,7 @@ public class DecimalResourcePropertyParserStrategyFacts
         public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -53,7 +53,7 @@ public class DecimalResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenCellValueIsNotDecimal()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -69,7 +69,7 @@ public class DecimalResourcePropertyParserStrategyFacts
         {
             // Arrange
             var expectedValue = 1.5M;
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Decimal);
             var sut = CreateSystemUnderTest();
 
             // Act

@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal;
@@ -17,7 +17,7 @@ internal class ReadingSpreadsheetPageOperationFactory : IReadingSpreadsheetPageO
     public IReadingSpreadsheetPageOperation<TResource> Create<TResource>(
         IWorksheetElementReader worksheetReader,
         HeaderRowReadingResult<TResource> headerRowResult,
-        ResourceMap<TResource> map)
+        ResourceMap map)
         where TResource : class
         => new ReadingSpreadsheetPageOperation<TResource>(
             worksheetReader,

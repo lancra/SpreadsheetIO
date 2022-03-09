@@ -21,7 +21,7 @@ public class ByteResourcePropertyParserStrategyFacts
         public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.ByteNullable);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.ByteNullable);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -38,7 +38,7 @@ public class ByteResourcePropertyParserStrategyFacts
         public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Byte);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Byte);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -53,7 +53,7 @@ public class ByteResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenCellValueIsNotByte()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Byte);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Byte);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -69,7 +69,7 @@ public class ByteResourcePropertyParserStrategyFacts
         {
             // Arrange
             byte expectedValue = 1;
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Byte);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Byte);
             var sut = CreateSystemUnderTest();
 
             // Act

@@ -1,6 +1,5 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using Moq.AutoMock;
 using Xunit;
@@ -11,8 +10,8 @@ public class ResourcePropertyValuesFacts
 {
     private readonly AutoMocker _mocker = new();
 
-    private ResourcePropertyValues<FakeModel> CreateSystemUnderTest()
-        => _mocker.CreateInstance<ResourcePropertyValues<FakeModel>>();
+    private ResourcePropertyValues CreateSystemUnderTest()
+        => _mocker.CreateInstance<ResourcePropertyValues>();
 
     public class TheAddMethod : ResourcePropertyValuesFacts
     {
@@ -20,7 +19,7 @@ public class ResourcePropertyValuesFacts
         public void AddsValueForMap()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeModel(model => model.Id);
+            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
             var expectedValue = 1;
 
             var sut = CreateSystemUnderTest();
@@ -38,7 +37,7 @@ public class ResourcePropertyValuesFacts
         public void ThrowsArgumentNullExceptionWhenMapIsNull()
         {
             // Arrange
-            var map = default(PropertyMap<FakeModel>);
+            var map = default(PropertyMap);
             var value = 1;
 
             var sut = CreateSystemUnderTest();
@@ -58,7 +57,7 @@ public class ResourcePropertyValuesFacts
         public void ReturnsTrueWhenValueIsFoundForMap()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeModel(model => model.Id);
+            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
             var expectedValue = 1;
 
             var sut = CreateSystemUnderTest();
@@ -76,7 +75,7 @@ public class ResourcePropertyValuesFacts
         public void ReturnsFalseWhenValueIsNotFoundForMap()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeModel(model => model.Id);
+            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
 
             var sut = CreateSystemUnderTest();
 
@@ -92,7 +91,7 @@ public class ResourcePropertyValuesFacts
         public void ThrowsArgumentNullExceptionWhenMapIsNull()
         {
             // Arrange
-            var map = default(PropertyMap<FakeModel>);
+            var map = default(PropertyMap);
             var sut = CreateSystemUnderTest();
 
             // Act

@@ -21,7 +21,7 @@ public class SignedByteResourcePropertyParserStrategyFacts
         public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByteNullable);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByteNullable);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -38,7 +38,7 @@ public class SignedByteResourcePropertyParserStrategyFacts
         public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -53,7 +53,7 @@ public class SignedByteResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenCellValueIsNotSignedByte()
         {
             // Arrange
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -69,7 +69,7 @@ public class SignedByteResourcePropertyParserStrategyFacts
         {
             // Arrange
             sbyte expectedValue = 1;
-            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
+            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
             var sut = CreateSystemUnderTest();
 
             // Act

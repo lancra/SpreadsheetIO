@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Creation;
@@ -15,6 +15,6 @@ internal interface IResourceCreator
     /// <param name="map">The resource map.</param>
     /// <param name="values">The resource property values.</param>
     /// <returns>The new resource if successful; otherwise, <c>null</c>.</returns>
-    TResource? Create<TResource>(ResourceMap<TResource> map, IResourcePropertyValues<TResource> values)
+    TResource? Create<TResource>(ResourceMap map, IResourcePropertyValues values)
         where TResource : class;
 }

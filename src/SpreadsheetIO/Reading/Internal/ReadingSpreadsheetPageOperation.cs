@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Reading.Failures;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 
@@ -9,13 +9,13 @@ internal class ReadingSpreadsheetPageOperation<TResource> : IReadingSpreadsheetP
 {
     private readonly IWorksheetElementReader _worksheetReader;
     private readonly HeaderRowReadingResult<TResource> _headerRowResult;
-    private readonly ResourceMap<TResource> _map;
+    private readonly ResourceMap _map;
     private readonly IMappedBodyRowReader _mappedBodyRowReader;
 
     public ReadingSpreadsheetPageOperation(
         IWorksheetElementReader worksheetReader,
         HeaderRowReadingResult<TResource> headerRowResult,
-        ResourceMap<TResource> map,
+        ResourceMap map,
         IMappedBodyRowReader mappedBodyRowReader)
     {
         _worksheetReader = worksheetReader;
@@ -36,7 +36,7 @@ internal class ReadingSpreadsheetPageOperation<TResource> : IReadingSpreadsheetP
         }
 
         var hasRow = _worksheetReader.ReadNextRow();
-        CurrentResult = hasRow ? _mappedBodyRowReader.Read(_worksheetReader, _map, _headerRowResult.Headers) : default;
+        CurrentResult = hasRow ? _mappedBodyRowReader.Read<TResource>(_worksheetReader, _map, _headerRowResult.Headers) : default;
         return hasRow;
     }
 

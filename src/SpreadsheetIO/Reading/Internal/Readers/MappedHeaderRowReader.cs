@@ -1,5 +1,5 @@
-using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping2;
+using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Reading.Failures;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 
@@ -14,16 +14,14 @@ internal class MappedHeaderRowReader : IMappedHeaderRowReader
         _resourcePropertyCollectionFactory = resourcePropertyCollectionFactory;
     }
 
-    public HeaderRowReadingResult<TResource> Read<TResource>(
-        IWorksheetElementReader reader,
-        ResourceMap<TResource> map)
+    public HeaderRowReadingResult<TResource> Read<TResource>(IWorksheetElementReader reader, ResourceMap map)
         where TResource : class
     {
-        var propertyHeaders = _resourcePropertyCollectionFactory.CreateHeaders<TResource>();
+        var propertyHeaders = _resourcePropertyCollectionFactory.CreateHeaders();
         var missingHeaderFailures = new List<MissingHeaderReadingFailure>();
         var invalidHeaderFailures = new List<InvalidHeaderReadingFailure>();
 
-        var headerRowNumberExtension = map.Options.FindExtension<HeaderRowNumberResourceMapOptionsExtension>();
+        var headerRowNumberExtension = map.Options.Find<HeaderRowNumberResourceMapOption>();
         var headerRowNumber = headerRowNumberExtension?.Number ?? 1U;
 
         var hasHeaderRow = reader.ReadToRow(headerRowNumber);
@@ -64,7 +62,7 @@ internal class MappedHeaderRowReader : IMappedHeaderRowReader
         {
             var isIndexed = propertyHeaders.ContainsMap(propertyMap);
 
-            var optionalExtension = propertyMap.Options.FindExtension<OptionalPropertyMapOptionsExtension>();
+            var optionalExtension = propertyMap.Options.Find<OptionalPropertyMapOption>();
             var isRequired = optionalExtension is null ||
                 (optionalExtension.Kind != PropertyElementKind.All && optionalExtension.Kind != PropertyElementKind.Header);
 
