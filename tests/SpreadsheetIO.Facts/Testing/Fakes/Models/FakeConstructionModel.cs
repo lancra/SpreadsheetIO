@@ -6,7 +6,7 @@ public class FakeConstructionModel
     {
     }
 
-    public FakeConstructionModel(int id, string? name, decimal amount)
+    public FakeConstructionModel(int id, string? name, decimal amount = 10M)
     {
         Id = id;
         Name = name;

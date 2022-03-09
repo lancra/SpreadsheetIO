@@ -132,6 +132,9 @@
   <data name="CannotAdvanceZeroRows" xml:space="preserve">
     <value>Cannot advance zero rows.</value>
   </data>
+  <data name="CannotGetAssemblyFromType" xml:space="preserve">
+    <value>Cannot retrieve assembly for {type}.</value>
+  </data>
   <data name="DuplicateMapForResourceType" xml:space="preserve">
     <value>Multiple maps are defined for the {resourceType} resource.</value>
   </data>
@@ -173,6 +176,9 @@
   </data>
   <data name="InvalidExcelStyleSetup" xml:space="preserve">
     <value>The {styleName} Excel style has not been set up with an identifier. Please contact the package maintainer.</value>
+  </data>
+  <data name="InvalidMapForResourceType" xml:space="preserve">
+    <value>The {resourceType} map has configuration errors and cannot be used.</value>
   </data>
   <data name="InvalidPropertyMapsForSetterCreation" xml:space="preserve">
     <value>The {resourceType} map does not specify a constructor and the following properties do not have public setters: {propertyNames}.</value>

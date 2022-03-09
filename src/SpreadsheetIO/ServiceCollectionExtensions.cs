@@ -3,6 +3,10 @@ using System.Reflection;
 using LanceC.SpreadsheetIO.Mapping.Internal;
 using LanceC.SpreadsheetIO.Mapping.Internal.Validators;
 using LanceC.SpreadsheetIO.Mapping.Validation;
+using LanceC.SpreadsheetIO.Mapping2;
+using LanceC.SpreadsheetIO.Mapping2.Options;
+using LanceC.SpreadsheetIO.Mapping2.Options.Converters;
+using LanceC.SpreadsheetIO.Mapping2.Options.Registrations;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
 using LanceC.SpreadsheetIO.Reading.Internal.Creation;
@@ -42,11 +46,49 @@ public static class ServiceCollectionExtensions
         .AddSpreadsheetIOStyling()
         .AddSpreadsheetIOWriting();
 
+    /// <summary>
+    /// Registers spreadsheet service descriptors.
+    /// </summary>
+    /// <param name="services">The service collection to modify.</param>
+    /// <param name="mapOptions">The options to use for resource maps.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection AddSpreadsheetIO2(
+        this IServiceCollection services,
+        Action<ICartographerBuilder>? mapOptions = default)
+        => services.AddScoped<ISpreadsheetFactory, SpreadsheetFactory>()
+        .AddSpreadsheetIOMapping2(mapOptions)
+        .AddSpreadsheetIOReading()
+        .AddSpreadsheetIOShared()
+        .AddSpreadsheetIOStyling()
+        .AddSpreadsheetIOWriting();
+
     private static IServiceCollection AddSpreadsheetIOMapping(this IServiceCollection services)
         => services
         .AddScoped<IResourceMapAggregateValidator, ResourceMapAggregateValidator>()
         .AddScoped<IResourceMapManager, ResourceMapManager>()
         .AddResourceMapValidators();
+
+    private static IServiceCollection AddSpreadsheetIOMapping2(
+        this IServiceCollection services,
+        Action<ICartographerBuilder>? mapOptions = default)
+    {
+        if (mapOptions is not null)
+        {
+            services.AddScoped(provider => new CartographyOptions(mapOptions));
+        }
+
+        return services.AddScoped<ICartographerBuilder, CartographerBuilder>()
+            .AddScoped(typeof(IMapOptionConverter<,>), typeof(MapOptionConverter<,>))
+            .AddScoped<
+                IMapOptionConversionStrategy<IPropertyMapOptionRegistration, IPropertyMapOption>,
+                DefaultValuePropertyMapOptionConversionStrategy>()
+            .AddScoped<
+                IMapOptionConversionStrategy<IResourceMapOptionRegistration, IResourceMapOption>,
+                ExplicitConstructorResourceMapOptionConversionStrategy>()
+            .AddScoped<
+                IMapOptionConversionStrategy<IResourceMapOptionRegistration, IResourceMapOption>,
+                ImplicitConstructorResourceMapOptionConversionStrategy>();
+    }
 
     private static IServiceCollection AddSpreadsheetIOReading(this IServiceCollection services)
         => services
@@ -81,6 +123,7 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddSpreadsheetIOShared(this IServiceCollection services)
         => services
+        .AddScoped<IAssemblyWrapperFactory, AssemblyWrapperFactory>()
         .AddScoped<ISpreadsheetDocumentWrapperFactory, SpreadsheetDocumentWrapperFactory>()
         .AddScoped<ISpreadsheetGenerator, SharedStringTableGenerator>()
         .AddScoped<ISpreadsheetGenerator, StylesheetGenerator>()

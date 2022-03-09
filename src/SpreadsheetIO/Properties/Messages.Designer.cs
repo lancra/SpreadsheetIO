@@ -49,6 +49,14 @@ namespace LanceC.SpreadsheetIO.Properties
             => GetString("CannotAdvanceZeroRows");
 
         /// <summary>
+        /// Cannot retrieve assembly for {type}.
+        /// </summary>
+        public static string CannotGetAssemblyFromType(object? type)
+            => string.Format(
+                GetString("CannotGetAssemblyFromType", nameof(type)),
+                type);
+
+        /// <summary>
         /// Multiple maps are defined for the {resourceType} resource.
         /// </summary>
         public static string DuplicateMapForResourceType(object? resourceType)
@@ -153,6 +161,14 @@ namespace LanceC.SpreadsheetIO.Properties
             => string.Format(
                 GetString("InvalidExcelStyleSetup", nameof(styleName)),
                 styleName);
+
+        /// <summary>
+        /// The {resourceType} map has configuration errors and cannot be used.
+        /// </summary>
+        public static string InvalidMapForResourceType(object? resourceType)
+            => string.Format(
+                GetString("InvalidMapForResourceType", nameof(resourceType)),
+                resourceType);
 
         /// <summary>
         /// The {resourceType} map does not specify a constructor and the following properties do not have public setters: {propertyNames}.
