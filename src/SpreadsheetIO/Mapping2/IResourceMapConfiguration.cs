@@ -11,5 +11,5 @@ public interface IResourceMapConfiguration<TResource>
     /// Configures the map of resource type <typeparamref name="TResource"/>.
     /// </summary>
     /// <param name="builder">The builder used to configure the resource map.</param>
-    void Configure(ResourceMapBuilder<TResource> builder);
+    void Configure(IResourceMapBuilder<TResource> builder);
 }

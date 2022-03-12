@@ -9,7 +9,7 @@ internal class ImplicitConstructorResourceMapOptionConversionStrategy :
 {
     public override MapOptionConversionResult<IResourceMapOption> ConvertToOption(
         ImplicitConstructorResourceMapOptionRegistration registration,
-        ResourceMapBuilder resourceMapBuilder)
+        IInternalResourceMapBuilder resourceMapBuilder)
     {
         Guard.Against.Null(registration, nameof(registration));
         Guard.Against.Null(resourceMapBuilder, nameof(resourceMapBuilder));

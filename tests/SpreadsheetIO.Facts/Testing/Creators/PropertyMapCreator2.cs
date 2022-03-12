@@ -6,7 +6,7 @@ using LanceC.SpreadsheetIO.Mapping2.Options;
 
 namespace LanceC.SpreadsheetIO.Facts.Testing.Creators;
 
-public static class PropertyMapCreator2
+internal static class PropertyMapCreator2
 {
     public static PropertyMap Create<TResource, TProperty>(
         Expression<Func<TResource, TProperty>> expression,

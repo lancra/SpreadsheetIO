@@ -6,23 +6,18 @@ namespace LanceC.SpreadsheetIO.Mapping2;
 /// <summary>
 /// Provides the builder for generating a property map key.
 /// </summary>
-public class PropertyMapKeyBuilder
+internal class PropertyMapKeyBuilder : IInternalPropertyMapKeyBuilder
 {
-    internal PropertyMapKeyBuilder(PropertyInfo propertyInfo)
+    public PropertyMapKeyBuilder(PropertyInfo propertyInfo)
     {
         Guard.Against.Null(propertyInfo, nameof(propertyInfo));
 
         Key = new(propertyInfo.Name, default, false);
     }
 
-    internal PropertyMapKey Key { get; private set; }
+    public PropertyMapKey Key { get; private set; }
 
-    /// <summary>
-    /// Specifies the name to use for the property.
-    /// </summary>
-    /// <param name="name">The new property name.</param>
-    /// <returns>The resulting property map key builder.</returns>
-    public PropertyMapKeyBuilder WithName(string name)
+    public IPropertyMapKeyBuilder WithName(string name)
     {
         Guard.Against.NullOrEmpty(name, nameof(name));
 
@@ -30,22 +25,13 @@ public class PropertyMapKeyBuilder
         return this;
     }
 
-    /// <summary>
-    /// Specifies that no name will be used for reading the property.
-    /// </summary>
-    /// <returns>The resulting property map key builder.</returns>
-    public PropertyMapKeyBuilder WithoutName()
+    public IPropertyMapKeyBuilder WithoutName()
     {
         Key = new(Key.Name, Key.Number, true);
         return this;
     }
 
-    /// <summary>
-    /// Specifies the column number to use for the property.
-    /// </summary>
-    /// <param name="number">The column number.</param>
-    /// <returns>The resulting property map key builder.</returns>
-    public PropertyMapKeyBuilder WithNumber(uint number)
+    public IPropertyMapKeyBuilder WithNumber(uint number)
     {
         Guard.Against.Zero(number, nameof(number));
 

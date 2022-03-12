@@ -9,7 +9,7 @@ internal class DefaultValuePropertyMapOptionConversionStrategy :
 {
     public override MapOptionConversionResult<IPropertyMapOption> ConvertToOption(
         DefaultValuePropertyMapOptionRegistration registration,
-        ResourceMapBuilder resourceMapBuilder)
+        IInternalResourceMapBuilder resourceMapBuilder)
     {
         Guard.Against.Null(registration, nameof(registration));
         Guard.Against.Null(resourceMapBuilder, nameof(resourceMapBuilder));

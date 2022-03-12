@@ -7,37 +7,26 @@ using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Mapping2;
 
-/// <summary>
-/// Provides the builder for generating a property map.
-/// </summary>
-public abstract class PropertyMapBuilder
+internal abstract class PropertyMapBuilder : IInternalPropertyMapBuilder
 {
     private readonly IDictionary<Type, IPropertyMapOptionRegistration> _registrations =
         new Dictionary<Type, IPropertyMapOptionRegistration>();
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PropertyMapBuilder"/> class.
-    /// </summary>
-    /// <param name="propertyInfo">The information about the resource property.</param>
     protected PropertyMapBuilder(PropertyInfo propertyInfo)
     {
         PropertyInfo = propertyInfo;
-        KeyBuilder = new PropertyMapKeyBuilder(propertyInfo);
+        InternalKeyBuilder = new PropertyMapKeyBuilder(propertyInfo);
     }
 
-    /// <summary>
-    /// Gets the information about the resource property.
-    /// </summary>
     public PropertyInfo PropertyInfo { get; }
 
-    /// <summary>
-    /// Gets the unique key builder.
-    /// </summary>
-    public PropertyMapKeyBuilder KeyBuilder { get; }
+    public IInternalPropertyMapKeyBuilder KeyBuilder => InternalKeyBuilder;
 
-    internal PropertyMapResult Build(
+    protected PropertyMapKeyBuilder InternalKeyBuilder { get; }
+
+    public PropertyMapResult Build(
         IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption> propertyOptionConverter,
-        ResourceMapBuilder resourceMapBuilder)
+        IInternalResourceMapBuilder resourceMapBuilder)
     {
         Guard.Against.Null(propertyOptionConverter, nameof(propertyOptionConverter));
         Guard.Against.Null(resourceMapBuilder, nameof(resourceMapBuilder));
@@ -60,7 +49,7 @@ public abstract class PropertyMapBuilder
 
         if (!failedConversionResults.Any())
         {
-            var map = new PropertyMap(PropertyInfo, KeyBuilder.Key, new MapOptions<IPropertyMapOption>(options));
+            var map = new PropertyMap(PropertyInfo, InternalKeyBuilder.Key, new MapOptions<IPropertyMapOption>(options));
             return PropertyMapResult.Success(map);
         }
         else
@@ -70,7 +59,7 @@ public abstract class PropertyMapBuilder
         }
     }
 
-    internal bool TryAddRegistration(IPropertyMapOptionRegistration registration)
+    public bool TryAddRegistration(IPropertyMapOptionRegistration registration)
     {
         Guard.Against.Null(registration, nameof(registration));
 
@@ -82,7 +71,7 @@ public abstract class PropertyMapBuilder
         return _registrations.TryAdd(registration.GetType(), registration);
     }
 
-    internal bool TryGetRegistration<TRegistration>(out TRegistration? registration)
+    public bool TryGetRegistration<TRegistration>(out TRegistration? registration)
         where TRegistration : class, IPropertyMapOptionRegistration
     {
         var hasRegistration = _registrations.TryGetValue(typeof(TRegistration), out var propertyRegistration);
@@ -90,11 +79,6 @@ public abstract class PropertyMapBuilder
         return hasRegistration;
     }
 
-    /// <summary>
-    /// Adds or updates a map option registration.
-    /// </summary>
-    /// <typeparam name="TRegistration">The type of map option registration.</typeparam>
-    /// <param name="registration">The map option registration to add or update.</param>
     protected void AddOrUpdateRegistration<TRegistration>(TRegistration registration)
         where TRegistration : class, IPropertyMapOptionRegistration
     {

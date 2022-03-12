@@ -50,7 +50,7 @@ internal class CartographerBuilder : ICartographerBuilder
         return ApplyConfigurationsFromAssemblyImpl(_assemblyFactory.Create(markerType));
     }
 
-    public ICartographerBuilder Configure<TResource>(Action<ResourceMapBuilder<TResource>> builderAction)
+    public ICartographerBuilder Configure<TResource>(Action<IResourceMapBuilder<TResource>> builderAction)
         where TResource : class
     {
         Guard.Against.Null(builderAction, nameof(builderAction));

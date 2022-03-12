@@ -6,7 +6,7 @@ namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 
 public class FakeModelMapConfiguration : IResourceMapConfiguration<FakeModel>
 {
-    public void Configure(ResourceMapBuilder<FakeModel> builder)
+    public void Configure(IResourceMapBuilder<FakeModel> builder)
     {
         builder.ExitsOnResourceReadingFailure()
             .UsesHeaderStyle(BuiltInExcelStyle.Good);

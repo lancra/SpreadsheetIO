@@ -5,32 +5,22 @@ using LanceC.SpreadsheetIO.Mapping2.Options.Registrations;
 
 namespace LanceC.SpreadsheetIO.Mapping2;
 
-/// <summary>
-/// Provides the builder for generating a resource map.
-/// </summary>
-public abstract class ResourceMapBuilder
+internal abstract class ResourceMapBuilder : IInternalResourceMapBuilder
 {
-    private readonly List<PropertyMapBuilder> _propertyMapBuilders = new();
+    private readonly List<IInternalPropertyMapBuilder> _propertyMapBuilders = new();
     private readonly IDictionary<Type, IResourceMapOptionRegistration> _registrations =
         new Dictionary<Type, IResourceMapOptionRegistration>();
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ResourceMapBuilder"/> class.
-    /// </summary>
-    /// <param name="resourceType">The type of resource to map.</param>
     protected ResourceMapBuilder(Type resourceType)
     {
         ResourceType = resourceType;
     }
 
-    /// <summary>
-    /// Gets the type of resource to map.
-    /// </summary>
     public Type ResourceType { get; }
 
-    internal IReadOnlyCollection<PropertyMapBuilder> Properties => _propertyMapBuilders;
+    public IReadOnlyCollection<IInternalPropertyMapBuilder> Properties => _propertyMapBuilders;
 
-    internal ResourceMapResult Build(
+    public ResourceMapResult Build(
         IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption> resourceOptionConverter,
         IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption> propertyOptionConverter)
     {
@@ -93,7 +83,7 @@ public abstract class ResourceMapBuilder
         }
     }
 
-    internal bool TryGetRegistration<TRegistration>(out TRegistration? registration)
+    public bool TryGetRegistration<TRegistration>(out TRegistration? registration)
         where TRegistration : class, IResourceMapOptionRegistration
     {
         var hasRegistration = _registrations.TryGetValue(typeof(TRegistration), out var resourceRegistration);
@@ -101,18 +91,9 @@ public abstract class ResourceMapBuilder
         return hasRegistration;
     }
 
-    /// <summary>
-    /// Adds a property map builder to the resource map builder.
-    /// </summary>
-    /// <param name="propertyMapBuilder">The builder to add.</param>
-    protected void AddProperty(PropertyMapBuilder propertyMapBuilder)
+    protected void AddProperty(IInternalPropertyMapBuilder propertyMapBuilder)
         => _propertyMapBuilders.Add(propertyMapBuilder);
 
-    /// <summary>
-    /// Adds or updates a map option registration.
-    /// </summary>
-    /// <typeparam name="TRegistration">The type of map option registration.</typeparam>
-    /// <param name="registration">The map option registration to add or update.</param>
     protected void AddOrUpdateRegistration<TRegistration>(TRegistration registration)
         where TRegistration : class, IResourceMapOptionRegistration
     {

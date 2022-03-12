@@ -1,4 +1,3 @@
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Mapping2.Options.Converters;
@@ -23,13 +22,17 @@ public class DefaultValuePropertyMapOptionConversionStrategyFacts
         {
             // Arrange
             var registration = new DefaultValuePropertyMapOptionRegistration("foo", ResourcePropertyDefaultReadingResolution.Missing);
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>()
-                .HasDefaultPropertyReadingResolutions(ResourcePropertyDefaultReadingResolution.Empty);
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
+
+            var resourceRegistration = new DefaultPropertyReadingResolutionsResourceMapOptionRegistration(
+                ResourcePropertyDefaultReadingResolution.Empty);
+            resourceMapBuilderMock.Setup(builder => builder.TryGetRegistration(out resourceRegistration))
+                .Returns(true);
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var optionConversionResult = sut.ConvertToOption(registration, resourceMapBuilder);
+            var optionConversionResult = sut.ConvertToOption(registration, resourceMapBuilderMock.Object);
 
             // Assert
             Assert.True(optionConversionResult.IsValid);
@@ -47,13 +50,17 @@ public class DefaultValuePropertyMapOptionConversionStrategyFacts
         {
             // Arrange
             var registration = new DefaultValuePropertyMapOptionRegistration("foo");
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>()
-                .HasDefaultPropertyReadingResolutions(ResourcePropertyDefaultReadingResolution.Empty);
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
+
+            var resourceRegistration = new DefaultPropertyReadingResolutionsResourceMapOptionRegistration(
+                ResourcePropertyDefaultReadingResolution.Empty);
+            resourceMapBuilderMock.Setup(builder => builder.TryGetRegistration(out resourceRegistration))
+                .Returns(true);
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var optionConversionResult = sut.ConvertToOption(registration, resourceMapBuilder);
+            var optionConversionResult = sut.ConvertToOption(registration, resourceMapBuilderMock.Object);
 
             // Assert
             Assert.True(optionConversionResult.IsValid);
@@ -71,12 +78,12 @@ public class DefaultValuePropertyMapOptionConversionStrategyFacts
         {
             // Arrange
             var registration = new DefaultValuePropertyMapOptionRegistration("foo");
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>();
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var optionConversionResult = sut.ConvertToOption(registration, resourceMapBuilder);
+            var optionConversionResult = sut.ConvertToOption(registration, resourceMapBuilderMock.Object);
 
             // Assert
             Assert.True(optionConversionResult.IsValid);
@@ -93,12 +100,12 @@ public class DefaultValuePropertyMapOptionConversionStrategyFacts
         {
             // Arrange
             var registration = default(DefaultValuePropertyMapOptionRegistration);
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>();
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var exception = Record.Exception(() => sut.ConvertToOption(registration!, resourceMapBuilder));
+            var exception = Record.Exception(() => sut.ConvertToOption(registration!, resourceMapBuilderMock.Object));
 
             // Assert
             Assert.NotNull(exception);
@@ -110,7 +117,7 @@ public class DefaultValuePropertyMapOptionConversionStrategyFacts
         {
             // Arrange
             var registration = new DefaultValuePropertyMapOptionRegistration("foo", ResourcePropertyDefaultReadingResolution.Missing);
-            var resourceMapBuilder = default(ResourceMapBuilder<FakeModel>);
+            var resourceMapBuilder = default(IInternalResourceMapBuilder);
 
             var sut = CreateSystemUnderTest();
 

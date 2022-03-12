@@ -1,5 +1,4 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Mapping2.Options.Converters;
@@ -80,7 +79,7 @@ public class MapOptionConverterFacts
         {
             // Arrange
             var registration = new FakeResourceMapOption();
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>();
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
 
             var strategyMock = MockStrategy(registration.GetType());
 
@@ -93,7 +92,7 @@ public class MapOptionConverterFacts
             var sut = CreateSystemUnderTest();
 
             // Act
-            var result = sut.ConvertToOption(registration, resourceMapBuilder);
+            var result = sut.ConvertToOption(registration, resourceMapBuilderMock.Object);
 
             // Assert
             Assert.True(result.IsValid);
@@ -101,7 +100,7 @@ public class MapOptionConverterFacts
             Assert.Equal(registration, result.Option);
             Assert.Empty(result.Message);
 
-            strategyMock.Verify(strategy => strategy.ConvertToOption(registration, resourceMapBuilder), Times.Never);
+            strategyMock.Verify(strategy => strategy.ConvertToOption(registration, resourceMapBuilderMock.Object), Times.Never);
         }
 
         [Fact]
@@ -109,11 +108,11 @@ public class MapOptionConverterFacts
         {
             // Arrange
             var registration = new FakeResourceMapOptionRegistration();
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>();
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
 
             var expectedResult = MapOptionConversionResult.Success<IResourceMapOption>(registration, new FakeResourceMapOption());
             var registrationStrategyMock = MockStrategy(registration.GetType());
-            registrationStrategyMock.Setup(strategy => strategy.ConvertToOption(registration, resourceMapBuilder))
+            registrationStrategyMock.Setup(strategy => strategy.ConvertToOption(registration, resourceMapBuilderMock.Object))
                 .Returns(expectedResult);
 
             var otherRegistrationStrategyMock = MockStrategy(typeof(FakeOtherResourceMapOptionRegistration));
@@ -128,7 +127,7 @@ public class MapOptionConverterFacts
             var sut = CreateSystemUnderTest();
 
             // Act
-            var actualResult = sut.ConvertToOption(registration, resourceMapBuilder);
+            var actualResult = sut.ConvertToOption(registration, resourceMapBuilderMock.Object);
 
             // Assert
             Assert.Equal(expectedResult, actualResult);
@@ -139,7 +138,7 @@ public class MapOptionConverterFacts
         {
             // Arrange
             var registration = new FakeResourceMapOptionRegistration();
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>();
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
 
             _mocker.Use(Array.Empty<IMapOptionConversionStrategy<IResourceMapOptionRegistration, IResourceMapOption>>()
                 .AsEnumerable());
@@ -147,7 +146,7 @@ public class MapOptionConverterFacts
             var sut = CreateSystemUnderTest();
 
             // Act
-            var result = sut.ConvertToOption(registration, resourceMapBuilder);
+            var result = sut.ConvertToOption(registration, resourceMapBuilderMock.Object);
 
             // Assert
             Assert.True(result.IsValid);

@@ -10,7 +10,7 @@ internal class FakePropertyMapOptionConversionStrategy : PropertyMapOptionConver
 
     public override MapOptionConversionResult<IPropertyMapOption> ConvertToOption(
         FakePropertyMapOptionRegistration registration,
-        ResourceMapBuilder resourceMapBuilder)
+        IInternalResourceMapBuilder resourceMapBuilder)
     {
         RanConversion = true;
         return MapOptionConversionResult.Skipped<IPropertyMapOption>(registration);

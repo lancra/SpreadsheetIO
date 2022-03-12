@@ -70,11 +70,11 @@ public class PropertyMapBuilderFacts
             // Arrange
             var propertyOptionConverterMock = _mocker
                 .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>();
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
 
             propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<HeaderStyleMapOption>(), resourceMapBuilder))
-                .Returns((HeaderStyleMapOption registration, ResourceMapBuilder _)
+                .Setup(converter => converter.ConvertToOption(It.IsAny<HeaderStyleMapOption>(), resourceMapBuilderMock.Object))
+                .Returns((HeaderStyleMapOption registration, IInternalResourceMapBuilder _)
                     => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
 
             var sut = CreateSystemUnderTest(model => model.Id);
@@ -82,7 +82,7 @@ public class PropertyMapBuilderFacts
             sut.TryGetRegistration<HeaderStyleMapOption>(out var registration);
 
             // Act
-            var result = sut.Build(propertyOptionConverterMock.Object, resourceMapBuilder);
+            var result = sut.Build(propertyOptionConverterMock.Object, resourceMapBuilderMock.Object);
 
             // Assert
             Assert.True(result.IsValid);
@@ -100,12 +100,12 @@ public class PropertyMapBuilderFacts
             // Arrange
             var propertyOptionConverterMock = _mocker
                 .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>();
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
 
             var expectedConversionResult = default(MapOptionConversionResult<IPropertyMapOption>);
             propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<HeaderStyleMapOption>(), resourceMapBuilder))
-                .Returns((HeaderStyleMapOption registration, ResourceMapBuilder _)
+                .Setup(converter => converter.ConvertToOption(It.IsAny<HeaderStyleMapOption>(), resourceMapBuilderMock.Object))
+                .Returns((HeaderStyleMapOption registration, IInternalResourceMapBuilder _)
                     =>
                     {
                         expectedConversionResult = MapOptionConversionResult.Failure<IPropertyMapOption>(registration, "foo");
@@ -117,7 +117,7 @@ public class PropertyMapBuilderFacts
             sut.TryGetRegistration<HeaderStyleMapOption>(out var registration);
 
             // Act
-            var result = sut.Build(propertyOptionConverterMock.Object, resourceMapBuilder);
+            var result = sut.Build(propertyOptionConverterMock.Object, resourceMapBuilderMock.Object);
 
             // Assert
             Assert.False(result.IsValid);
@@ -133,12 +133,12 @@ public class PropertyMapBuilderFacts
         {
             // Arrange
             var propertyOptionConverter = default(IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>);
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>();
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
 
             var sut = CreateSystemUnderTest(model => model.Id);
 
             // Act
-            var exception = Record.Exception(() => sut.Build(propertyOptionConverter!, resourceMapBuilder));
+            var exception = Record.Exception(() => sut.Build(propertyOptionConverter!, resourceMapBuilderMock.Object));
 
             // Assert
             Assert.NotNull(exception);
@@ -151,7 +151,7 @@ public class PropertyMapBuilderFacts
             // Arrange
             var propertyOptionConverterMock = _mocker
                 .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
-            var resourceMapBuilder = default(ResourceMapBuilder<FakeModel>);
+            var resourceMapBuilder = default(IInternalResourceMapBuilder);
 
             var sut = CreateSystemUnderTest(model => model.Id);
 

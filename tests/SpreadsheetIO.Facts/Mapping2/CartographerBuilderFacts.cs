@@ -327,7 +327,7 @@ public class CartographerBuilderFacts
         public void ThrowsArgumentNullExceptionWhenBuilderActionIsNull()
         {
             // Arrange
-            var builderAction = default(Action<ResourceMapBuilder<FakeModel>>);
+            var builderAction = default(Action<IResourceMapBuilder<FakeModel>>);
             var sut = CreateSystemUnderTest();
 
             // Act

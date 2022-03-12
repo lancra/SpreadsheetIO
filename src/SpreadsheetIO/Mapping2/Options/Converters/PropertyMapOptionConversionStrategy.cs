@@ -10,10 +10,10 @@ internal abstract class PropertyMapOptionConversionStrategy<TRegistration> :
 
     public MapOptionConversionResult<IPropertyMapOption> ConvertToOption(
         IPropertyMapOptionRegistration registration,
-        ResourceMapBuilder resourceMapBuilder)
+        IInternalResourceMapBuilder resourceMapBuilder)
         => ConvertToOption((TRegistration)registration, resourceMapBuilder);
 
     public abstract MapOptionConversionResult<IPropertyMapOption> ConvertToOption(
         TRegistration registration,
-        ResourceMapBuilder resourceMapBuilder);
+        IInternalResourceMapBuilder resourceMapBuilder);
 }

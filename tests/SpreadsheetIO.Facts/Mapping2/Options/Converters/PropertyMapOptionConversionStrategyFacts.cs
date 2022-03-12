@@ -1,17 +1,19 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Mapping2.Options.Converters;
 using LanceC.SpreadsheetIO.Mapping2.Options.Registrations;
+using Moq.AutoMock;
 using Xunit;
 
 namespace LanceC.SpreadsheetIO.Facts.Mapping2.Options.Converters;
 
 public class PropertyMapOptionConversionStrategyFacts
 {
-    private static IMapOptionConversionStrategy<IPropertyMapOptionRegistration, IPropertyMapOption> CreateSystemUnderTest()
-        => new FakePropertyMapOptionConversionStrategy();
+    private readonly AutoMocker _mocker = new();
+
+    private IMapOptionConversionStrategy<IPropertyMapOptionRegistration, IPropertyMapOption> CreateSystemUnderTest()
+        => _mocker.CreateInstance<FakePropertyMapOptionConversionStrategy>();
 
     public class TheConvertToOptionMethod : PropertyMapOptionConversionStrategyFacts
     {
@@ -20,11 +22,11 @@ public class PropertyMapOptionConversionStrategyFacts
         {
             // Arrange
             var registration = new FakePropertyMapOptionRegistration();
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>();
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
             var sut = CreateSystemUnderTest();
 
             // Act
-            sut.ConvertToOption(registration, resourceMapBuilder);
+            sut.ConvertToOption(registration, resourceMapBuilderMock.Object);
 
             // Assert
             Assert.True(((FakePropertyMapOptionConversionStrategy)sut).RanConversion);
@@ -35,11 +37,11 @@ public class PropertyMapOptionConversionStrategyFacts
         {
             // Arrange
             var registration = new FakeOtherPropertyMapOptionRegistration();
-            var resourceMapBuilder = new ResourceMapBuilder<FakeModel>();
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
             var sut = CreateSystemUnderTest();
 
             // Act
-            var exception = Record.Exception(() => sut.ConvertToOption(registration, resourceMapBuilder));
+            var exception = Record.Exception(() => sut.ConvertToOption(registration, resourceMapBuilderMock.Object));
 
             // Assert
             Assert.NotNull(exception);

@@ -42,6 +42,6 @@ public interface ICartographerBuilder
     /// <typeparam name="TResource">The type of resource to configure.</typeparam>
     /// <param name="builderAction">The resource map builder configuration.</param>
     /// <returns>The resulting cartographer builder.</returns>
-    ICartographerBuilder Configure<TResource>(Action<ResourceMapBuilder<TResource>> builderAction)
+    ICartographerBuilder Configure<TResource>(Action<IResourceMapBuilder<TResource>> builderAction)
         where TResource : class;
 }

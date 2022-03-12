@@ -17,5 +17,7 @@ internal interface IMapOptionConverter<TRegistration, TOption>
     /// <param name="registration">The registration to convert.</param>
     /// <param name="resourceMapBuilder">The resource map builder containing the registration.</param>
     /// <returns>The option conversion result.</returns>
-    MapOptionConversionResult<TOption> ConvertToOption(TRegistration registration, ResourceMapBuilder resourceMapBuilder);
+    MapOptionConversionResult<TOption> ConvertToOption(
+        TRegistration registration,
+        IInternalResourceMapBuilder resourceMapBuilder);
 }

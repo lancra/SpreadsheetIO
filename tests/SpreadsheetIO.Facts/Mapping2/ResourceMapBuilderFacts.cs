@@ -50,7 +50,7 @@ public class ResourceMapBuilderFacts
                 .UsesBodyStyle(BuiltInExcelStyle.Bad);
 
             sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
-            propertyBuilder.TryGetRegistration<BodyStyleMapOption>(out var propertyRegistration);
+            ((IInternalPropertyMapBuilder)propertyBuilder).TryGetRegistration<BodyStyleMapOption>(out var propertyRegistration);
 
             // Act
             var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
@@ -99,7 +99,7 @@ public class ResourceMapBuilderFacts
                 .UsesBodyStyle(BuiltInExcelStyle.Bad);
 
             sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
-            propertyBuilder.TryGetRegistration<BodyStyleMapOption>(out var propertyRegistration);
+            ((IInternalPropertyMapBuilder)propertyBuilder).TryGetRegistration<BodyStyleMapOption>(out var propertyRegistration);
 
             // Act
             var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
@@ -145,7 +145,7 @@ public class ResourceMapBuilderFacts
                 .UsesBodyStyle(BuiltInExcelStyle.Bad);
 
             sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
-            propertyBuilder.TryGetRegistration<BodyStyleMapOption>(out var propertyRegistration);
+            ((IInternalPropertyMapBuilder)propertyBuilder).TryGetRegistration<BodyStyleMapOption>(out var propertyRegistration);
 
             // Act
             var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
@@ -213,7 +213,7 @@ public class ResourceMapBuilderFacts
             sut.Property(model => model.Name);
 
             sut.TryGetRegistration<HeaderStyleMapOption>(out var resourceRegistration);
-            propertyBuilder.TryGetRegistration<HeaderStyleMapOption>(out var propertyRegistration);
+            ((IInternalPropertyMapBuilder)propertyBuilder).TryGetRegistration<HeaderStyleMapOption>(out var propertyRegistration);
 
             // Act
             var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);

@@ -1,3 +1,4 @@
+using LanceC.SpreadsheetIO.Facts.Testing.Extensions;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Mapping2.Options;
@@ -23,15 +24,29 @@ public class ImplicitConstructorResourceMapOptionConversionStrategyFacts
         {
             // Arrange
             var registration = new ImplicitConstructorResourceMapOptionRegistration();
-            var resourceMapBuilder = new ResourceMapBuilder<FakeConstructionModel>();
-            resourceMapBuilder.Property(model => model.Id);
-            resourceMapBuilder.Property(model => model.Name);
-            resourceMapBuilder.Property(model => model.Amount);
+
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
+            resourceMapBuilderMock.SetupGet(builder => builder.ResourceType)
+                .Returns(typeof(FakeConstructionModel));
+            resourceMapBuilderMock.SetupGet(builder => builder.Properties)
+                .Returns(
+                    new[]
+                    {
+                        _mocker.GetMockForInternalPropertyMapBuilder(
+                            typeof(FakeConstructionModel),
+                            nameof(FakeConstructionModel.Id)).Object,
+                        _mocker.GetMockForInternalPropertyMapBuilder(
+                            typeof(FakeConstructionModel),
+                            nameof(FakeConstructionModel.Name)).Object,
+                        _mocker.GetMockForInternalPropertyMapBuilder(
+                            typeof(FakeConstructionModel),
+                            nameof(FakeConstructionModel.Amount)).Object,
+                    });
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var optionConversionResult = sut.ConvertToOption(registration, resourceMapBuilder);
+            var optionConversionResult = sut.ConvertToOption(registration, resourceMapBuilderMock.Object);
 
             // Assert
             Assert.True(optionConversionResult.IsValid);
@@ -50,13 +65,23 @@ public class ImplicitConstructorResourceMapOptionConversionStrategyFacts
         {
             // Arrange
             var registration = new ImplicitConstructorResourceMapOptionRegistration();
-            var resourceMapBuilder = new ResourceMapBuilder<FakeConstructionModel>();
-            resourceMapBuilder.Property(model => model.Id);
+
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
+            resourceMapBuilderMock.SetupGet(builder => builder.ResourceType)
+                .Returns(typeof(FakeConstructionModel));
+            resourceMapBuilderMock.SetupGet(builder => builder.Properties)
+                .Returns(
+                    new[]
+                    {
+                        _mocker.GetMockForInternalPropertyMapBuilder(
+                            typeof(FakeConstructionModel),
+                            nameof(FakeConstructionModel.Id)).Object,
+                    });
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var optionConversionResult = sut.ConvertToOption(registration, resourceMapBuilder);
+            var optionConversionResult = sut.ConvertToOption(registration, resourceMapBuilderMock.Object);
 
             // Assert
             Assert.False(optionConversionResult.IsValid);
@@ -70,12 +95,12 @@ public class ImplicitConstructorResourceMapOptionConversionStrategyFacts
         {
             // Arrange
             var registration = default(ImplicitConstructorResourceMapOptionRegistration);
-            var resourceMapBuilder = new ResourceMapBuilder<FakeConstructionModel>();
+            var resourceMapBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder>();
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            var exception = Record.Exception(() => sut.ConvertToOption(registration!, resourceMapBuilder));
+            var exception = Record.Exception(() => sut.ConvertToOption(registration!, resourceMapBuilderMock.Object));
 
             // Assert
             Assert.NotNull(exception);
@@ -87,7 +112,7 @@ public class ImplicitConstructorResourceMapOptionConversionStrategyFacts
         {
             // Arrange
             var registration = new ImplicitConstructorResourceMapOptionRegistration();
-            var resourceMapBuilder = default(ResourceMapBuilder<FakeConstructionModel>);
+            var resourceMapBuilder = default(IInternalResourceMapBuilder);
 
             var sut = CreateSystemUnderTest();
 

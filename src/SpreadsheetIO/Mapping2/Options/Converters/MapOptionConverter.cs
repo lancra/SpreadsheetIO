@@ -32,7 +32,9 @@ internal class MapOptionConverter<TRegistration, TOption> : IMapOptionConverter<
         }
     }
 
-    public MapOptionConversionResult<TOption> ConvertToOption(TRegistration registration, ResourceMapBuilder resourceMapBuilder)
+    public MapOptionConversionResult<TOption> ConvertToOption(
+        TRegistration registration,
+        IInternalResourceMapBuilder resourceMapBuilder)
     {
         if (registration is TOption implicitOption)
         {

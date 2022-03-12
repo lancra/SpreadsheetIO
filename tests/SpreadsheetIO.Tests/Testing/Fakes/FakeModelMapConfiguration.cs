@@ -4,7 +4,7 @@ namespace LanceC.SpreadsheetIO.Tests.Testing.Fakes;
 
 public class FakeModelMapConfiguration : IResourceMapConfiguration<FakeModel>
 {
-    public void Configure(ResourceMapBuilder<FakeModel> builder)
+    public void Configure(IResourceMapBuilder<FakeModel> builder)
     {
         builder.Property(model => model.Id);
         builder.Property(model => model.Name);
