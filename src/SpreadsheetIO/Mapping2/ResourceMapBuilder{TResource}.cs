@@ -12,9 +12,12 @@ namespace LanceC.SpreadsheetIO.Mapping2;
 internal class ResourceMapBuilder<TResource> : ResourceMapBuilder, IInternalResourceMapBuilder<TResource>
     where TResource : class
 {
-    public ResourceMapBuilder()
+    private readonly IMapBuilderFactory _mapBuilderFactory;
+
+    public ResourceMapBuilder(IMapBuilderFactory mapBuilderFactory)
         : base(typeof(TResource))
     {
+        _mapBuilderFactory = mapBuilderFactory;
     }
 
     public IResourceMapBuilder<TResource> ExitsOnResourceReadingFailure()
@@ -45,7 +48,7 @@ internal class ResourceMapBuilder<TResource> : ResourceMapBuilder, IInternalReso
     {
         Guard.Against.Null(propertyExpression, nameof(propertyExpression));
 
-        var propertyMapBuilder = new PropertyMapBuilder<TResource, TProperty>(propertyExpression);
+        var propertyMapBuilder = _mapBuilderFactory.CreateForProperty(propertyExpression);
         AddProperty(propertyMapBuilder);
 
         return propertyMapBuilder;

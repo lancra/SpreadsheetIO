@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping2;
@@ -39,18 +40,24 @@ public class ResourceMapBuilderFacts
 
             var propertyOptionConverterMock = _mocker
                 .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<BodyStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((BodyStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
+
+            var expectedPropertyMap = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
+            var propertyBuilderMock = _mocker.GetMock<IInternalPropertyMapBuilder<FakeModel, int>>();
+            propertyBuilderMock
+                .Setup(propertyBuilder => propertyBuilder.Build(
+                    propertyOptionConverterMock.Object,
+                    It.IsAny<IInternalResourceMapBuilder>()))
+                .Returns(PropertyMapResult.Success(expectedPropertyMap));
+
+            _mocker.GetMock<IMapBuilderFactory>()
+                .Setup(mapBuilderFactory => mapBuilderFactory.CreateForProperty((FakeModel model) => model.Id))
+                .Returns(propertyBuilderMock.Object);
 
             var sut = CreateSystemUnderTest();
             sut.ExitsOnResourceReadingFailure();
-            var propertyBuilder = sut.Property(model => model.Id)
-                .UsesBodyStyle(BuiltInExcelStyle.Bad);
+            sut.Property(model => model.Id);
 
             sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
-            ((IInternalPropertyMapBuilder)propertyBuilder).TryGetRegistration<BodyStyleMapOption>(out var propertyRegistration);
 
             // Act
             var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
@@ -63,8 +70,8 @@ public class ResourceMapBuilderFacts
             Assert.Equal(sut.ResourceType, result.Value!.ResourceType);
             Assert.Equal(resourceRegistration, result.Value.Options.Find<ExitOnResourceReadingFailureResourceMapOption>());
 
-            var propertyMap = Assert.Single(result.Value.Properties);
-            Assert.Equal(propertyRegistration, propertyMap.Options.Find<BodyStyleMapOption>());
+            var actualPropertyMap = Assert.Single(result.Value.Properties);
+            Assert.Equal(expectedPropertyMap, actualPropertyMap);
         }
 
         [Fact]
@@ -88,18 +95,24 @@ public class ResourceMapBuilderFacts
 
             var propertyOptionConverterMock = _mocker
                 .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<BodyStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((BodyStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
+
+            var expectedPropertyMap = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
+            var propertyBuilderMock = _mocker.GetMock<IInternalPropertyMapBuilder<FakeModel, int>>();
+            propertyBuilderMock
+                .Setup(propertyBuilder => propertyBuilder.Build(
+                    propertyOptionConverterMock.Object,
+                    It.IsAny<IInternalResourceMapBuilder>()))
+                .Returns(PropertyMapResult.Success(expectedPropertyMap));
+
+            _mocker.GetMock<IMapBuilderFactory>()
+                .Setup(mapBuilderFactory => mapBuilderFactory.CreateForProperty((FakeModel model) => model.Id))
+                .Returns(propertyBuilderMock.Object);
 
             var sut = CreateSystemUnderTest();
             sut.ExitsOnResourceReadingFailure();
-            var propertyBuilder = sut.Property(model => model.Id)
-                .UsesBodyStyle(BuiltInExcelStyle.Bad);
+            sut.Property(model => model.Id);
 
             sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
-            ((IInternalPropertyMapBuilder)propertyBuilder).TryGetRegistration<BodyStyleMapOption>(out var propertyRegistration);
 
             // Act
             var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
@@ -114,7 +127,7 @@ public class ResourceMapBuilderFacts
         }
 
         [Fact]
-        public void ReturnsFailureResultWhenPropertyOptionConversionFails()
+        public void ReturnsFailureResultWhenPropertyMapBuildFails()
         {
             // Arrange
             var resourceOptionConverterMock = _mocker
@@ -129,23 +142,25 @@ public class ResourceMapBuilderFacts
             var propertyOptionConverterMock = _mocker
                 .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
 
-            var expectedPropertyConversionResult = default(MapOptionConversionResult<IPropertyMapOption>);
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<BodyStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((BodyStyleMapOption registration, ResourceMapBuilder _)
-                    =>
-                    {
-                        expectedPropertyConversionResult = MapOptionConversionResult.Failure<IPropertyMapOption>(registration, "foo");
-                        return expectedPropertyConversionResult;
-                    });
+            var propertyBuilderMock = _mocker.GetMock<IInternalPropertyMapBuilder<FakeModel, int>>();
+
+            var expectedPropertyConversionResult = MapOptionConversionResult
+                .Failure<IPropertyMapOption>(new OptionalPropertyMapOption(PropertyElementKind.All), "foo");
+            propertyBuilderMock
+                .Setup(propertyBuilder => propertyBuilder.Build(
+                    propertyOptionConverterMock.Object,
+                    It.IsAny<IInternalResourceMapBuilder>()))
+                .Returns(PropertyMapResult.Failure(new PropertyMapError(new[] { expectedPropertyConversionResult, })));
+
+            _mocker.GetMock<IMapBuilderFactory>()
+                .Setup(mapBuilderFactory => mapBuilderFactory.CreateForProperty((FakeModel model) => model.Id))
+                .Returns(propertyBuilderMock.Object);
 
             var sut = CreateSystemUnderTest();
             sut.ExitsOnResourceReadingFailure();
-            var propertyBuilder = sut.Property(model => model.Id)
-                .UsesBodyStyle(BuiltInExcelStyle.Bad);
+            sut.Property(model => model.Id);
 
             sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
-            ((IInternalPropertyMapBuilder)propertyBuilder).TryGetRegistration<BodyStyleMapOption>(out var propertyRegistration);
 
             // Act
             var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
@@ -160,17 +175,35 @@ public class ResourceMapBuilderFacts
         }
 
         [Fact]
-        public void AddsResourceOptionRegistrationsToPropertiesWhenApplicable()
+        public void AttemptsToAddResourceOptionRegistrationsToPropertiesWhenApplicable()
         {
             // Arrange
             var resourceOptionConverterMock = _mocker
                 .GetMock<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>();
             var propertyOptionConverterMock = _mocker
                 .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<HeaderStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((HeaderStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
+
+            var expectedIdPropertyMap = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
+            var idPropertyBuilderMock = _mocker.GetMock<IInternalPropertyMapBuilder<FakeModel, int>>();
+            idPropertyBuilderMock
+                .Setup(propertyBuilder => propertyBuilder.Build(
+                    propertyOptionConverterMock.Object,
+                    It.IsAny<IInternalResourceMapBuilder>()))
+                .Returns(PropertyMapResult.Success(expectedIdPropertyMap));
+
+            var expectedNamePropertyMap = PropertyMapCreator2.CreateForFakeModel(model => model.Name);
+            var namePropertyBuilderMock = _mocker.GetMock<IInternalPropertyMapBuilder<FakeModel, string?>>();
+            namePropertyBuilderMock
+                .Setup(propertyBuilder => propertyBuilder.Build(
+                    propertyOptionConverterMock.Object,
+                    It.IsAny<IInternalResourceMapBuilder>()))
+                .Returns(PropertyMapResult.Success(expectedNamePropertyMap));
+
+            var mapBuilderFactoryMock = _mocker.GetMock<IMapBuilderFactory>();
+            mapBuilderFactoryMock.Setup(mapBuilderFactory => mapBuilderFactory.CreateForProperty((FakeModel model) => model.Id))
+                .Returns(idPropertyBuilderMock.Object);
+            mapBuilderFactoryMock.Setup(mapBuilderFactory => mapBuilderFactory.CreateForProperty((FakeModel model) => model.Name))
+                .Returns(namePropertyBuilderMock.Object);
 
             var sut = CreateSystemUnderTest();
             sut.UsesHeaderStyle(BuiltInExcelStyle.Normal);
@@ -180,56 +213,11 @@ public class ResourceMapBuilderFacts
             sut.TryGetRegistration<HeaderStyleMapOption>(out var registration);
 
             // Act
-            var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
+            sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
 
             // Assert
-            Assert.True(result.IsValid);
-            Assert.NotNull(result.Value);
-            Assert.Null(result.Error);
-
-            Assert.Equal(sut.ResourceType, result.Value!.ResourceType);
-            Assert.All(
-                result.Value.Properties,
-                propertyMap => Assert.Equal(registration, propertyMap.Options.Find<HeaderStyleMapOption>()));
-        }
-
-        [Fact]
-        public void DoesNotAddResourceOptionRegistrationToPropertyWhenAlreadyPresent()
-        {
-            // Arrange
-            var resourceOptionConverterMock = _mocker
-                .GetMock<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>();
-            var propertyOptionConverterMock = _mocker
-                .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<HeaderStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((HeaderStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
-
-            var sut = CreateSystemUnderTest();
-            sut.UsesHeaderStyle(BuiltInExcelStyle.Good);
-            var propertyBuilder = sut.Property(model => model.Id)
-                .UsesHeaderStyle(BuiltInExcelStyle.Bad);
-            sut.Property(model => model.Name);
-
-            sut.TryGetRegistration<HeaderStyleMapOption>(out var resourceRegistration);
-            ((IInternalPropertyMapBuilder)propertyBuilder).TryGetRegistration<HeaderStyleMapOption>(out var propertyRegistration);
-
-            // Act
-            var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
-
-            // Assert
-            Assert.True(result.IsValid);
-            Assert.NotNull(result.Value);
-            Assert.Null(result.Error);
-
-            Assert.Equal(sut.ResourceType, result.Value!.ResourceType);
-
-            var idPropertyMap = Assert.Single(result.Value.Properties.Where(p => p.Property.Name == nameof(FakeModel.Id)));
-            Assert.Equal(propertyRegistration, idPropertyMap.Options.Find<HeaderStyleMapOption>());
-
-            var namePropertyMap = Assert.Single(result.Value.Properties.Where(p => p.Property.Name == nameof(FakeModel.Name)));
-            Assert.Equal(resourceRegistration, namePropertyMap.Options.Find<HeaderStyleMapOption>());
+            idPropertyBuilderMock.Verify(propertyBuilder => propertyBuilder.TryAddRegistration(registration!));
+            namePropertyBuilderMock.Verify(propertyBuilder => propertyBuilder.TryAddRegistration(registration!));
         }
 
         [Fact]
@@ -409,6 +397,12 @@ public class ResourceMapBuilderFacts
         public void AddsPropertyMapBuilder()
         {
             // Arrange
+            var propertyMapBuilderMock = _mocker.GetMock<IInternalPropertyMapBuilder<FakeModel, int>>();
+
+            _mocker.GetMock<IMapBuilderFactory>()
+                .Setup(mapBuilderFactory => mapBuilderFactory.CreateForProperty((FakeModel model) => model.Id))
+                .Returns(propertyMapBuilderMock.Object);
+
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -416,7 +410,7 @@ public class ResourceMapBuilderFacts
 
             // Assert
             var propertyMapBuilder = Assert.Single(sut.Properties);
-            Assert.Equal(nameof(FakeModel.Id), propertyMapBuilder.PropertyInfo.Name);
+            Assert.Equal(propertyMapBuilderMock.Object, propertyMapBuilder);
         }
 
         [Fact]

@@ -1,4 +1,5 @@
 using System.Reflection;
+using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping2;
@@ -25,37 +26,37 @@ public class CartographerBuilderFacts
         public void RegistersResult()
         {
             // Arrange
-            var configuration = new FakeModelMapConfiguration();
+            var configurationMock = new FakeModelMapConfiguration();
 
-            var resourceOptionConverterMock = _mocker
-                .GetMock<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>();
-            resourceOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(
-                    It.IsAny<ExitOnResourceReadingFailureResourceMapOption>(),
-                    It.IsAny<ResourceMapBuilder>()))
-                .Returns((ExitOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IResourceMapOption>(registration, registration));
+            var resourceBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder<FakeModel>>();
 
-            var propertyOptionConverterMock = _mocker
-                .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<HeaderStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((HeaderStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<BodyStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((BodyStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
+            var expectedResourceType = typeof(FakeModel);
+            resourceBuilderMock.SetupGet(resourceBuilder => resourceBuilder.ResourceType)
+                .Returns(expectedResourceType);
+
+            var expectedResourceMapResult = ResourceMapResult.Success(
+                    ResourceMapCreator.Create<FakeModel>(Array.Empty<PropertyMap>()));
+            resourceBuilderMock
+                .Setup(resourceBuilder => resourceBuilder.Build(
+                    It.IsAny<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>(),
+                    It.IsAny<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>()))
+                .Returns(expectedResourceMapResult);
+
+            _mocker.GetMock<IMapBuilderFactory>()
+                .Setup(mapBuilderFactory => mapBuilderFactory.CreateForResource<FakeModel>())
+                .Returns(resourceBuilderMock.Object);
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            sut.ApplyConfiguration(configuration);
+            sut.ApplyConfiguration(configurationMock);
 
             // Assert
             var resourceMapResultEntry = Assert.Single(sut.ResourceMaps);
-            Assert.Equal(typeof(FakeModel), resourceMapResultEntry.Key);
-            Assert.True(resourceMapResultEntry.Value.IsValid);
+            Assert.Equal(expectedResourceType, resourceMapResultEntry.Key);
+            Assert.Equal(expectedResourceMapResult, resourceMapResultEntry.Value);
+
+            Assert.True(configurationMock.Configured);
         }
 
         [Fact]
@@ -88,25 +89,23 @@ public class CartographerBuilderFacts
                 .Setup(assemblyFactory => assemblyFactory.Create(It.IsAny<Assembly>()))
                 .Returns(assemblyMock.Object);
 
-            var resourceOptionConverterMock = _mocker
-                .GetMock<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>();
-            resourceOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(
-                    It.IsAny<ExitOnResourceReadingFailureResourceMapOption>(),
-                    It.IsAny<ResourceMapBuilder>()))
-                .Returns((ExitOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IResourceMapOption>(registration, registration));
+            var resourceBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder<FakeModel>>();
 
-            var propertyOptionConverterMock = _mocker
-                .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<HeaderStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((HeaderStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<BodyStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((BodyStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
+            var expectedResourceType = typeof(FakeModel);
+            resourceBuilderMock.SetupGet(resourceBuilder => resourceBuilder.ResourceType)
+                .Returns(expectedResourceType);
+
+            var expectedResourceMapResult = ResourceMapResult.Success(
+                    ResourceMapCreator.Create<FakeModel>(Array.Empty<PropertyMap>()));
+            resourceBuilderMock
+                .Setup(resourceBuilder => resourceBuilder.Build(
+                    It.IsAny<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>(),
+                    It.IsAny<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>()))
+                .Returns(expectedResourceMapResult);
+
+            _mocker.GetMock<IMapBuilderFactory>()
+                .Setup(mapBuilderFactory => mapBuilderFactory.CreateForResource<FakeModel>())
+                .Returns(resourceBuilderMock.Object);
 
             var sut = CreateSystemUnderTest();
 
@@ -115,8 +114,8 @@ public class CartographerBuilderFacts
 
             // Assert
             var resourceMapResultEntry = Assert.Single(sut.ResourceMaps);
-            Assert.Equal(typeof(FakeModel), resourceMapResultEntry.Key);
-            Assert.True(resourceMapResultEntry.Value.IsValid);
+            Assert.Equal(expectedResourceType, resourceMapResultEntry.Key);
+            Assert.Equal(expectedResourceMapResult, resourceMapResultEntry.Value);
         }
 
         [Fact]
@@ -193,25 +192,23 @@ public class CartographerBuilderFacts
                 .Setup(assemblyFactory => assemblyFactory.Create(markerType))
                 .Returns(assemblyMock.Object);
 
-            var resourceOptionConverterMock = _mocker
-                .GetMock<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>();
-            resourceOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(
-                    It.IsAny<ExitOnResourceReadingFailureResourceMapOption>(),
-                    It.IsAny<ResourceMapBuilder>()))
-                .Returns((ExitOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IResourceMapOption>(registration, registration));
+            var resourceBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder<FakeModel>>();
 
-            var propertyOptionConverterMock = _mocker
-                .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<HeaderStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((HeaderStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<BodyStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((BodyStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
+            var expectedResourceType = typeof(FakeModel);
+            resourceBuilderMock.SetupGet(resourceBuilder => resourceBuilder.ResourceType)
+                .Returns(expectedResourceType);
+
+            var expectedResourceMapResult = ResourceMapResult.Success(
+                    ResourceMapCreator.Create<FakeModel>(Array.Empty<PropertyMap>()));
+            resourceBuilderMock
+                .Setup(resourceBuilder => resourceBuilder.Build(
+                    It.IsAny<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>(),
+                    It.IsAny<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>()))
+                .Returns(expectedResourceMapResult);
+
+            _mocker.GetMock<IMapBuilderFactory>()
+                .Setup(mapBuilderFactory => mapBuilderFactory.CreateForResource<FakeModel>())
+                .Returns(resourceBuilderMock.Object);
 
             var sut = CreateSystemUnderTest();
 
@@ -220,8 +217,8 @@ public class CartographerBuilderFacts
 
             // Assert
             var resourceMapResultEntry = Assert.Single(sut.ResourceMaps);
-            Assert.Equal(typeof(FakeModel), resourceMapResultEntry.Key);
-            Assert.True(resourceMapResultEntry.Value.IsValid);
+            Assert.Equal(expectedResourceType, resourceMapResultEntry.Key);
+            Assert.Equal(expectedResourceMapResult, resourceMapResultEntry.Value);
         }
 
         [Fact]
@@ -292,35 +289,37 @@ public class CartographerBuilderFacts
         public void RegistersResult()
         {
             // Arrange
-            var resourceOptionConverterMock = _mocker
-                .GetMock<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>();
-            resourceOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(
-                    It.IsAny<ExitOnResourceReadingFailureResourceMapOption>(),
-                    It.IsAny<ResourceMapBuilder>()))
-                .Returns((ExitOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IResourceMapOption>(registration, registration));
+            var configurationMock = new FakeModelMapConfiguration();
 
-            var propertyOptionConverterMock = _mocker
-                .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<HeaderStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((HeaderStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
-            propertyOptionConverterMock
-                .Setup(converter => converter.ConvertToOption(It.IsAny<BodyStyleMapOption>(), It.IsAny<ResourceMapBuilder>()))
-                .Returns((BodyStyleMapOption registration, ResourceMapBuilder _)
-                    => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
+            var resourceBuilderMock = _mocker.GetMock<IInternalResourceMapBuilder<FakeModel>>();
+
+            var expectedResourceType = typeof(FakeModel);
+            resourceBuilderMock.SetupGet(resourceBuilder => resourceBuilder.ResourceType)
+                .Returns(expectedResourceType);
+
+            var expectedResourceMapResult = ResourceMapResult.Success(
+                    ResourceMapCreator.Create<FakeModel>(Array.Empty<PropertyMap>()));
+            resourceBuilderMock
+                .Setup(resourceBuilder => resourceBuilder.Build(
+                    It.IsAny<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>(),
+                    It.IsAny<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>()))
+                .Returns(expectedResourceMapResult);
+
+            _mocker.GetMock<IMapBuilderFactory>()
+                .Setup(mapBuilderFactory => mapBuilderFactory.CreateForResource<FakeModel>())
+                .Returns(resourceBuilderMock.Object);
 
             var sut = CreateSystemUnderTest();
 
             // Act
-            sut.Configure<FakeModel>(builder => new FakeModelMapConfiguration().Configure(builder));
+            sut.Configure<FakeModel>(builder => configurationMock.Configure(builder));
 
             // Assert
             var resourceMapResultEntry = Assert.Single(sut.ResourceMaps);
-            Assert.Equal(typeof(FakeModel), resourceMapResultEntry.Key);
-            Assert.True(resourceMapResultEntry.Value.IsValid);
+            Assert.Equal(expectedResourceType, resourceMapResultEntry.Key);
+            Assert.Equal(expectedResourceMapResult, resourceMapResultEntry.Value);
+
+            Assert.True(configurationMock.Configured);
         }
 
         [Fact]

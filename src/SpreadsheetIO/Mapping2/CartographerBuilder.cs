@@ -9,15 +9,18 @@ namespace LanceC.SpreadsheetIO.Mapping2;
 
 internal class CartographerBuilder : ICartographerBuilder
 {
+    private readonly IMapBuilderFactory _mapBuilderFactory;
     private readonly IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption> _resourceOptionConverter;
     private readonly IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption> _propertyOptionConverter;
     private readonly IAssemblyWrapperFactory _assemblyFactory;
 
     public CartographerBuilder(
+        IMapBuilderFactory mapBuilderFactory,
         IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption> resourceOptionConverter,
         IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption> propertyOptionConverter,
         IAssemblyWrapperFactory assemblyFactory)
     {
+        _mapBuilderFactory = mapBuilderFactory;
         _resourceOptionConverter = resourceOptionConverter;
         _propertyOptionConverter = propertyOptionConverter;
         _assemblyFactory = assemblyFactory;
@@ -55,7 +58,7 @@ internal class CartographerBuilder : ICartographerBuilder
     {
         Guard.Against.Null(builderAction, nameof(builderAction));
 
-        var resourceMapBuilder = new ResourceMapBuilder<TResource>();
+        var resourceMapBuilder = _mapBuilderFactory.CreateForResource<TResource>();
         builderAction(resourceMapBuilder);
 
         ResourceMaps.Add(

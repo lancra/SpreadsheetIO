@@ -78,6 +78,7 @@ public static class ServiceCollectionExtensions
         }
 
         return services.AddScoped<ICartographerBuilder, CartographerBuilder>()
+            .AddScoped<IMapBuilderFactory, MapBuilderFactory>()
             .AddScoped(typeof(IMapOptionConverter<,>), typeof(MapOptionConverter<,>))
             .AddScoped<
                 IMapOptionConversionStrategy<IPropertyMapOptionRegistration, IPropertyMapOption>,

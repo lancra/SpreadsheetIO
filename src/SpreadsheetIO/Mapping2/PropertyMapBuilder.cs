@@ -12,17 +12,15 @@ internal abstract class PropertyMapBuilder : IInternalPropertyMapBuilder
     private readonly IDictionary<Type, IPropertyMapOptionRegistration> _registrations =
         new Dictionary<Type, IPropertyMapOptionRegistration>();
 
-    protected PropertyMapBuilder(PropertyInfo propertyInfo)
+    protected PropertyMapBuilder(PropertyInfo propertyInfo, IMapBuilderFactory mapBuilderFactory)
     {
         PropertyInfo = propertyInfo;
-        InternalKeyBuilder = new PropertyMapKeyBuilder(propertyInfo);
+        KeyBuilder = mapBuilderFactory.CreateForPropertyKey(propertyInfo);
     }
 
     public PropertyInfo PropertyInfo { get; }
 
-    public IInternalPropertyMapKeyBuilder KeyBuilder => InternalKeyBuilder;
-
-    protected PropertyMapKeyBuilder InternalKeyBuilder { get; }
+    public IInternalPropertyMapKeyBuilder KeyBuilder { get; }
 
     public PropertyMapResult Build(
         IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption> propertyOptionConverter,
@@ -49,7 +47,7 @@ internal abstract class PropertyMapBuilder : IInternalPropertyMapBuilder
 
         if (!failedConversionResults.Any())
         {
-            var map = new PropertyMap(PropertyInfo, InternalKeyBuilder.Key, new MapOptions<IPropertyMapOption>(options));
+            var map = new PropertyMap(PropertyInfo, KeyBuilder.Key, new MapOptions<IPropertyMapOption>(options));
             return PropertyMapResult.Success(map);
         }
         else

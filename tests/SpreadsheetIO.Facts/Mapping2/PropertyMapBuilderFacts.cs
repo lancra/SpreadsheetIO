@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Reflection;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping2;
@@ -77,6 +78,15 @@ public class PropertyMapBuilderFacts
                 .Returns((HeaderStyleMapOption registration, IInternalResourceMapBuilder _)
                     => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
 
+            var expectedKey = new PropertyMapKey(nameof(FakeModel.Id), default, false);
+            var propertyMapKeyBuilderMock = _mocker.GetMock<IInternalPropertyMapKeyBuilder>();
+            propertyMapKeyBuilderMock.SetupGet(builder => builder.Key)
+                .Returns(expectedKey);
+
+            _mocker.GetMock<IMapBuilderFactory>()
+                .Setup(mapBuilderFactory => mapBuilderFactory.CreateForPropertyKey(It.IsAny<PropertyInfo>()))
+                .Returns(propertyMapKeyBuilderMock.Object);
+
             var sut = CreateSystemUnderTest(model => model.Id);
             sut.UsesHeaderStyle(BuiltInExcelStyle.Normal);
             sut.TryGetRegistration<HeaderStyleMapOption>(out var registration);
@@ -90,7 +100,7 @@ public class PropertyMapBuilderFacts
             Assert.Null(result.Error);
 
             Assert.Equal(sut.PropertyInfo, result.Value!.Property);
-            Assert.Equal(sut.KeyBuilder.Key, result.Value.Key);
+            Assert.Equal(expectedKey, result.Value.Key);
             Assert.Equal(registration, result.Value.Options.Find<HeaderStyleMapOption>());
         }
 
@@ -167,6 +177,41 @@ public class PropertyMapBuilderFacts
     public class TheTryAddRegistrationMethod : PropertyMapBuilderFacts
     {
         [Fact]
+        public void ReturnsTrueWhenRegistrationIsNew()
+        {
+            // Arrange
+            var registrationMock = new Mock<IPropertyMapOptionRegistration>();
+            registrationMock.SetupGet(registration => registration.AllowedTypes)
+                .Returns(new[] { typeof(int), });
+
+            var sut = CreateSystemUnderTest(model => model.Id);
+
+            // Act
+            var isAdded = sut.TryAddRegistration(registrationMock.Object);
+
+            // Assert
+            Assert.True(isAdded);
+        }
+
+        [Fact]
+        public void ReturnsFalseWhenRegistrationIsAlreadyAdded()
+        {
+            // Arrange
+            var registrationMock = new Mock<IPropertyMapOptionRegistration>();
+            registrationMock.SetupGet(registration => registration.AllowedTypes)
+                .Returns(new[] { typeof(int), });
+
+            var sut = CreateSystemUnderTest(model => model.Id);
+            sut.TryAddRegistration(registrationMock.Object);
+
+            // Act
+            var isAdded = sut.TryAddRegistration(registrationMock.Object);
+
+            // Assert
+            Assert.False(isAdded);
+        }
+
+        [Fact]
         public void ReturnsFalseWhenRegistrationIsNotAllowed()
         {
             // Arrange
@@ -208,13 +253,19 @@ public class PropertyMapBuilderFacts
         {
             // Arrange
             var number = 3U;
+
+            var propertyMapKeyBuilderMock = _mocker.GetMock<IInternalPropertyMapKeyBuilder>();
+            _mocker.GetMock<IMapBuilderFactory>()
+                .Setup(mapBuilderFactory => mapBuilderFactory.CreateForPropertyKey(It.IsAny<PropertyInfo>()))
+                .Returns(propertyMapKeyBuilderMock.Object);
+
             var sut = CreateSystemUnderTest(model => model.Id);
 
             // Act
             sut.HasKey(key => key.WithNumber(number));
 
             // Assert
-            Assert.Equal(number, sut.KeyBuilder.Key.Number);
+            propertyMapKeyBuilderMock.Verify(builder => builder.WithNumber(number));
         }
 
         [Fact]

@@ -14,8 +14,8 @@ namespace LanceC.SpreadsheetIO.Mapping2;
 internal class PropertyMapBuilder<TResource, TProperty> : PropertyMapBuilder, IInternalPropertyMapBuilder<TResource, TProperty>
     where TResource : class
 {
-    public PropertyMapBuilder(Expression<Func<TResource, TProperty>> propertyExpression)
-        : base(GetPropertyInfo(propertyExpression))
+    public PropertyMapBuilder(Expression<Func<TResource, TProperty>> propertyExpression, IMapBuilderFactory mapBuilderFactory)
+        : base(GetPropertyInfo(propertyExpression), mapBuilderFactory)
     {
     }
 
@@ -23,7 +23,7 @@ internal class PropertyMapBuilder<TResource, TProperty> : PropertyMapBuilder, II
     {
         Guard.Against.Null(key, nameof(key));
 
-        key(InternalKeyBuilder);
+        key(KeyBuilder);
         return this;
     }
 
@@ -108,12 +108,10 @@ internal class PropertyMapBuilder<TResource, TProperty> : PropertyMapBuilder, II
     {
         Guard.Against.Null(propertyExpression, nameof(propertyExpression));
 
-        if (propertyExpression.Body is MemberExpression memberExpression)
+        if (propertyExpression.Body is MemberExpression memberExpression &&
+            memberExpression.Member is PropertyInfo propertyInfo)
         {
-            if (memberExpression.Member is PropertyInfo propertyInfo)
-            {
-                return propertyInfo;
-            }
+            return propertyInfo;
         }
 
         throw new ArgumentException(Messages.InvalidResourcePropertyExpression, nameof(propertyExpression));
