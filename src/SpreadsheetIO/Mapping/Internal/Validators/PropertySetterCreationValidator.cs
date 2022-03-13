@@ -24,7 +24,7 @@ internal class PropertySetterCreationValidator : ResourceMapValidator
         if (invalidPropertyNames.Any())
         {
             return ResourceMapValidationResult.Failure(
-                Messages.InvalidPropertyMapsForSetterCreation(typeof(TResource).Name, string.Join(',', invalidPropertyNames)));
+                Messages.InvalidPropertiesForSetterCreation(typeof(TResource).Name, string.Join(',', invalidPropertyNames)));
         }
 
         return ResourceMapValidationResult.Success();

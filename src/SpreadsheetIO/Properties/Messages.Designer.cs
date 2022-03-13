@@ -173,9 +173,9 @@ namespace LanceC.SpreadsheetIO.Properties
         /// <summary>
         /// The {resourceType} map does not specify a constructor and the following properties do not have public setters: {propertyNames}.
         /// </summary>
-        public static string InvalidPropertyMapsForSetterCreation(object? resourceType, object? propertyNames)
+        public static string InvalidPropertiesForSetterCreation(object? resourceType, object? propertyNames)
             => string.Format(
-                GetString("InvalidPropertyMapsForSetterCreation", nameof(resourceType), nameof(propertyNames)),
+                GetString("InvalidPropertiesForSetterCreation", nameof(resourceType), nameof(propertyNames)),
                 resourceType, propertyNames);
 
         /// <summary>

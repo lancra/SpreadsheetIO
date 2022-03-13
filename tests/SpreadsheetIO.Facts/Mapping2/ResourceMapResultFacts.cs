@@ -32,7 +32,7 @@ public class ResourceMapResultFacts
         public void ReturnsInvalidResult()
         {
             // Arrange
-            var error = new ResourceMapError(Array.Empty<MapOptionConversionResult>());
+            var error = ResourceMapErrorCreator.Create();
 
             // Act
             var result = ResourceMapResult.Failure(error);

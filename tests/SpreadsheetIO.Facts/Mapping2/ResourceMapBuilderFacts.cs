@@ -6,6 +6,7 @@ using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Mapping2.Options.Converters;
 using LanceC.SpreadsheetIO.Mapping2.Options.Registrations;
+using LanceC.SpreadsheetIO.Mapping2.Validation;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Shared;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
@@ -52,6 +53,10 @@ public class ResourceMapBuilderFacts
             _mocker.GetMock<IMapBuilderFactory>()
                 .Setup(mapBuilderFactory => mapBuilderFactory.CreateForProperty((FakeModel model) => model.Id))
                 .Returns(propertyBuilderMock.Object);
+
+            _mocker.GetMock<IResourceMapBuilderValidator>()
+                .Setup(validator => validator.Validate(It.IsAny<IInternalResourceMapBuilder>()))
+                .Returns(Array.Empty<ResourceMapBuilderValidationResult>());
 
             var sut = CreateSystemUnderTest();
             sut.ExitsOnResourceReadingFailure();
@@ -108,6 +113,10 @@ public class ResourceMapBuilderFacts
                 .Setup(mapBuilderFactory => mapBuilderFactory.CreateForProperty((FakeModel model) => model.Id))
                 .Returns(propertyBuilderMock.Object);
 
+            _mocker.GetMock<IResourceMapBuilderValidator>()
+                .Setup(validator => validator.Validate(It.IsAny<IInternalResourceMapBuilder>()))
+                .Returns(Array.Empty<ResourceMapBuilderValidationResult>());
+
             var sut = CreateSystemUnderTest();
             sut.ExitsOnResourceReadingFailure();
             sut.Property(model => model.Id);
@@ -156,6 +165,10 @@ public class ResourceMapBuilderFacts
                 .Setup(mapBuilderFactory => mapBuilderFactory.CreateForProperty((FakeModel model) => model.Id))
                 .Returns(propertyBuilderMock.Object);
 
+            _mocker.GetMock<IResourceMapBuilderValidator>()
+                .Setup(validator => validator.Validate(It.IsAny<IInternalResourceMapBuilder>()))
+                .Returns(Array.Empty<ResourceMapBuilderValidationResult>());
+
             var sut = CreateSystemUnderTest();
             sut.ExitsOnResourceReadingFailure();
             sut.Property(model => model.Id);
@@ -172,6 +185,57 @@ public class ResourceMapBuilderFacts
 
             var actualConversionResult = Assert.Single(result.Error!.Conversions);
             Assert.Equal(expectedPropertyConversionResult, actualConversionResult);
+        }
+
+        [Fact]
+        public void ReturnsFailureResultWhenValidationFails()
+        {
+            // Arrange
+            var resourceOptionConverterMock = _mocker
+                .GetMock<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>();
+            resourceOptionConverterMock
+                .Setup(converter => converter.ConvertToOption(
+                    It.IsAny<ExitOnResourceReadingFailureResourceMapOption>(),
+                    It.IsAny<ResourceMapBuilder>()))
+                .Returns((ExitOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
+                    => MapOptionConversionResult.Success<IResourceMapOption>(registration, registration));
+
+            var propertyOptionConverterMock = _mocker
+                .GetMock<IMapOptionConverter<IPropertyMapOptionRegistration, IPropertyMapOption>>();
+
+            var expectedPropertyMap = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
+            var propertyBuilderMock = _mocker.GetMock<IInternalPropertyMapBuilder<FakeModel, int>>();
+            propertyBuilderMock
+                .Setup(propertyBuilder => propertyBuilder.Build(
+                    propertyOptionConverterMock.Object,
+                    It.IsAny<IInternalResourceMapBuilder>()))
+                .Returns(PropertyMapResult.Success(expectedPropertyMap));
+
+            _mocker.GetMock<IMapBuilderFactory>()
+                .Setup(mapBuilderFactory => mapBuilderFactory.CreateForProperty((FakeModel model) => model.Id))
+                .Returns(propertyBuilderMock.Object);
+
+            var expectedValidationResult = ResourceMapBuilderValidationResult.Failure("foo");
+            _mocker.GetMock<IResourceMapBuilderValidator>()
+                .Setup(validator => validator.Validate(It.IsAny<IInternalResourceMapBuilder>()))
+                .Returns(new[] { expectedValidationResult, });
+
+            var sut = CreateSystemUnderTest();
+            sut.ExitsOnResourceReadingFailure();
+            sut.Property(model => model.Id);
+
+            sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
+
+            // Act
+            var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
+
+            // Assert
+            Assert.False(result.IsValid);
+            Assert.Null(result.Value);
+            Assert.NotNull(result.Error);
+
+            var actualValidationResult = Assert.Single(result.Error!.Validations);
+            Assert.Equal(expectedValidationResult, actualValidationResult);
         }
 
         [Fact]
@@ -204,6 +268,10 @@ public class ResourceMapBuilderFacts
                 .Returns(idPropertyBuilderMock.Object);
             mapBuilderFactoryMock.Setup(mapBuilderFactory => mapBuilderFactory.CreateForProperty((FakeModel model) => model.Name))
                 .Returns(namePropertyBuilderMock.Object);
+
+            _mocker.GetMock<IResourceMapBuilderValidator>()
+                .Setup(validator => validator.Validate(It.IsAny<IInternalResourceMapBuilder>()))
+                .Returns(Array.Empty<ResourceMapBuilderValidationResult>());
 
             var sut = CreateSystemUnderTest();
             sut.UsesHeaderStyle(BuiltInExcelStyle.Normal);

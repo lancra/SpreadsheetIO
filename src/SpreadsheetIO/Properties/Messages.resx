@@ -180,7 +180,7 @@
   <data name="InvalidMapForResourceType" xml:space="preserve">
     <value>The {resourceType} map has configuration errors and cannot be used.</value>
   </data>
-  <data name="InvalidPropertyMapsForSetterCreation" xml:space="preserve">
+  <data name="InvalidPropertiesForSetterCreation" xml:space="preserve">
     <value>The {resourceType} map does not specify a constructor and the following properties do not have public setters: {propertyNames}.</value>
   </data>
   <data name="InvalidResourcePropertyExpression" xml:space="preserve">

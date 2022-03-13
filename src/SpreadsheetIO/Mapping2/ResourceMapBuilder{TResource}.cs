@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Mapping2.Options.Registrations;
+using LanceC.SpreadsheetIO.Mapping2.Validation;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Shared;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
@@ -14,8 +15,8 @@ internal class ResourceMapBuilder<TResource> : ResourceMapBuilder, IInternalReso
 {
     private readonly IMapBuilderFactory _mapBuilderFactory;
 
-    public ResourceMapBuilder(IMapBuilderFactory mapBuilderFactory)
-        : base(typeof(TResource))
+    public ResourceMapBuilder(IMapBuilderFactory mapBuilderFactory, IResourceMapBuilderValidator validator)
+        : base(typeof(TResource), validator)
     {
         _mapBuilderFactory = mapBuilderFactory;
     }

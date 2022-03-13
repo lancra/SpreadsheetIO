@@ -2,18 +2,21 @@ using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Mapping2.Options.Converters;
 using LanceC.SpreadsheetIO.Mapping2.Options.Registrations;
+using LanceC.SpreadsheetIO.Mapping2.Validation;
 
 namespace LanceC.SpreadsheetIO.Mapping2;
 
 internal abstract class ResourceMapBuilder : IInternalResourceMapBuilder
 {
+    private readonly IResourceMapBuilderValidator _validator;
     private readonly List<IInternalPropertyMapBuilder> _propertyMapBuilders = new();
     private readonly IDictionary<Type, IResourceMapOptionRegistration> _registrations =
         new Dictionary<Type, IResourceMapOptionRegistration>();
 
-    protected ResourceMapBuilder(Type resourceType)
+    protected ResourceMapBuilder(Type resourceType, IResourceMapBuilderValidator validator)
     {
         ResourceType = resourceType;
+        _validator = validator;
     }
 
     public Type ResourceType { get; }
@@ -67,7 +70,10 @@ internal abstract class ResourceMapBuilder : IInternalResourceMapBuilder
             }
         }
 
-        if (!failedConversionResults.Any())
+        var failedValidationResults = _validator.Validate(this);
+
+        if (!failedConversionResults.Any() &&
+            !failedValidationResults.Any())
         {
             var map = new ResourceMap(
                 ResourceType,
@@ -78,7 +84,7 @@ internal abstract class ResourceMapBuilder : IInternalResourceMapBuilder
         }
         else
         {
-            var error = new ResourceMapError(failedConversionResults);
+            var error = new ResourceMapError(failedConversionResults, failedValidationResults);
             return ResourceMapResult.Failure(error);
         }
     }

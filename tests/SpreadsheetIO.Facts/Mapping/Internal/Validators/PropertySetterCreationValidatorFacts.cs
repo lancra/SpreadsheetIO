@@ -97,7 +97,7 @@ public class PropertySetterCreationValidatorFacts
             // Assert
             Assert.False(validationResult.IsValid);
             Assert.Equal(
-                Messages.InvalidPropertyMapsForSetterCreation(
+                Messages.InvalidPropertiesForSetterCreation(
                     typeof(FakePropertySetterModel).Name,
                     nameof(FakePropertySetterModel.Amount)),
                 validationResult.Message);

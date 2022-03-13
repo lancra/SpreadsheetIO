@@ -7,6 +7,7 @@ using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Mapping2.Options.Converters;
 using LanceC.SpreadsheetIO.Mapping2.Options.Registrations;
+using LanceC.SpreadsheetIO.Mapping2.Validation;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
 using LanceC.SpreadsheetIO.Reading.Internal.Creation;
@@ -88,7 +89,9 @@ public static class ServiceCollectionExtensions
                 ExplicitConstructorResourceMapOptionConversionStrategy>()
             .AddScoped<
                 IMapOptionConversionStrategy<IResourceMapOptionRegistration, IResourceMapOption>,
-                ImplicitConstructorResourceMapOptionConversionStrategy>();
+                ImplicitConstructorResourceMapOptionConversionStrategy>()
+            .AddScoped<IResourceMapBuilderValidator, ResourceMapBuilderValidator>()
+            .AddScoped<IResourceMapBuilderValidationStrategy, PropertySetterCreationValidationStrategy>();
     }
 
     private static IServiceCollection AddSpreadsheetIOReading(this IServiceCollection services)

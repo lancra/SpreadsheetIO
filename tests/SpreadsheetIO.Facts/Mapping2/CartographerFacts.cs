@@ -42,7 +42,7 @@ public class CartographerFacts
         {
             // Arrange
             var resourceType = typeof(FakeModel);
-            var resourceMapError = new ResourceMapError(Array.Empty<MapOptionConversionResult>());
+            var resourceMapError = ResourceMapErrorCreator.Create();
 
             _mocker.Use<IDictionary<Type, ResourceMapResult>>(
                 new Dictionary<Type, ResourceMapResult>
