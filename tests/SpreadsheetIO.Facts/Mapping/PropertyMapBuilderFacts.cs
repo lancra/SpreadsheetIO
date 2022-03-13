@@ -694,7 +694,7 @@ public class PropertyMapBuilderFacts
             Assert.NotNull(exception);
             var invalidOperationException = Assert.IsType<InvalidOperationException>(exception);
             Assert.Equal(
-                Messages.OptionsExtensionNotAllowedForType(typeof(DateKindMapOption).Name, typeof(int).Name),
+                Messages.MapOptionRegistrationNotAllowedForType(typeof(DateKindMapOption), typeof(int).Name),
                 invalidOperationException.Message);
         }
     }

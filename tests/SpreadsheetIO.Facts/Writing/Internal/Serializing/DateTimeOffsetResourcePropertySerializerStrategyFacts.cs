@@ -50,7 +50,7 @@ public class DateTimeOffsetResourcePropertySerializerStrategyFacts
                 { new DateTimeOffset(2021, 2, 3, 4, 5, 6, new TimeSpan(-4, 0, 0)) },
             };
 
-        public static TheoryData<DateTimeOffset, CellDateKind> DataForUsesDateKindFromExtensionWhenSpecified
+        public static TheoryData<DateTimeOffset, CellDateKind> DataForUsesDateKindFromMapOptionWhenSpecified
             => new()
             {
                 { new DateTimeOffset(2021, 2, 3, 4, 5, 6, new TimeSpan(-4, 0, 0)), CellDateKind.Number },
@@ -92,8 +92,8 @@ public class DateTimeOffsetResourcePropertySerializerStrategyFacts
         }
 
         [Theory]
-        [MemberData(nameof(DataForUsesDateKindFromExtensionWhenSpecified))]
-        public void UsesDateKindFromExtensionWhenSpecified(DateTimeOffset value, CellDateKind dateKind)
+        [MemberData(nameof(DataForUsesDateKindFromMapOptionWhenSpecified))]
+        public void UsesDateKindFromMapOptionWhenSpecified(DateTimeOffset value, CellDateKind dateKind)
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value, dateKind);

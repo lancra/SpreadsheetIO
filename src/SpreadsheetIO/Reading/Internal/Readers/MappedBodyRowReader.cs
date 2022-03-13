@@ -73,9 +73,9 @@ internal class MappedBodyRowReader : IMappedBodyRowReader
 
             var propertyMap = propertyHeaders.GetMap(columnNumber);
 
-            var optionalExtension = propertyMap.Options.Find<OptionalPropertyMapOption>();
-            var isRequired = optionalExtension is null ||
-                (optionalExtension.Kind != PropertyElementKind.All && optionalExtension.Kind != PropertyElementKind.Body);
+            var optionalMapOption = propertyMap.Options.Find<OptionalPropertyMapOption>();
+            var isRequired = optionalMapOption is null ||
+                (optionalMapOption.Kind != PropertyElementKind.All && optionalMapOption.Kind != PropertyElementKind.Body);
 
             var hasDefaultValue = _resourcePropertyDefaultValueResolver
                 .TryResolve(

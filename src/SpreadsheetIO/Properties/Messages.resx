@@ -135,20 +135,8 @@
   <data name="CannotGetAssemblyFromType" xml:space="preserve">
     <value>Cannot retrieve assembly for {type}.</value>
   </data>
-  <data name="DuplicateMapForResourceType" xml:space="preserve">
-    <value>Multiple maps are defined for the {resourceType} resource.</value>
-  </data>
-  <data name="DuplicatePropertyMap" xml:space="preserve">
-    <value>The {propertyName} property has already been mapped for the {resourceMapType} resource map.</value>
-  </data>
-  <data name="DuplicatePropertyMapKeyName" xml:space="preserve">
-    <value>The {keyName} property key name has already been defined for the {resourceMapType} resource map.</value>
-  </data>
   <data name="DuplicatePropertyMapKeyNames" xml:space="preserve">
     <value>{resourceType} has duplicate key names for the following properties: {keyNames}.</value>
-  </data>
-  <data name="DuplicatePropertyMapKeyNumber" xml:space="preserve">
-    <value>The {keyNumber} property key number has already been defined for the {resourceMapType} resource map.</value>
   </data>
   <data name="DuplicatePropertyMapKeyNumbers" xml:space="preserve">
     <value>{resourceType} has duplicate key numbers for the following properties: {keyNumbers}.</value>
@@ -156,23 +144,14 @@
   <data name="DuplicatePropertyMaps" xml:space="preserve">
     <value>{resourceType} has duplicate maps for the following properties: {propertyNames}.</value>
   </data>
-  <data name="DuplicateResourceConstructor" xml:space="preserve">
-    <value>Multiple {resourceType} constructors are defined.</value>
-  </data>
   <data name="DuplicateSpreadsheetPageForName" xml:space="preserve">
     <value>A spreadsheet page has already been added with the name '{name}'.</value>
   </data>
   <data name="DuplicateStrategy" xml:space="preserve">
     <value>The {parentName} cannot be constructed because there are multiple {strategyType} instances registered for the {propertyType} property type.</value>
   </data>
-  <data name="FailedResourceMapValidation" xml:space="preserve">
-    <value>One or more validation failures occurred.</value>
-  </data>
   <data name="FinishedWriting" xml:space="preserve">
     <value>This operation cannot be performed since writing has been closed.</value>
-  </data>
-  <data name="FrozenMapOptions" xml:space="preserve">
-    <value>The map options are frozen and cannot be modified.</value>
   </data>
   <data name="InvalidCellReference" xml:space="preserve">
     <value>The cell reference '{cellReference}' is not valid.</value>
@@ -198,11 +177,11 @@
   <data name="InvalidStringForIndexing" xml:space="preserve">
     <value>A null or empty string cannot be indexed.</value>
   </data>
+  <data name="MapOptionRegistrationNotAllowedForType" xml:space="preserve">
+    <value>The {registrationType} option registration is not allowed for a {propertyType} property.</value>
+  </data>
   <data name="MissingHeaderForColumnNumber" xml:space="preserve">
     <value>No header was found at column {columnNumber}.</value>
-  </data>
-  <data name="MissingMapForResourceMapType" xml:space="preserve">
-    <value>The {resourceMapType} map is not defined for the {resourceType} resource.</value>
   </data>
   <data name="MissingMapForResourceProperties" xml:space="preserve">
     <value>The {resourceType} map has properties that were specified as constructor parameters but do not have a defined map: {propertyNames}.</value>
@@ -233,9 +212,6 @@
   </data>
   <data name="NonNumericInput" xml:space="preserve">
     <value>Required input {parameterName} was not numeric.</value>
-  </data>
-  <data name="OptionsExtensionNotAllowedForType" xml:space="preserve">
-    <value>The {extensionType} option is not allowed for a {propertyType} property.</value>
   </data>
   <data name="UnindexedResource" xml:space="preserve">
     <value>The resource has not been indexed.</value>

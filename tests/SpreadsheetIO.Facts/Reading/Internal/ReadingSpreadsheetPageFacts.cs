@@ -88,7 +88,7 @@ public class ReadingSpreadsheetPageFacts
         }
 
         [Fact]
-        public void ReturnsNoResourcesWhenBodyRowReadingFailureIsSetAndExitOnFailureOptionsExtensionIsPresent()
+        public void ReturnsNoResourcesWhenBodyRowReadingFailureIsSetAndExitOnFailureMapOptionIsPresent()
         {
             // Arrange
             var map = ResourceMapCreator.Create<FakeModel>(

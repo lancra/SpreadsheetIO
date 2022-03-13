@@ -85,7 +85,7 @@ internal abstract class PropertyMapBuilder : IInternalPropertyMapBuilder
         if (!IsRegistrationAllowed(registration))
         {
             throw new InvalidOperationException(
-                Messages.OptionsExtensionNotAllowedForType(registration.GetType().Name, PropertyInfo.PropertyType.Name));
+                Messages.MapOptionRegistrationNotAllowedForType(registration.GetType(), PropertyInfo.PropertyType.Name));
         }
 
         _registrations[typeof(TRegistration)] = registration;

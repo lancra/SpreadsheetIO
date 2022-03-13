@@ -50,7 +50,7 @@ public class DateTimeResourcePropertySerializerStrategyFacts
                 { new DateTime(2021, 2, 3, 4, 5, 6) },
             };
 
-        public static TheoryData<DateTime, CellDateKind> DataForUsesDateKindFromExtensionWhenSpecified
+        public static TheoryData<DateTime, CellDateKind> DataForUsesDateKindFromMapOptionWhenSpecified
             => new()
             {
                 { new DateTime(2021, 2, 3, 4, 5, 6), CellDateKind.Number },
@@ -92,8 +92,8 @@ public class DateTimeResourcePropertySerializerStrategyFacts
         }
 
         [Theory]
-        [MemberData(nameof(DataForUsesDateKindFromExtensionWhenSpecified))]
-        public void UsesDateKindFromExtensionWhenSpecified(DateTime value, CellDateKind dateKind)
+        [MemberData(nameof(DataForUsesDateKindFromMapOptionWhenSpecified))]
+        public void UsesDateKindFromMapOptionWhenSpecified(DateTime value, CellDateKind dateKind)
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value, dateKind);

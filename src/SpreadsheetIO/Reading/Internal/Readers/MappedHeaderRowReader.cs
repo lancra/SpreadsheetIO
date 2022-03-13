@@ -21,8 +21,8 @@ internal class MappedHeaderRowReader : IMappedHeaderRowReader
         var missingHeaderFailures = new List<MissingHeaderReadingFailure>();
         var invalidHeaderFailures = new List<InvalidHeaderReadingFailure>();
 
-        var headerRowNumberExtension = map.Options.Find<HeaderRowNumberResourceMapOption>();
-        var headerRowNumber = headerRowNumberExtension?.Number ?? 1U;
+        var headerRowNumberOption = map.Options.Find<HeaderRowNumberResourceMapOption>();
+        var headerRowNumber = headerRowNumberOption?.Number ?? 1U;
 
         var hasHeaderRow = reader.ReadToRow(headerRowNumber);
         if (!hasHeaderRow)
@@ -62,9 +62,9 @@ internal class MappedHeaderRowReader : IMappedHeaderRowReader
         {
             var isIndexed = propertyHeaders.ContainsMap(propertyMap);
 
-            var optionalExtension = propertyMap.Options.Find<OptionalPropertyMapOption>();
-            var isRequired = optionalExtension is null ||
-                (optionalExtension.Kind != PropertyElementKind.All && optionalExtension.Kind != PropertyElementKind.Header);
+            var optionalMapOption = propertyMap.Options.Find<OptionalPropertyMapOption>();
+            var isRequired = optionalMapOption is null ||
+                (optionalMapOption.Kind != PropertyElementKind.All && optionalMapOption.Kind != PropertyElementKind.Header);
 
             if (!isIndexed && isRequired)
             {

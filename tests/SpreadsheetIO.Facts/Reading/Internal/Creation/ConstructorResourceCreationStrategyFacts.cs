@@ -20,7 +20,7 @@ public class ConstructorResourceCreationStrategyFacts
     public class TheApplicabilityHandlerProperty : ConstructorResourceCreationStrategyFacts
     {
         [Fact]
-        public void ReturnsTrueWhenOptionsContainsConstructorExtension()
+        public void ReturnsTrueWhenOptionsContainsConstructorOption()
         {
             // Arrange
             var resourceMap = ResourceMapCreator.Create<FakeConstructionModel>(

@@ -97,7 +97,7 @@ public class SpreadsheetPageMapWriterFacts
         }
 
         [Fact]
-        public void AdvancesHeaderRowWhenOptionsExtensionSpecified()
+        public void AdvancesHeaderRowWhenMapOptionSpecified()
         {
             // Arrange
             var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
@@ -123,7 +123,7 @@ public class SpreadsheetPageMapWriterFacts
         }
 
         [Fact]
-        public void SetsHeaderStyleWhenOptionsExtensionSpecified()
+        public void SetsHeaderStyleWhenMapOptionSpecified()
         {
             // Arrange
             var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
@@ -160,7 +160,7 @@ public class SpreadsheetPageMapWriterFacts
         }
 
         [Fact]
-        public void SetsBodyStyleWhenOptionsExtensionSpecified()
+        public void SetsBodyStyleWhenMapOptionSpecified()
         {
             // Arrange
             var spreadsheetPageMock = new FakeWritingSpreadsheetPage();

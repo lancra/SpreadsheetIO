@@ -18,7 +18,7 @@ public class ResourcePropertyDefaultValueResolverFacts
     public class TheTryResolveMethod : ResourcePropertyDefaultValueResolverFacts
     {
         [Fact]
-        public void ReturnsTrueWhenDefaultValueOptionsExtensionHasCorrespondingResolutionToParseResult()
+        public void ReturnsTrueWhenDefaultValueMapOptionHasCorrespondingResolutionToParseResult()
         {
             // Arrange
             var expectedValue = 1.5M;
@@ -74,7 +74,7 @@ public class ResourcePropertyDefaultValueResolverFacts
         }
 
         [Fact]
-        public void ReturnsFalseWhenDefaultValueOptionsExtensionIsNotFound()
+        public void ReturnsFalseWhenDefaultValueMapOptionIsNotFound()
         {
             // Arrange
             var map = PropertyMapCreator.CreateForFakeModel(model => model.Decimal);
@@ -91,7 +91,7 @@ public class ResourcePropertyDefaultValueResolverFacts
         }
 
         [Fact]
-        public void ReturnsFalseWhenParseResultDoesNotMatchAnyResolutionsDefinedInDefaultValueOptionsExtension()
+        public void ReturnsFalseWhenParseResultDoesNotMatchAnyResolutionsDefinedInDefaultValueMapOption()
         {
             // Arrange
             var defaultValue = 1.5M;

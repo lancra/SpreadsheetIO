@@ -39,7 +39,7 @@ public class MappedHeaderRowReaderFacts
     public class TheReadMethod : MappedHeaderRowReaderFacts
     {
         public static TheoryData<PropertyElementKind>
-            DataForDoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderOptionsExtension
+            DataForDoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderMapOption
             => new()
             {
                 { PropertyElementKind.All },
@@ -225,7 +225,7 @@ public class MappedHeaderRowReaderFacts
         }
 
         [Fact]
-        public void UsesOverriddenHeaderRowNumberWhenOptionsExtensionIsDefined()
+        public void UsesOverriddenHeaderRowNumberWhenMapOptionIsDefined()
         {
             // Arrange
             var headerRowNumber = 2U;
@@ -265,8 +265,8 @@ public class MappedHeaderRowReaderFacts
         }
 
         [Theory]
-        [MemberData(nameof(DataForDoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderOptionsExtension))]
-        public void DoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderOptionsExtension(PropertyElementKind kind)
+        [MemberData(nameof(DataForDoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderMapOption))]
+        public void DoesNotGenerateMissingFailureForPropertyMapWithOptionalHeaderMapOption(PropertyElementKind kind)
         {
             // Arrange
             var readerMock = _mocker.GetMock<IWorksheetElementReader>();

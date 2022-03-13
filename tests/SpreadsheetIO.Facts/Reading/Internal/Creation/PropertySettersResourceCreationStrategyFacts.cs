@@ -19,7 +19,7 @@ public class PropertySettersResourceCreationStrategyFacts
     public class TheApplicabilityHandlerProperty : PropertySettersResourceCreationStrategyFacts
     {
         [Fact]
-        public void ReturnsTrueWhenOptionsDoesNotContainConstructorExtension()
+        public void ReturnsTrueWhenOptionsDoesNotContainConstructorOption()
         {
             // Arrange
             var resourceMap = ResourceMapCreator.Create<FakeConstructionModel>(Array.Empty<PropertyMap>());
