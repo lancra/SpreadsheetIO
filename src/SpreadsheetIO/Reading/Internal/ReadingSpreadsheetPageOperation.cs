@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping2;
+using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading.Failures;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 

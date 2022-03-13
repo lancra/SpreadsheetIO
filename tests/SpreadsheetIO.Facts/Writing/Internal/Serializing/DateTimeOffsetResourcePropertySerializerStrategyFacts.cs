@@ -1,6 +1,6 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Assertions;
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
-using LanceC.SpreadsheetIO.Mapping2.Options;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Shared;
 using LanceC.SpreadsheetIO.Writing;
 using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
@@ -63,7 +63,7 @@ public class DateTimeOffsetResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
 
             var sut = CreateSystemUnderTest();
 
@@ -80,7 +80,7 @@ public class DateTimeOffsetResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffsetNullable);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffsetNullable);
 
             var sut = CreateSystemUnderTest();
 
@@ -97,7 +97,7 @@ public class DateTimeOffsetResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value, dateKind);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(
                 model => model.DateTimeOffset,
                 options: new DateKindMapOption(dateKind));
 
@@ -114,7 +114,7 @@ public class DateTimeOffsetResourcePropertySerializerStrategyFacts
         public void ThrowsInvalidCastExceptionWhenNonDateTimeOffsetTypeIsProvided()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
             var sut = CreateSystemUnderTest();
 
             // Act

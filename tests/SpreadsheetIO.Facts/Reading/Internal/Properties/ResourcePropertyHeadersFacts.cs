@@ -18,9 +18,9 @@ public class ResourcePropertyHeadersFacts
         public void ReturnsAddedColumnNumbers()
         {
             // Arrange
-            var firstMap = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
-            var secondMap = PropertyMapCreator2.CreateForFakeModel(model => model.Name);
-            var thirdMap = PropertyMapCreator2.CreateForFakeModel(model => model.Decimal);
+            var firstMap = PropertyMapCreator.CreateForFakeModel(model => model.Id);
+            var secondMap = PropertyMapCreator.CreateForFakeModel(model => model.Name);
+            var thirdMap = PropertyMapCreator.CreateForFakeModel(model => model.Decimal);
 
             var firstColumnNumber = 1U;
             var secondColumnNumber = 2U;
@@ -62,7 +62,7 @@ public class ResourcePropertyHeadersFacts
         public void AddsMapByNumber()
         {
             // Arrange
-            var expectedMap = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
+            var expectedMap = PropertyMapCreator.CreateForFakeModel(model => model.Id);
             var columnNumber = 1U;
 
             var sut = CreateSystemUnderTest();
@@ -79,8 +79,8 @@ public class ResourcePropertyHeadersFacts
         public void DoesNotOverrideExistingMap()
         {
             // Arrange
-            var expectedMap = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
-            var notExpectedMap = PropertyMapCreator2.CreateForFakeModel(model => model.Name);
+            var expectedMap = PropertyMapCreator.CreateForFakeModel(model => model.Id);
+            var notExpectedMap = PropertyMapCreator.CreateForFakeModel(model => model.Name);
             var columnNumber = 1U;
 
             var sut = CreateSystemUnderTest();
@@ -101,7 +101,7 @@ public class ResourcePropertyHeadersFacts
         public void ReturnsTrueWhenTheMapHasBeenAdded()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
+            var map = PropertyMapCreator.CreateForFakeModel(model => model.Id);
 
             var sut = CreateSystemUnderTest();
             sut.Add(map, 1U);
@@ -117,7 +117,7 @@ public class ResourcePropertyHeadersFacts
         public void ReturnsFalseWhenTheMapHasNotBeenAdded()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
+            var map = PropertyMapCreator.CreateForFakeModel(model => model.Id);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -134,9 +134,9 @@ public class ResourcePropertyHeadersFacts
         public void ReturnsUsageTrackerContainingAllColumnNumbers()
         {
             // Arrange
-            var firstMap = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
-            var secondMap = PropertyMapCreator2.CreateForFakeModel(model => model.Name);
-            var thirdMap = PropertyMapCreator2.CreateForFakeModel(model => model.Decimal);
+            var firstMap = PropertyMapCreator.CreateForFakeModel(model => model.Id);
+            var secondMap = PropertyMapCreator.CreateForFakeModel(model => model.Name);
+            var thirdMap = PropertyMapCreator.CreateForFakeModel(model => model.Decimal);
 
             var firstColumnNumber = 1U;
             var secondColumnNumber = 2U;
@@ -162,7 +162,7 @@ public class ResourcePropertyHeadersFacts
         public void ReturnsMapForColumnNumber()
         {
             // Arrange
-            var expectedMap = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
+            var expectedMap = PropertyMapCreator.CreateForFakeModel(model => model.Id);
             var columnNumber = 1U;
 
             var sut = CreateSystemUnderTest();
@@ -196,7 +196,7 @@ public class ResourcePropertyHeadersFacts
         public void ReturnsTrueWhenMapExistsForColumnNumber()
         {
             // Arrange
-            var expectedMap = PropertyMapCreator2.CreateForFakeModel(model => model.Id);
+            var expectedMap = PropertyMapCreator.CreateForFakeModel(model => model.Id);
             var columnNumber = 1U;
 
             var sut = CreateSystemUnderTest();

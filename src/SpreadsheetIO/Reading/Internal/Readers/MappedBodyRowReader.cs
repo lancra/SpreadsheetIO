@@ -1,5 +1,5 @@
-using LanceC.SpreadsheetIO.Mapping2;
-using LanceC.SpreadsheetIO.Mapping2.Options;
+using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Reading.Failures;
 using LanceC.SpreadsheetIO.Reading.Internal.Creation;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;

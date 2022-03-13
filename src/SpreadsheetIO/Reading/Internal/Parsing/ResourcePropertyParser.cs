@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping2;
+using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing;

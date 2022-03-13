@@ -1,7 +1,7 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping2;
-using LanceC.SpreadsheetIO.Mapping2.Options;
+using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Reading.Internal.Creation;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using Moq.AutoMock;
@@ -68,9 +68,9 @@ public class PropertySettersResourceCreationStrategyFacts
             var resourceMap = ResourceMapCreator.Create<FakeConstructionModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Id),
-                    PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Name),
-                    PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Amount),
+                    PropertyMapCreator.CreateForFakeConstructionModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeConstructionModel(model => model.Name),
+                    PropertyMapCreator.CreateForFakeConstructionModel(model => model.Amount),
                 });
 
             var idPropertyMap = resourceMap.Properties.Single(p => p.Key.Name == nameof(FakeConstructionModel.Id));
@@ -103,9 +103,9 @@ public class PropertySettersResourceCreationStrategyFacts
             var resourceMap = ResourceMapCreator.Create<FakeConstructionModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Id),
-                    PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Name),
-                    PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Amount),
+                    PropertyMapCreator.CreateForFakeConstructionModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeConstructionModel(model => model.Name),
+                    PropertyMapCreator.CreateForFakeConstructionModel(model => model.Amount),
                 });
 
             var idPropertyMap = resourceMap.Properties.Single(p => p.Key.Name == nameof(FakeConstructionModel.Id));

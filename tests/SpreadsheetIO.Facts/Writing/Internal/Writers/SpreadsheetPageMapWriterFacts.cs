@@ -1,7 +1,7 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping2.Options;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Writing;
@@ -31,11 +31,11 @@ public class SpreadsheetPageMapWriterFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id, keyAction => keyAction.WithNumber(1U)),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Display, keyAction => keyAction.WithNumber(3U)),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Decimal, keyAction => keyAction.WithNumber(2U)),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.DateTime),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id, keyAction => keyAction.WithNumber(1U)),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Name),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Display, keyAction => keyAction.WithNumber(3U)),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Decimal, keyAction => keyAction.WithNumber(2U)),
+                    PropertyMapCreator.CreateForFakeModel(model => model.DateTime),
                 });
 
             var sut = CreateSystemUnderTest();
@@ -63,9 +63,9 @@ public class SpreadsheetPageMapWriterFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Display),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Name),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Display),
                 });
 
             var idPropertyMap = map.Properties.Single(propertyMap => propertyMap.Key.Name == nameof(FakeModel.Id));
@@ -105,9 +105,9 @@ public class SpreadsheetPageMapWriterFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Display),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Name),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Display),
                 },
                 new HeaderRowNumberResourceMapOption(2U));
 
@@ -137,13 +137,13 @@ public class SpreadsheetPageMapWriterFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Id,
                         options: new HeaderStyleMapOption(new(idStyleName, IndexerKeyKind.Custom), idStyle)),
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Name,
                         options: new HeaderStyleMapOption(nameStyle.IndexerKey, nameStyle.Style)),
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Display,
                         options: new HeaderStyleMapOption(displayStyle.IndexerKey, displayStyle.Style)),
                 });
@@ -176,13 +176,13 @@ public class SpreadsheetPageMapWriterFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Id,
                         options: new BodyStyleMapOption(new(idStyleName, IndexerKeyKind.Custom), idStyle)),
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Name,
                         options: new BodyStyleMapOption(nameStyle.IndexerKey, nameStyle.Style)),
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Display,
                         options: new BodyStyleMapOption(displayStyle.IndexerKey, displayStyle.Style)),
                 });
@@ -224,9 +224,9 @@ public class SpreadsheetPageMapWriterFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Display),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Name),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Display),
                 });
 
             var sut = CreateSystemUnderTest();
@@ -249,9 +249,9 @@ public class SpreadsheetPageMapWriterFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id, keyAction => keyAction.WithNumber(1U)),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Name, keyAction => keyAction.WithNumber(3U)),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Display, keyAction => keyAction.WithNumber(5U)),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id, keyAction => keyAction.WithNumber(1U)),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Name, keyAction => keyAction.WithNumber(3U)),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Display, keyAction => keyAction.WithNumber(5U)),
                 });
 
             var sut = CreateSystemUnderTest();

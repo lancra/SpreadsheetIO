@@ -1,8 +1,8 @@
 using System.Drawing;
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping2;
-using LanceC.SpreadsheetIO.Mapping2.Options;
+using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
@@ -152,9 +152,9 @@ public class WritingSpreadsheetFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Display),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Name),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Display),
                 });
             _mocker.GetMock<ICartographer>()
                 .Setup(cartographer => cartographer.GetMap<FakeModel>())
@@ -209,13 +209,13 @@ public class WritingSpreadsheetFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Id,
                         options: new HeaderStyleMapOption(new("foo", IndexerKeyKind.Custom), customStyle)),
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Name,
                         options: new HeaderStyleMapOption(excelStyle.IndexerKey, excelStyle.Style)),
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Display,
                         options: new HeaderStyleMapOption(packageStyle.IndexerKey, packageStyle.Style)),
                 });
@@ -274,13 +274,13 @@ public class WritingSpreadsheetFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Id,
                         options: new BodyStyleMapOption(new("foo", IndexerKeyKind.Custom), customStyle)),
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Name,
                         options: new BodyStyleMapOption(excelStyle.IndexerKey, excelStyle.Style)),
-                    PropertyMapCreator2.CreateForFakeModel(
+                    PropertyMapCreator.CreateForFakeModel(
                         model => model.Display,
                         options: new BodyStyleMapOption(packageStyle.IndexerKey, packageStyle.Style)),
                 });

@@ -21,7 +21,7 @@ public class ShortResourcePropertyParserStrategyFacts
         public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.ShortNullable);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.ShortNullable);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -38,7 +38,7 @@ public class ShortResourcePropertyParserStrategyFacts
         public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Short);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Short);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -53,7 +53,7 @@ public class ShortResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenCellValueIsNotShort()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Short);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Short);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -69,7 +69,7 @@ public class ShortResourcePropertyParserStrategyFacts
         {
             // Arrange
             short expectedValue = 1;
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Short);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Short);
             var sut = CreateSystemUnderTest();
 
             // Act

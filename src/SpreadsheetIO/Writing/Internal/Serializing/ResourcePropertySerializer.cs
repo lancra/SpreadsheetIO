@@ -1,5 +1,5 @@
-using LanceC.SpreadsheetIO.Mapping2;
-using LanceC.SpreadsheetIO.Mapping2.Options;
+using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing;

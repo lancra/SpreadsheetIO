@@ -1,5 +1,5 @@
-using LanceC.SpreadsheetIO.Mapping2.Options;
-using LanceC.SpreadsheetIO.Mapping2.Options.Registrations;
+using LanceC.SpreadsheetIO.Mapping.Options;
+using LanceC.SpreadsheetIO.Mapping.Options.Registrations;
 
 namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 

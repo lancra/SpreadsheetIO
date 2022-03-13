@@ -1,6 +1,6 @@
-using LanceC.SpreadsheetIO.Mapping2;
-using LanceC.SpreadsheetIO.Mapping2.Options.Converters;
-using LanceC.SpreadsheetIO.Mapping2.Validation;
+using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Options.Converters;
+using LanceC.SpreadsheetIO.Mapping.Validation;
 
 namespace LanceC.SpreadsheetIO.Facts.Testing.Creators;
 

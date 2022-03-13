@@ -1,5 +1,5 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
-using LanceC.SpreadsheetIO.Mapping2.Options;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
 using LanceC.SpreadsheetIO.Shared;
@@ -23,7 +23,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
         public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffsetNullable);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffsetNullable);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -40,7 +40,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
         public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -55,7 +55,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenNoDateKindIsSpecifiedAndCellValueIsNotDouble()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -70,7 +70,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenNoDateKindIsSpecifiedAndCellValueIsNotOADate()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -85,7 +85,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
         public void ReturnsSuccessParseResultWhenNoDateKindIsSpecifiedAndCellValueIsOADate()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -100,7 +100,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenDateKindOfNumberIsSpecifiedAndCellValueIsNotDouble()
         {
             // Arrange
-            var map = PropertyMapCreator2
+            var map = PropertyMapCreator
                 .CreateForFakeResourcePropertyStrategyModel(
                     model => model.DateTimeOffset,
                     new DateKindMapOption(CellDateKind.Number));
@@ -119,7 +119,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenDateKindOfNumberIsSpecifiedAndCellValueIsNotOADate()
         {
             // Arrange
-            var map = PropertyMapCreator2
+            var map = PropertyMapCreator
                 .CreateForFakeResourcePropertyStrategyModel(
                     model => model.DateTimeOffset,
                     new DateKindMapOption(CellDateKind.Number));
@@ -138,7 +138,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
         public void ReturnsSuccessParseResultWhenDateKindOfNumberIsSpecifiedAndCellValueIsOADate()
         {
             // Arrange
-            var map = PropertyMapCreator2
+            var map = PropertyMapCreator
                 .CreateForFakeResourcePropertyStrategyModel(
                     model => model.DateTimeOffset,
                     new DateKindMapOption(CellDateKind.Number));
@@ -157,7 +157,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenDateKindOfTextIsSpecifiedAndCellValueIsNotDateTime()
         {
             // Arrange
-            var map = PropertyMapCreator2
+            var map = PropertyMapCreator
                 .CreateForFakeResourcePropertyStrategyModel(
                     model => model.DateTimeOffset,
                     new DateKindMapOption(CellDateKind.Text));
@@ -176,7 +176,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
         public void ReturnsSuccessParseResultWhenDateKindOfTextIsSpecifiedAndCellValueIsDateTime()
         {
             // Arrange
-            var map = PropertyMapCreator2
+            var map = PropertyMapCreator
                 .CreateForFakeResourcePropertyStrategyModel(
                     model => model.DateTimeOffset,
                     new DateKindMapOption(CellDateKind.Text));

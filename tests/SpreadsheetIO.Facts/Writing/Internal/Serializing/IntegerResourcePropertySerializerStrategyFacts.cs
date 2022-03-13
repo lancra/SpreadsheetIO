@@ -76,7 +76,7 @@ public class IntegerResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
 
             var sut = CreateSystemUnderTest();
 
@@ -95,7 +95,7 @@ public class IntegerResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.IntegerNullable);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.IntegerNullable);
 
             var sut = CreateSystemUnderTest();
 
@@ -113,7 +113,7 @@ public class IntegerResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByte);
 
             var sut = CreateSystemUnderTest();
 
@@ -130,7 +130,7 @@ public class IntegerResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByteNullable);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.SignedByteNullable);
 
             var sut = CreateSystemUnderTest();
 
@@ -148,7 +148,7 @@ public class IntegerResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Byte);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Byte);
 
             var sut = CreateSystemUnderTest();
 
@@ -165,7 +165,7 @@ public class IntegerResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.ByteNullable);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.ByteNullable);
 
             var sut = CreateSystemUnderTest();
 
@@ -183,7 +183,7 @@ public class IntegerResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Short);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Short);
 
             var sut = CreateSystemUnderTest();
 
@@ -200,7 +200,7 @@ public class IntegerResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.ShortNullable);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.ShortNullable);
 
             var sut = CreateSystemUnderTest();
 
@@ -218,7 +218,7 @@ public class IntegerResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedShort);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedShort);
 
             var sut = CreateSystemUnderTest();
 
@@ -235,7 +235,7 @@ public class IntegerResourcePropertySerializerStrategyFacts
         {
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedShortNullable);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.UnsignedShortNullable);
 
             var sut = CreateSystemUnderTest();
 
@@ -250,7 +250,7 @@ public class IntegerResourcePropertySerializerStrategyFacts
         public void ThrowsFormatExceptionWhenNonIntegerTypeIsProvided()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Integer);
             var sut = CreateSystemUnderTest();
 
             // Act

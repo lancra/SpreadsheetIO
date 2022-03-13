@@ -21,7 +21,7 @@ public class BooleanResourcePropertyParserStrategyFacts
         public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.BooleanNullable);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.BooleanNullable);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -38,7 +38,7 @@ public class BooleanResourcePropertyParserStrategyFacts
         public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -53,7 +53,7 @@ public class BooleanResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenCellValueIsNotInteger()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -68,7 +68,7 @@ public class BooleanResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenCellValueIsNotZeroOrOne()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -85,7 +85,7 @@ public class BooleanResourcePropertyParserStrategyFacts
         public void ReturnsSuccessParseResultWhenCellValueIsZeroOrOne(string cellValue, bool expectedValue)
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Boolean);
             var sut = CreateSystemUnderTest();
 
             // Act

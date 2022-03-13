@@ -21,7 +21,7 @@ public class DoubleResourcePropertyParserStrategyFacts
         public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.DoubleNullable);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DoubleNullable);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -38,7 +38,7 @@ public class DoubleResourcePropertyParserStrategyFacts
         public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Double);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Double);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -53,7 +53,7 @@ public class DoubleResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenCellValueIsNotDouble()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Double);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Double);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -69,7 +69,7 @@ public class DoubleResourcePropertyParserStrategyFacts
         {
             // Arrange
             var expectedValue = 1.5D;
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Double);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Double);
             var sut = CreateSystemUnderTest();
 
             // Act

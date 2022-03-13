@@ -48,7 +48,7 @@ public class ExcelFixture : IDisposable
     private static ISpreadsheetFactory GetSpreadsheetFactory(Action<IServiceCollection>? additionalServices = default)
     {
         var services = new ServiceCollection()
-            .AddSpreadsheetIO2(map => map.ApplyConfiguration(new FakeModelMapConfiguration()));
+            .AddSpreadsheetIO(map => map.ApplyConfiguration(new FakeModelMapConfiguration()));
 
         additionalServices?.Invoke(services);
 

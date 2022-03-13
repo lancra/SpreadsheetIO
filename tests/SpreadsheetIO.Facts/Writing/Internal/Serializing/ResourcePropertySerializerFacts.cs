@@ -1,6 +1,6 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping2.Options;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Writing;
 using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
@@ -112,7 +112,7 @@ public class ResourcePropertySerializerFacts
             // Arrange
             var name = "foo";
             var resource = new FakeModel { Name = name, };
-            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Name);
+            var map = PropertyMapCreator.CreateForFakeModel(model => model.Name);
 
             var expectedCellValue = new WritingCellValue(name);
 
@@ -144,7 +144,7 @@ public class ResourcePropertySerializerFacts
             // Arrange
             var dateTime = new DateTime(2012, 12, 21);
             var resource = new FakeModel { DateTime = dateTime, };
-            var map = PropertyMapCreator2.CreateForFakeModel(model => model.DateTime);
+            var map = PropertyMapCreator.CreateForFakeModel(model => model.DateTime);
 
             var expectedCellValue = new WritingCellValue(dateTime);
 
@@ -177,7 +177,7 @@ public class ResourcePropertySerializerFacts
             var defaultName = "bar";
 
             var resource = new FakeModel { Name = null, };
-            var map = PropertyMapCreator2.CreateForFakeModel(
+            var map = PropertyMapCreator.CreateForFakeModel(
                 model => model.Name,
                 options: new DefaultValuePropertyMapOption(defaultName, ResourcePropertyDefaultReadingResolution.List));
 
@@ -210,7 +210,7 @@ public class ResourcePropertySerializerFacts
         {
             // Arrange
             var resource = new FakeModel { Name = null, };
-            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Name);
+            var map = PropertyMapCreator.CreateForFakeModel(model => model.Name);
 
             var expectedCellValue = new WritingCellValue();
 
@@ -242,7 +242,7 @@ public class ResourcePropertySerializerFacts
             // Arrange
             var name = "foo";
             var resource = new FakeModel { Name = name, };
-            var map = PropertyMapCreator2.CreateForFakeModel(model => model.Name);
+            var map = PropertyMapCreator.CreateForFakeModel(model => model.Name);
 
             var expectedCellValue = new WritingCellValue(name);
 

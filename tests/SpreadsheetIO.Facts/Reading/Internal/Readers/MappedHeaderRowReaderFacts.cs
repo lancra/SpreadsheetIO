@@ -1,8 +1,8 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping2;
-using LanceC.SpreadsheetIO.Mapping2.Options;
+using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 using LanceC.SpreadsheetIO.Shared.Internal;
@@ -62,9 +62,9 @@ public class MappedHeaderRowReaderFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Decimal),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Name),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Decimal),
                 });
 
             var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
@@ -106,8 +106,8 @@ public class MappedHeaderRowReaderFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Name),
                 });
 
             var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
@@ -151,9 +151,9 @@ public class MappedHeaderRowReaderFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Decimal, keyAction: key => key.WithoutName().WithNumber(2U)),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Name),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Decimal, keyAction: key => key.WithoutName().WithNumber(2U)),
                 });
 
             var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
@@ -199,8 +199,8 @@ public class MappedHeaderRowReaderFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Name),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Name),
                 });
 
             var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders>();
@@ -239,7 +239,7 @@ public class MappedHeaderRowReaderFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id),
                 },
                 new HeaderRowNumberResourceMapOption(headerRowNumber));
 
@@ -278,8 +278,8 @@ public class MappedHeaderRowReaderFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Name, options: new OptionalPropertyMapOption(kind)),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Name, options: new OptionalPropertyMapOption(kind)),
                 });
 
             var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
@@ -321,7 +321,7 @@ public class MappedHeaderRowReaderFacts
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
                 {
-                    PropertyMapCreator2.CreateForFakeModel(model => model.Id),
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id),
                 });
 
             var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));

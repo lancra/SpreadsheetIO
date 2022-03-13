@@ -21,7 +21,7 @@ public class CharacterResourcePropertyParserStrategyFacts
         public void ReturnsEmptyParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.CharacterNullable);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.CharacterNullable);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -38,7 +38,7 @@ public class CharacterResourcePropertyParserStrategyFacts
         public void ReturnsMissingParseResultWhenCellValueIsNullOrEmptyAndPropertyTypeIsNotNullable(string cellValue)
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -53,7 +53,7 @@ public class CharacterResourcePropertyParserStrategyFacts
         public void ReturnsInvalidParseResultWhenCellValueIsNotCharacter()
         {
             // Arrange
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
             var sut = CreateSystemUnderTest();
 
             // Act
@@ -69,7 +69,7 @@ public class CharacterResourcePropertyParserStrategyFacts
         {
             // Arrange
             var expectedValue = 'A';
-            var map = PropertyMapCreator2.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.Character);
             var sut = CreateSystemUnderTest();
 
             // Act

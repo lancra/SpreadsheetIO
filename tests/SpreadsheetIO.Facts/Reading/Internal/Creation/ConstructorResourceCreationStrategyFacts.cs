@@ -1,7 +1,7 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping2;
-using LanceC.SpreadsheetIO.Mapping2.Options;
+using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Properties;
 using LanceC.SpreadsheetIO.Reading.Internal.Creation;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
@@ -66,9 +66,9 @@ public class ConstructorResourceCreationStrategyFacts
             // Arrange
             var expectedModel = new FakeConstructionModel(1, "foo", 2.5M);
 
-            var idPropertyMap = PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Id);
-            var namePropertyMap = PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Name);
-            var amountPropertyMap = PropertyMapCreator2.CreateForFakeConstructionModel(
+            var idPropertyMap = PropertyMapCreator.CreateForFakeConstructionModel(model => model.Id);
+            var namePropertyMap = PropertyMapCreator.CreateForFakeConstructionModel(model => model.Name);
+            var amountPropertyMap = PropertyMapCreator.CreateForFakeConstructionModel(
                 model => model.Amount,
                 new OptionalPropertyMapOption(PropertyElementKind.All));
             var resourceMap = ResourceMapCreator.Create<FakeConstructionModel>(
@@ -110,9 +110,9 @@ public class ConstructorResourceCreationStrategyFacts
             // Arrange
             var expectedModel = new FakeConstructionModel(1, "foo");
 
-            var idPropertyMap = PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Id);
-            var namePropertyMap = PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Name);
-            var amountPropertyMap = PropertyMapCreator2.CreateForFakeConstructionModel(
+            var idPropertyMap = PropertyMapCreator.CreateForFakeConstructionModel(model => model.Id);
+            var namePropertyMap = PropertyMapCreator.CreateForFakeConstructionModel(model => model.Name);
+            var amountPropertyMap = PropertyMapCreator.CreateForFakeConstructionModel(
                 model => model.Amount,
                 new OptionalPropertyMapOption(PropertyElementKind.All));
             var resourceMap = ResourceMapCreator.Create<FakeConstructionModel>(
@@ -151,9 +151,9 @@ public class ConstructorResourceCreationStrategyFacts
         public void ReturnsNullWhenRequiredPropertySpecifiedForConstructorHasNoValue()
         {
             // Arrange
-            var idPropertyMap = PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Id);
-            var namePropertyMap = PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Name);
-            var amountPropertyMap = PropertyMapCreator2.CreateForFakeConstructionModel(
+            var idPropertyMap = PropertyMapCreator.CreateForFakeConstructionModel(model => model.Id);
+            var namePropertyMap = PropertyMapCreator.CreateForFakeConstructionModel(model => model.Name);
+            var amountPropertyMap = PropertyMapCreator.CreateForFakeConstructionModel(
                 model => model.Amount,
                 new OptionalPropertyMapOption(PropertyElementKind.All));
             var resourceMap = ResourceMapCreator.Create<FakeConstructionModel>(
@@ -190,8 +190,8 @@ public class ConstructorResourceCreationStrategyFacts
             // Arrange
             var expectedModel = new FakeConstructionModel(1, "foo");
 
-            var idPropertyMap = PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Id);
-            var namePropertyMap = PropertyMapCreator2.CreateForFakeConstructionModel(model => model.Name);
+            var idPropertyMap = PropertyMapCreator.CreateForFakeConstructionModel(model => model.Id);
+            var namePropertyMap = PropertyMapCreator.CreateForFakeConstructionModel(model => model.Name);
             var amountPropertyKey = new PropertyMapKey(nameof(FakeConstructionModel.Amount), default, default);
             var resourceMap = ResourceMapCreator.Create<FakeConstructionModel>(
                 new[]

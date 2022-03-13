@@ -1,5 +1,5 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping2;
+using LanceC.SpreadsheetIO.Mapping;
 
 namespace LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 

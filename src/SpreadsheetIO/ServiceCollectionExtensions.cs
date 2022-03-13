@@ -1,9 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
-using LanceC.SpreadsheetIO.Mapping2;
-using LanceC.SpreadsheetIO.Mapping2.Options;
-using LanceC.SpreadsheetIO.Mapping2.Options.Converters;
-using LanceC.SpreadsheetIO.Mapping2.Options.Registrations;
-using LanceC.SpreadsheetIO.Mapping2.Validation;
+using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Options;
+using LanceC.SpreadsheetIO.Mapping.Options.Converters;
+using LanceC.SpreadsheetIO.Mapping.Options.Registrations;
+using LanceC.SpreadsheetIO.Mapping.Validation;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
 using LanceC.SpreadsheetIO.Reading.Internal.Creation;
@@ -36,17 +36,17 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection to modify.</param>
     /// <param name="mapOptions">The options to use for resource maps.</param>
     /// <returns>The modified service collection.</returns>
-    public static IServiceCollection AddSpreadsheetIO2(
+    public static IServiceCollection AddSpreadsheetIO(
         this IServiceCollection services,
         Action<ICartographerBuilder>? mapOptions = default)
         => services.AddScoped<ISpreadsheetFactory, SpreadsheetFactory>()
-        .AddSpreadsheetIOMapping2(mapOptions)
+        .AddSpreadsheetIOMapping(mapOptions)
         .AddSpreadsheetIOReading()
         .AddSpreadsheetIOShared()
         .AddSpreadsheetIOStyling()
         .AddSpreadsheetIOWriting();
 
-    private static IServiceCollection AddSpreadsheetIOMapping2(
+    private static IServiceCollection AddSpreadsheetIOMapping(
         this IServiceCollection services,
         Action<ICartographerBuilder>? mapOptions = default)
     {
