@@ -91,7 +91,10 @@ public static class ServiceCollectionExtensions
                 IMapOptionConversionStrategy<IResourceMapOptionRegistration, IResourceMapOption>,
                 ImplicitConstructorResourceMapOptionConversionStrategy>()
             .AddScoped<IResourceMapBuilderValidator, ResourceMapBuilderValidator>()
-            .AddScoped<IResourceMapBuilderValidationStrategy, PropertySetterCreationValidationStrategy>();
+            .AddScoped<IResourceMapBuilderValidationStrategy, PropertySetterCreationValidationStrategy>()
+            .AddScoped<IResourceMapBuilderValidationStrategy, UniquePropertyValidationStrategy>()
+            .AddScoped<IResourceMapBuilderValidationStrategy, UniquePropertyKeyNameValidationStrategy>()
+            .AddScoped<IResourceMapBuilderValidationStrategy, UniquePropertyKeyNumberValidationStrategy>();
     }
 
     private static IServiceCollection AddSpreadsheetIOReading(this IServiceCollection services)

@@ -144,8 +144,17 @@
   <data name="DuplicatePropertyMapKeyName" xml:space="preserve">
     <value>The {keyName} property key name has already been defined for the {resourceMapType} resource map.</value>
   </data>
+  <data name="DuplicatePropertyMapKeyNames" xml:space="preserve">
+    <value>{resourceType} has duplicate key names for the following properties: {keyNames}.</value>
+  </data>
   <data name="DuplicatePropertyMapKeyNumber" xml:space="preserve">
     <value>The {keyNumber} property key number has already been defined for the {resourceMapType} resource map.</value>
+  </data>
+  <data name="DuplicatePropertyMapKeyNumbers" xml:space="preserve">
+    <value>{resourceType} has duplicate key numbers for the following properties: {keyNumbers}.</value>
+  </data>
+  <data name="DuplicatePropertyMaps" xml:space="preserve">
+    <value>{resourceType} has duplicate maps for the following properties: {propertyNames}.</value>
   </data>
   <data name="DuplicateResourceConstructor" xml:space="preserve">
     <value>Multiple {resourceType} constructors are defined.</value>

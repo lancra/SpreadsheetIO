@@ -81,12 +81,36 @@ namespace LanceC.SpreadsheetIO.Properties
                 keyName, resourceMapType);
 
         /// <summary>
+        /// {resourceType} has duplicate key names for the following properties: {keyNames}.
+        /// </summary>
+        public static string DuplicatePropertyMapKeyNames(object? resourceType, object? keyNames)
+            => string.Format(
+                GetString("DuplicatePropertyMapKeyNames", nameof(resourceType), nameof(keyNames)),
+                resourceType, keyNames);
+
+        /// <summary>
         /// The {keyNumber} property key number has already been defined for the {resourceMapType} resource map.
         /// </summary>
         public static string DuplicatePropertyMapKeyNumber(object? keyNumber, object? resourceMapType)
             => string.Format(
                 GetString("DuplicatePropertyMapKeyNumber", nameof(keyNumber), nameof(resourceMapType)),
                 keyNumber, resourceMapType);
+
+        /// <summary>
+        /// {resourceType} has duplicate key numbers for the following properties: {keyNumbers}.
+        /// </summary>
+        public static string DuplicatePropertyMapKeyNumbers(object? resourceType, object? keyNumbers)
+            => string.Format(
+                GetString("DuplicatePropertyMapKeyNumbers", nameof(resourceType), nameof(keyNumbers)),
+                resourceType, keyNumbers);
+
+        /// <summary>
+        /// {resourceType} has duplicate maps for the following properties: {propertyNames}.
+        /// </summary>
+        public static string DuplicatePropertyMaps(object? resourceType, object? propertyNames)
+            => string.Format(
+                GetString("DuplicatePropertyMaps", nameof(resourceType), nameof(propertyNames)),
+                resourceType, propertyNames);
 
         /// <summary>
         /// Multiple {resourceType} constructors are defined.
