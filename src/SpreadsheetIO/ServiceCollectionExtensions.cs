@@ -1,8 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using LanceC.SpreadsheetIO.Mapping.Internal;
-using LanceC.SpreadsheetIO.Mapping.Internal.Validators;
-using LanceC.SpreadsheetIO.Mapping.Validation;
 using LanceC.SpreadsheetIO.Mapping2;
 using LanceC.SpreadsheetIO.Mapping2.Options;
 using LanceC.SpreadsheetIO.Mapping2.Options.Converters;
@@ -38,19 +34,6 @@ public static class ServiceCollectionExtensions
     /// Registers spreadsheet service descriptors.
     /// </summary>
     /// <param name="services">The service collection to modify.</param>
-    /// <returns>The modified service collection.</returns>
-    public static IServiceCollection AddSpreadsheetIO(this IServiceCollection services)
-        => services.AddScoped<ISpreadsheetFactory, SpreadsheetFactory>()
-        .AddSpreadsheetIOMapping()
-        .AddSpreadsheetIOReading()
-        .AddSpreadsheetIOShared()
-        .AddSpreadsheetIOStyling()
-        .AddSpreadsheetIOWriting();
-
-    /// <summary>
-    /// Registers spreadsheet service descriptors.
-    /// </summary>
-    /// <param name="services">The service collection to modify.</param>
     /// <param name="mapOptions">The options to use for resource maps.</param>
     /// <returns>The modified service collection.</returns>
     public static IServiceCollection AddSpreadsheetIO2(
@@ -62,12 +45,6 @@ public static class ServiceCollectionExtensions
         .AddSpreadsheetIOShared()
         .AddSpreadsheetIOStyling()
         .AddSpreadsheetIOWriting();
-
-    private static IServiceCollection AddSpreadsheetIOMapping(this IServiceCollection services)
-        => services
-        .AddScoped<IResourceMapAggregateValidator, ResourceMapAggregateValidator>()
-        .AddScoped<IResourceMapManager, ResourceMapManager>()
-        .AddResourceMapValidators();
 
     private static IServiceCollection AddSpreadsheetIOMapping2(
         this IServiceCollection services,
@@ -162,22 +139,4 @@ public static class ServiceCollectionExtensions
         .AddScoped<IResourcePropertySerializerStrategy, IntegerResourcePropertySerializerStrategy>()
         .AddScoped<IResourcePropertySerializerStrategy, StringResourcePropertySerializerStrategy>()
         .AddScoped<ISpreadsheetPageMapWriter, SpreadsheetPageMapWriter>();
-
-    private static IServiceCollection AddResourceMapValidators(this IServiceCollection services)
-    {
-        var assembly = Assembly.GetAssembly(typeof(ServiceCollectionExtensions));
-        var serviceType = typeof(IResourceMapValidator);
-
-        var implementationTypes = assembly!.GetTypes()
-            .Where(type => type.GetInterface(serviceType.Name) != null)
-            .Where(type => type.IsClass)
-            .Where(type => !type.IsAbstract)
-            .ToArray();
-        foreach (var implementationType in implementationTypes)
-        {
-            services.AddScoped(serviceType, implementationType);
-        }
-
-        return services;
-    }
 }
