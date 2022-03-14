@@ -59,7 +59,7 @@ internal class ReadingSpreadsheetPage : IReadingSpreadsheetPage
         var resources = new List<NumberedResource<TResource>>();
         var resourceFailures = new List<ResourceReadingFailure>();
 
-        var shouldExitOnResourceReadingFailure = map.Options.Has<ExitOnResourceReadingFailureResourceMapOption>();
+        var continueOnResourceReadingFailure = map.Options.Has<ContinueOnResourceReadingFailureResourceMapOption>();
         while (operation.ReadNext())
         {
             if (operation.CurrentResult!.NumberedResource is not null)
@@ -71,7 +71,7 @@ internal class ReadingSpreadsheetPage : IReadingSpreadsheetPage
             {
                 resourceFailures.Add(operation.CurrentResult.Failure);
 
-                if (shouldExitOnResourceReadingFailure)
+                if (!continueOnResourceReadingFailure)
                 {
                     break;
                 }

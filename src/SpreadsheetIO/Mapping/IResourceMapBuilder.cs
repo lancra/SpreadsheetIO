@@ -13,10 +13,10 @@ public interface IResourceMapBuilder<TResource>
     where TResource : class
 {
     /// <summary>
-    /// Specifies that a reading operation will exit if any resource cannot be read.
+    /// Specifies that a reading operation will continue if any resource cannot be read.
     /// </summary>
     /// <returns>The resulting resource map builder.</returns>
-    IResourceMapBuilder<TResource> ExitsOnResourceReadingFailure();
+    IResourceMapBuilder<TResource> ContinuesOnResourceReadingFailure();
 
     /// <summary>
     /// Specifies the default value resolutions to use for reading all properties.

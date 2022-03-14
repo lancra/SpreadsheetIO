@@ -21,9 +21,9 @@ internal class ResourceMapBuilder<TResource> : ResourceMapBuilder, IInternalReso
         _mapBuilderFactory = mapBuilderFactory;
     }
 
-    public IResourceMapBuilder<TResource> ExitsOnResourceReadingFailure()
+    public IResourceMapBuilder<TResource> ContinuesOnResourceReadingFailure()
     {
-        AddOrUpdateRegistration(new ExitOnResourceReadingFailureResourceMapOption());
+        AddOrUpdateRegistration(new ContinueOnResourceReadingFailureResourceMapOption());
         return this;
     }
 

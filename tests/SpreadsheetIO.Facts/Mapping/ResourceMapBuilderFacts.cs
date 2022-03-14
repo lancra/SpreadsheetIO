@@ -34,9 +34,9 @@ public class ResourceMapBuilderFacts
                 .GetMock<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>();
             resourceOptionConverterMock
                 .Setup(converter => converter.ConvertToOption(
-                    It.IsAny<ExitOnResourceReadingFailureResourceMapOption>(),
+                    It.IsAny<ContinueOnResourceReadingFailureResourceMapOption>(),
                     It.IsAny<ResourceMapBuilder>()))
-                .Returns((ExitOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
+                .Returns((ContinueOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
                     => MapOptionConversionResult.Success<IResourceMapOption>(registration, registration));
 
             var propertyOptionConverterMock = _mocker
@@ -59,10 +59,10 @@ public class ResourceMapBuilderFacts
                 .Returns(Array.Empty<ResourceMapBuilderValidationResult>());
 
             var sut = CreateSystemUnderTest();
-            sut.ExitsOnResourceReadingFailure();
+            sut.ContinuesOnResourceReadingFailure();
             sut.Property(model => model.Id);
 
-            sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
+            sut.TryGetRegistration<ContinueOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
 
             // Act
             var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
@@ -73,7 +73,7 @@ public class ResourceMapBuilderFacts
             Assert.Null(result.Error);
 
             Assert.Equal(sut.ResourceType, result.Value!.ResourceType);
-            Assert.Equal(resourceRegistration, result.Value.Options.Find<ExitOnResourceReadingFailureResourceMapOption>());
+            Assert.Equal(resourceRegistration, result.Value.Options.Find<ContinueOnResourceReadingFailureResourceMapOption>());
 
             var actualPropertyMap = Assert.Single(result.Value.Properties);
             Assert.Equal(expectedPropertyMap, actualPropertyMap);
@@ -89,9 +89,9 @@ public class ResourceMapBuilderFacts
             var expectedResourceConversionResult = default(MapOptionConversionResult<IResourceMapOption>);
             resourceOptionConverterMock
                 .Setup(converter => converter.ConvertToOption(
-                    It.IsAny<ExitOnResourceReadingFailureResourceMapOption>(),
+                    It.IsAny<ContinueOnResourceReadingFailureResourceMapOption>(),
                     It.IsAny<ResourceMapBuilder>()))
-                .Returns((ExitOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
+                .Returns((ContinueOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
                     =>
                     {
                         expectedResourceConversionResult = MapOptionConversionResult.Failure<IResourceMapOption>(registration, "foo");
@@ -118,10 +118,10 @@ public class ResourceMapBuilderFacts
                 .Returns(Array.Empty<ResourceMapBuilderValidationResult>());
 
             var sut = CreateSystemUnderTest();
-            sut.ExitsOnResourceReadingFailure();
+            sut.ContinuesOnResourceReadingFailure();
             sut.Property(model => model.Id);
 
-            sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
+            sut.TryGetRegistration<ContinueOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
 
             // Act
             var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
@@ -143,9 +143,9 @@ public class ResourceMapBuilderFacts
                 .GetMock<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>();
             resourceOptionConverterMock
                 .Setup(converter => converter.ConvertToOption(
-                    It.IsAny<ExitOnResourceReadingFailureResourceMapOption>(),
+                    It.IsAny<ContinueOnResourceReadingFailureResourceMapOption>(),
                     It.IsAny<ResourceMapBuilder>()))
-                .Returns((ExitOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
+                .Returns((ContinueOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
                     => MapOptionConversionResult.Success<IResourceMapOption>(registration, registration));
 
             var propertyOptionConverterMock = _mocker
@@ -170,10 +170,10 @@ public class ResourceMapBuilderFacts
                 .Returns(Array.Empty<ResourceMapBuilderValidationResult>());
 
             var sut = CreateSystemUnderTest();
-            sut.ExitsOnResourceReadingFailure();
+            sut.ContinuesOnResourceReadingFailure();
             sut.Property(model => model.Id);
 
-            sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
+            sut.TryGetRegistration<ContinueOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
 
             // Act
             var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
@@ -195,9 +195,9 @@ public class ResourceMapBuilderFacts
                 .GetMock<IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption>>();
             resourceOptionConverterMock
                 .Setup(converter => converter.ConvertToOption(
-                    It.IsAny<ExitOnResourceReadingFailureResourceMapOption>(),
+                    It.IsAny<ContinueOnResourceReadingFailureResourceMapOption>(),
                     It.IsAny<ResourceMapBuilder>()))
-                .Returns((ExitOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
+                .Returns((ContinueOnResourceReadingFailureResourceMapOption registration, ResourceMapBuilder _)
                     => MapOptionConversionResult.Success<IResourceMapOption>(registration, registration));
 
             var propertyOptionConverterMock = _mocker
@@ -221,10 +221,10 @@ public class ResourceMapBuilderFacts
                 .Returns(new[] { expectedValidationResult, });
 
             var sut = CreateSystemUnderTest();
-            sut.ExitsOnResourceReadingFailure();
+            sut.ContinuesOnResourceReadingFailure();
             sut.Property(model => model.Id);
 
-            sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
+            sut.TryGetRegistration<ContinueOnResourceReadingFailureResourceMapOption>(out var resourceRegistration);
 
             // Act
             var result = sut.Build(resourceOptionConverterMock.Object, propertyOptionConverterMock.Object);
@@ -342,7 +342,7 @@ public class ResourceMapBuilderFacts
         }
     }
 
-    public class TheExitsOnResourceReadingFailureMethod : ResourceMapBuilderFacts
+    public class TheContinuesOnResourceReadingFailureMethod : ResourceMapBuilderFacts
     {
         [Fact]
         public void AddsOptionRegistration()
@@ -351,10 +351,10 @@ public class ResourceMapBuilderFacts
             var sut = CreateSystemUnderTest();
 
             // Act
-            sut.ExitsOnResourceReadingFailure();
+            sut.ContinuesOnResourceReadingFailure();
 
             // Assert
-            Assert.True(sut.TryGetRegistration<ExitOnResourceReadingFailureResourceMapOption>(out var _));
+            Assert.True(sut.TryGetRegistration<ContinueOnResourceReadingFailureResourceMapOption>(out var _));
         }
     }
 

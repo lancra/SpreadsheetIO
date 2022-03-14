@@ -88,12 +88,10 @@ public class ReadingSpreadsheetPageFacts
         }
 
         [Fact]
-        public void ReturnsNoResourcesWhenBodyRowReadingFailureIsSetAndExitOnFailureMapOptionIsPresent()
+        public void ReturnsNoResourcesWhenBodyRowReadingFailureIsSet()
         {
             // Arrange
-            var map = ResourceMapCreator.Create<FakeModel>(
-                Array.Empty<PropertyMap>(),
-                new ExitOnResourceReadingFailureResourceMapOption());
+            var map = ResourceMapCreator.Create<FakeModel>(Array.Empty<PropertyMap>());
             _mocker.GetMock<ICartographer>()
                 .Setup(cartographer => cartographer.GetMap<FakeModel>())
                 .Returns(map);
@@ -140,10 +138,12 @@ public class ReadingSpreadsheetPageFacts
         }
 
         [Fact]
-        public void ReturnsResourceAndBodyRowReadingFailureWhenReadWasPartialSuccess()
+        public void ReturnsResourceAndBodyRowReadingFailureWhenReadWasPartialSuccessAndContinueOnFailureMapOptionIsPresent()
         {
             // Arrange
-            var map = ResourceMapCreator.Create<FakeModel>(Array.Empty<PropertyMap>());
+            var map = ResourceMapCreator.Create<FakeModel>(
+                Array.Empty<PropertyMap>(),
+                new ContinueOnResourceReadingFailureResourceMapOption());
             _mocker.GetMock<ICartographer>()
                 .Setup(cartographer => cartographer.GetMap<FakeModel>())
                 .Returns(map);

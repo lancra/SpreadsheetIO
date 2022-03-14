@@ -25,19 +25,19 @@ public class ResourceCreatorFacts
             // Arrange
             var resourceMap = ResourceMapCreator.Create<FakeConstructionModel>(
                 Array.Empty<PropertyMap>(),
-                new ExitOnResourceReadingFailureResourceMapOption());
+                new ContinueOnResourceReadingFailureResourceMapOption());
             var fakeValues = _mocker.GetMock<IResourcePropertyValues>();
             var expectedModel = new FakeConstructionModel(1, "One", 1.11M);
 
             var matchingStrategy = new Mock<IResourceCreationStrategy>();
             matchingStrategy.SetupGet(strategy => strategy.ApplicabilityHandler)
-                .Returns(map => map.Options.Has<ExitOnResourceReadingFailureResourceMapOption>());
+                .Returns(map => map.Options.Has<ContinueOnResourceReadingFailureResourceMapOption>());
             matchingStrategy.Setup(strategy => strategy.Create<FakeConstructionModel>(resourceMap, fakeValues.Object))
                 .Returns(expectedModel);
 
             var unmatchingStrategy = new Mock<IResourceCreationStrategy>();
             unmatchingStrategy.SetupGet(strategy => strategy.ApplicabilityHandler)
-                .Returns(map => !map.Options.Has<ExitOnResourceReadingFailureResourceMapOption>());
+                .Returns(map => !map.Options.Has<ContinueOnResourceReadingFailureResourceMapOption>());
 
             _mocker.Use<IEnumerable<IResourceCreationStrategy>>(
                 new[]
