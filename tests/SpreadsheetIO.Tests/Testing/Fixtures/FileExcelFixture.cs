@@ -1,32 +1,31 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading;
-using LanceC.SpreadsheetIO.Tests.Testing.Fakes;
 using LanceC.SpreadsheetIO.Writing;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 
-namespace LanceC.SpreadsheetIO.Tests.Testing;
+namespace LanceC.SpreadsheetIO.Tests.Testing.Fixtures;
 
-public class ExcelFixture : IDisposable
+public class FileExcelFixture : ExcelFixtureBase, IDisposable
 {
     private readonly ExcelAsserter _asserter;
 
-    public ExcelFixture(ITestOutputHelper output)
+    public FileExcelFixture(ITestOutputHelper output)
     {
         _asserter = new(output);
     }
 
     public Uri Path { get; } = new(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx"));
 
-    public IWritingSpreadsheet CreateSpreadsheet(Action<IServiceCollection>? additionalServices = default)
-        => GetSpreadsheetFactory(additionalServices)
+    public IWritingSpreadsheet CreateSpreadsheet(Action<ICartographerBuilder>? mapOptions = default)
+        => GetSpreadsheetFactory(mapOptions)
         .Create(Path);
 
     [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Keeps reading and writing APIs consistent.")]
-    public IReadingSpreadsheet OpenReadSpreadsheet(Action<IServiceCollection>? additionalServices = default)
-        => GetSpreadsheetFactory(additionalServices)
+    public IReadingSpreadsheet OpenReadSpreadsheet(Action<ICartographerBuilder>? mapOptions = default)
+        => GetSpreadsheetFactory(mapOptions)
         .OpenRead(GetSourcePath());
 
     public void EquivalentToSource() => _asserter.Equal(GetSourcePath(), Path);
@@ -41,19 +40,8 @@ public class ExcelFixture : IDisposable
     {
         if (disposing)
         {
-            System.IO.File.Delete(Path.LocalPath);
+            File.Delete(Path.LocalPath);
         }
-    }
-
-    private static ISpreadsheetFactory GetSpreadsheetFactory(Action<IServiceCollection>? additionalServices = default)
-    {
-        var services = new ServiceCollection()
-            .AddSpreadsheetIO(map => map.ApplyConfiguration(new FakeModelMapConfiguration()));
-
-        additionalServices?.Invoke(services);
-
-        var serviceProvider = services.BuildServiceProvider();
-        return serviceProvider.GetRequiredService<ISpreadsheetFactory>();
     }
 
     private static Uri GetSourcePath()

@@ -2,6 +2,7 @@ using System.Drawing;
 using LanceC.SpreadsheetIO.Styling;
 using LanceC.SpreadsheetIO.Tests.Testing;
 using LanceC.SpreadsheetIO.Tests.Testing.Fakes;
+using LanceC.SpreadsheetIO.Tests.Testing.Fixtures;
 using LanceC.SpreadsheetIO.Writing;
 using Xunit;
 using Xunit.Abstractions;
@@ -10,7 +11,7 @@ namespace LanceC.SpreadsheetIO.Tests;
 
 public class WritingTests : IDisposable
 {
-    private readonly ExcelFixture _excelFixture;
+    private readonly FileExcelFixture _excelFixture;
 
     public WritingTests(ITestOutputHelper output)
     {
@@ -142,7 +143,7 @@ public class WritingTests : IDisposable
         };
 
         // Act
-        using (var spreadsheet = _excelFixture.CreateSpreadsheet())
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet(map => map.ApplyConfiguration(new FakeModelMapConfiguration())))
         {
             spreadsheet.WritePage("Map", models);
         }
