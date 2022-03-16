@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Redefine mapping process.
+- Default behavior of reading is now to exit on first resource failure.
 
 ### Removed
 - `MarkHeaderASOptional` and `MarkBodyAsOptional` mapping methods.
