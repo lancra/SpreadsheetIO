@@ -14,8 +14,7 @@ internal class DoubleResourcePropertySerializerStrategy : IResourcePropertySeria
                 typeof(double),
         };
 
-    public WritingCellValue Serialize<TResource>(object? value, PropertyMap<TResource> map)
-        where TResource : class
+    public WritingCellValue Serialize(object? value, PropertyMap map)
     {
         if (value is null)
         {

@@ -10,8 +10,7 @@ internal class CharacterResourcePropertySerializerStrategy : IResourcePropertySe
                 typeof(char),
         };
 
-    public WritingCellValue Serialize<TResource>(object? value, PropertyMap<TResource> map)
-        where TResource : class
+    public WritingCellValue Serialize(object? value, PropertyMap map)
     {
         var characterValue = (char?)value;
         var cellValue = new WritingCellValue(characterValue);

@@ -1,5 +1,4 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
@@ -174,7 +173,7 @@ public class ResourcePropertyParserFacts
                 .Verify(
                     strategy => strategy.TryParse(
                         It.IsAny<string>(),
-                        It.IsAny<PropertyMap<FakeModel>>(),
+                        It.IsAny<PropertyMap>(),
                         out expectedValue),
                     Times.Never);
         }

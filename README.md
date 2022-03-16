@@ -23,12 +23,12 @@ public class Model
     public string Name { get; set; }
 }
 
-public class ModelMap : ResourceMap<Model>
+public class ModelMapConfiguration : IResourceMapConfiguration<Model>
 {
-    public ModelMap()
+    public void Configure(IResourceMapBuilder<Model> builder)
     {
-        Map(model => model.Id);
-        Map(model => model.Name);
+        builder.Property(model => model.Id);
+        builder.Property(model => model.Name);
     }
 }
 ```
@@ -38,8 +38,7 @@ public class ModelMap : ResourceMap<Model>
 public void Read(string filePath)
 {
     var provider = new ServiceCollection()
-        .AddSpreadsheetIO()
-        .AddScoped<IResourceMap, ModelMap>()
+        .AddSpreadsheetIO(map => map.ApplyConfiguration(new ModelMapConfiguration()))
         .BuildServiceProvider();
 
     using var spreadsheetStream = new FileStream(
@@ -61,8 +60,7 @@ public void Read(string filePath)
 public void Write(string filePath, IEnumerable<Model> models)
 {
     var provider = new ServiceCollection()
-        .AddSpreadsheetIO()
-        .AddScoped<IResourceMap, ModelMap>()
+        .AddSpreadsheetIO(map => map.ApplyConfiguration(new ModelMapConfiguration()))
         .BuildServiceProvider();
 
     using var spreadsheetStream = new FileStream(

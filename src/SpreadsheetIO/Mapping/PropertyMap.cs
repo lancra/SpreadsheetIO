@@ -1,17 +1,16 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using LanceC.SpreadsheetIO.Mapping.Options;
 
 namespace LanceC.SpreadsheetIO.Mapping;
 
 /// <summary>
-/// Represents a map to Excel for a resource property.
+/// Provides a map for a resource property.
 /// </summary>
-/// <typeparam name="TResource">The type of resource to map.</typeparam>
 [ExcludeFromCodeCoverage]
-public class PropertyMap<TResource>
-    where TResource : class
+public class PropertyMap
 {
-    internal PropertyMap(PropertyInfo property, PropertyMapKey key, PropertyMapOptions<TResource> options)
+    internal PropertyMap(PropertyInfo property, PropertyMapKey key, MapOptions<IPropertyMapOption> options)
     {
         Property = property;
         Key = key;
@@ -19,17 +18,17 @@ public class PropertyMap<TResource>
     }
 
     /// <summary>
-    /// Gets the underlying resource property.
+    /// Gets the information about the mapped property.
     /// </summary>
     public PropertyInfo Property { get; }
 
     /// <summary>
-    /// Gets the property identification key.
+    /// Gets the unique key for the map.
     /// </summary>
     public PropertyMapKey Key { get; }
 
     /// <summary>
-    /// Gets the property map customization options.
+    /// Gets the map options.
     /// </summary>
-    public PropertyMapOptions<TResource> Options { get; }
+    public MapOptions<IPropertyMapOption> Options { get; }
 }

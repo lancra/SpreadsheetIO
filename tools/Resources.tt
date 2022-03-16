@@ -1,5 +1,4 @@
 <#@ template hostspecific="true" #>
-<#@ assembly name="EnvDTE" #>
 <#@ assembly name="System.Core" #>
 <#@ assembly name="System.Windows.Forms" #>
 <#@ import namespace="System.Collections" #>

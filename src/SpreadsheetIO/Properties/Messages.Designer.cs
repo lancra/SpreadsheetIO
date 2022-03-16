@@ -49,44 +49,36 @@ namespace LanceC.SpreadsheetIO.Properties
             => GetString("CannotAdvanceZeroRows");
 
         /// <summary>
-        /// Multiple maps are defined for the {resourceType} resource.
+        /// Cannot retrieve assembly for {type}.
         /// </summary>
-        public static string DuplicateMapForResourceType(object? resourceType)
+        public static string CannotGetAssemblyFromType(object? type)
             => string.Format(
-                GetString("DuplicateMapForResourceType", nameof(resourceType)),
-                resourceType);
+                GetString("CannotGetAssemblyFromType", nameof(type)),
+                type);
 
         /// <summary>
-        /// The {propertyName} property has already been mapped for the {resourceMapType} resource map.
+        /// {resourceType} has duplicate key names for the following properties: {keyNames}.
         /// </summary>
-        public static string DuplicatePropertyMap(object? propertyName, object? resourceMapType)
+        public static string DuplicatePropertyMapKeyNames(object? resourceType, object? keyNames)
             => string.Format(
-                GetString("DuplicatePropertyMap", nameof(propertyName), nameof(resourceMapType)),
-                propertyName, resourceMapType);
+                GetString("DuplicatePropertyMapKeyNames", nameof(resourceType), nameof(keyNames)),
+                resourceType, keyNames);
 
         /// <summary>
-        /// The {keyName} property key name has already been defined for the {resourceMapType} resource map.
+        /// {resourceType} has duplicate key numbers for the following properties: {keyNumbers}.
         /// </summary>
-        public static string DuplicatePropertyMapKeyName(object? keyName, object? resourceMapType)
+        public static string DuplicatePropertyMapKeyNumbers(object? resourceType, object? keyNumbers)
             => string.Format(
-                GetString("DuplicatePropertyMapKeyName", nameof(keyName), nameof(resourceMapType)),
-                keyName, resourceMapType);
+                GetString("DuplicatePropertyMapKeyNumbers", nameof(resourceType), nameof(keyNumbers)),
+                resourceType, keyNumbers);
 
         /// <summary>
-        /// The {keyNumber} property key number has already been defined for the {resourceMapType} resource map.
+        /// {resourceType} has duplicate maps for the following properties: {propertyNames}.
         /// </summary>
-        public static string DuplicatePropertyMapKeyNumber(object? keyNumber, object? resourceMapType)
+        public static string DuplicatePropertyMaps(object? resourceType, object? propertyNames)
             => string.Format(
-                GetString("DuplicatePropertyMapKeyNumber", nameof(keyNumber), nameof(resourceMapType)),
-                keyNumber, resourceMapType);
-
-        /// <summary>
-        /// Multiple {resourceType} constructors are defined.
-        /// </summary>
-        public static string DuplicateResourceConstructor(object? resourceType)
-            => string.Format(
-                GetString("DuplicateResourceConstructor", nameof(resourceType)),
-                resourceType);
+                GetString("DuplicatePropertyMaps", nameof(resourceType), nameof(propertyNames)),
+                resourceType, propertyNames);
 
         /// <summary>
         /// A spreadsheet page has already been added with the name '{name}'.
@@ -105,22 +97,10 @@ namespace LanceC.SpreadsheetIO.Properties
                 parentName, strategyType, propertyType);
 
         /// <summary>
-        /// One or more validation failures occurred.
-        /// </summary>
-        public static string FailedResourceMapValidation
-            => GetString("FailedResourceMapValidation");
-
-        /// <summary>
         /// This operation cannot be performed since writing has been closed.
         /// </summary>
         public static string FinishedWriting
             => GetString("FinishedWriting");
-
-        /// <summary>
-        /// The map options are frozen and cannot be modified.
-        /// </summary>
-        public static string FrozenMapOptions
-            => GetString("FrozenMapOptions");
 
         /// <summary>
         /// The cell reference '{cellReference}' is not valid.
@@ -155,11 +135,19 @@ namespace LanceC.SpreadsheetIO.Properties
                 styleName);
 
         /// <summary>
+        /// The {resourceType} map has configuration errors and cannot be used.
+        /// </summary>
+        public static string InvalidMapForResourceType(object? resourceType)
+            => string.Format(
+                GetString("InvalidMapForResourceType", nameof(resourceType)),
+                resourceType);
+
+        /// <summary>
         /// The {resourceType} map does not specify a constructor and the following properties do not have public setters: {propertyNames}.
         /// </summary>
-        public static string InvalidPropertyMapsForSetterCreation(object? resourceType, object? propertyNames)
+        public static string InvalidPropertiesForSetterCreation(object? resourceType, object? propertyNames)
             => string.Format(
-                GetString("InvalidPropertyMapsForSetterCreation", nameof(resourceType), nameof(propertyNames)),
+                GetString("InvalidPropertiesForSetterCreation", nameof(resourceType), nameof(propertyNames)),
                 resourceType, propertyNames);
 
         /// <summary>
@@ -175,20 +163,20 @@ namespace LanceC.SpreadsheetIO.Properties
             => GetString("InvalidStringForIndexing");
 
         /// <summary>
+        /// The {registrationType} option registration is not allowed for a {propertyType} property.
+        /// </summary>
+        public static string MapOptionRegistrationNotAllowedForType(object? registrationType, object? propertyType)
+            => string.Format(
+                GetString("MapOptionRegistrationNotAllowedForType", nameof(registrationType), nameof(propertyType)),
+                registrationType, propertyType);
+
+        /// <summary>
         /// No header was found at column {columnNumber}.
         /// </summary>
         public static string MissingHeaderForColumnNumber(object? columnNumber)
             => string.Format(
                 GetString("MissingHeaderForColumnNumber", nameof(columnNumber)),
                 columnNumber);
-
-        /// <summary>
-        /// The {resourceMapType} map is not defined for the {resourceType} resource.
-        /// </summary>
-        public static string MissingMapForResourceMapType(object? resourceMapType, object? resourceType)
-            => string.Format(
-                GetString("MissingMapForResourceMapType", nameof(resourceMapType), nameof(resourceType)),
-                resourceMapType, resourceType);
 
         /// <summary>
         /// The {resourceType} map has properties that were specified as constructor parameters but do not have a defined map: {propertyNames}.
@@ -267,14 +255,6 @@ namespace LanceC.SpreadsheetIO.Properties
             => string.Format(
                 GetString("NonNumericInput", nameof(parameterName)),
                 parameterName);
-
-        /// <summary>
-        /// The {extensionType} option is not allowed for a {propertyType} property.
-        /// </summary>
-        public static string OptionsExtensionNotAllowedForType(object? extensionType, object? propertyType)
-            => string.Format(
-                GetString("OptionsExtensionNotAllowedForType", nameof(extensionType), nameof(propertyType)),
-                extensionType, propertyType);
 
         /// <summary>
         /// The resource has not been indexed.

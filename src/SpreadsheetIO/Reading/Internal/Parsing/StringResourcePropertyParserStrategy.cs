@@ -6,8 +6,7 @@ internal class StringResourcePropertyParserStrategy : IDefaultResourcePropertyPa
 {
     public Type PropertyType { get; } = typeof(string);
 
-    public ResourcePropertyParseResultKind TryParse<TResource>(string cellValue, PropertyMap<TResource> map, out object? value)
-        where TResource : class
+    public ResourcePropertyParseResultKind TryParse(string cellValue, PropertyMap map, out object? value)
     {
         value = cellValue;
         return string.IsNullOrEmpty(cellValue) ? ResourcePropertyParseResultKind.Empty : ResourcePropertyParseResultKind.Success;

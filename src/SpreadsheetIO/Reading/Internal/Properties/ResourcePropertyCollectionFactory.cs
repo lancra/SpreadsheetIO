@@ -5,11 +5,9 @@ namespace LanceC.SpreadsheetIO.Reading.Internal.Properties;
 [ExcludeFromCodeCoverage]
 internal class ResourcePropertyCollectionFactory : IResourcePropertyCollectionFactory
 {
-    public IResourcePropertyHeaders<TResource> CreateHeaders<TResource>()
-        where TResource : class
-        => new ResourcePropertyHeaders<TResource>();
+    public IResourcePropertyHeaders CreateHeaders()
+        => new ResourcePropertyHeaders();
 
-    public IResourcePropertyValues<TResource> CreateValues<TResource>()
-        where TResource : class
-        => new ResourcePropertyValues<TResource>();
+    public IResourcePropertyValues CreateValues()
+        => new ResourcePropertyValues();
 }

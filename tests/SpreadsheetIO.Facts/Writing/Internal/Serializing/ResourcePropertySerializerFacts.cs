@@ -1,6 +1,7 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Options;
+using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Writing;
 using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 using Moq;
@@ -176,8 +177,9 @@ public class ResourcePropertySerializerFacts
             var defaultName = "bar";
 
             var resource = new FakeModel { Name = null, };
-            var map = PropertyMapCreator
-                .CreateForFakeModel(model => model.Name, new DefaultValuePropertyMapOptionsExtension(defaultName));
+            var map = PropertyMapCreator.CreateForFakeModel(
+                model => model.Name,
+                options: new DefaultValuePropertyMapOption(defaultName, ResourcePropertyDefaultReadingResolution.List));
 
             var expectedCellValue = new WritingCellValue(defaultName);
 

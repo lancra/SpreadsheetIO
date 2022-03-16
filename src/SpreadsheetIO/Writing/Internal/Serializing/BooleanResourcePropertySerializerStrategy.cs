@@ -10,8 +10,7 @@ internal class BooleanResourcePropertySerializerStrategy : IResourcePropertySeri
                 typeof(bool),
         };
 
-    public WritingCellValue Serialize<TResource>(object? value, PropertyMap<TResource> map)
-        where TResource : class
+    public WritingCellValue Serialize(object? value, PropertyMap map)
     {
         var booleanValue = (bool?)value;
         var cellValue = new WritingCellValue(booleanValue);

@@ -2,38 +2,47 @@ using System.Linq.Expressions;
 using System.Reflection;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Options;
 
 namespace LanceC.SpreadsheetIO.Facts.Testing.Creators;
 
-public static class PropertyMapCreator
+internal static class PropertyMapCreator
 {
-    public static PropertyMap<FakeModel> CreateForFakeModel<TProperty>(
+    public static PropertyMap Create<TResource, TProperty>(
+        Expression<Func<TResource, TProperty>> expression,
+        Action<PropertyMapKeyBuilder>? keyAction = default,
+        params IPropertyMapOption[] options)
+        where TResource : class
+    {
+        var propertyInfo = GetPropertyInfo(expression);
+
+        var keyBuilder = new PropertyMapKeyBuilder(propertyInfo);
+        if (keyAction is not null)
+        {
+            keyAction(keyBuilder);
+        }
+
+        var mapOptions = new MapOptions<IPropertyMapOption>(
+            (options ?? Array.Empty<IPropertyMapOption>()).ToDictionary(o => o.GetType()));
+        var map = new PropertyMap(propertyInfo, keyBuilder.Key, mapOptions);
+        return map;
+    }
+
+    public static PropertyMap CreateForFakeModel<TProperty>(
         Expression<Func<FakeModel, TProperty>> expression,
-        params IPropertyMapOptionsExtension[] extensions)
-    {
-        var propertyInfo = GetPropertyInfo(expression);
-        var extensionsLookup = extensions.ToDictionary(extension => extension.GetType(), extension => extension);
+        Action<PropertyMapKeyBuilder>? keyAction = default,
+        params IPropertyMapOption[] options)
+        => Create(expression, keyAction, options);
 
-        var map = new PropertyMap<FakeModel>(
-            propertyInfo,
-            new PropertyMapKey(propertyInfo.Name, default, false),
-            new PropertyMapOptions<FakeModel, TProperty>(extensionsLookup));
-        return map;
-    }
+    public static PropertyMap CreateForFakeConstructionModel<TProperty>(
+        Expression<Func<FakeConstructionModel, TProperty>> expression,
+        params IPropertyMapOption[] options)
+        => Create(expression, default, options);
 
-    public static PropertyMap<FakeResourcePropertyStrategyModel> CreateForFakeResourcePropertyStrategyModel<TProperty>(
+    public static PropertyMap CreateForFakeResourcePropertyStrategyModel<TProperty>(
         Expression<Func<FakeResourcePropertyStrategyModel, TProperty>> expression,
-        params IPropertyMapOptionsExtension[] extensions)
-    {
-        var propertyInfo = GetPropertyInfo(expression);
-        var extensionsLookup = extensions.ToDictionary(extension => extension.GetType(), extension => extension);
-
-        var map = new PropertyMap<FakeResourcePropertyStrategyModel>(
-            propertyInfo,
-            new PropertyMapKey(propertyInfo.Name, default, false),
-            new PropertyMapOptions<FakeResourcePropertyStrategyModel, TProperty>(extensionsLookup));
-        return map;
-    }
+        params IPropertyMapOption[] options)
+        => Create(expression, default, options);
 
     private static PropertyInfo GetPropertyInfo<TResource, TProperty>(Expression<Func<TResource, TProperty>> property)
         where TResource : class

@@ -1,5 +1,4 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using Moq.AutoMock;
 using Xunit;
@@ -10,8 +9,8 @@ public class ResourcePropertyHeadersFacts
 {
     private readonly AutoMocker _mocker = new();
 
-    private ResourcePropertyHeaders<FakeModel> CreateSystemUnderTest()
-        => _mocker.CreateInstance<ResourcePropertyHeaders<FakeModel>>();
+    private ResourcePropertyHeaders CreateSystemUnderTest()
+        => _mocker.CreateInstance<ResourcePropertyHeaders>();
 
     public class TheColumnNumbersProperty : ResourcePropertyHeadersFacts
     {

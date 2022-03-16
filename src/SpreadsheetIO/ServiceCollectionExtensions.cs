@@ -1,10 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using LanceC.SpreadsheetIO.Mapping.Internal;
-using LanceC.SpreadsheetIO.Mapping.Internal.Validators;
+using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Options;
+using LanceC.SpreadsheetIO.Mapping.Options.Converters;
+using LanceC.SpreadsheetIO.Mapping.Options.Registrations;
 using LanceC.SpreadsheetIO.Mapping.Validation;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
+using LanceC.SpreadsheetIO.Reading.Internal.Creation;
 using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
@@ -32,24 +34,51 @@ public static class ServiceCollectionExtensions
     /// Registers spreadsheet service descriptors.
     /// </summary>
     /// <param name="services">The service collection to modify.</param>
+    /// <param name="mapOptions">The options to use for resource maps.</param>
     /// <returns>The modified service collection.</returns>
-    public static IServiceCollection AddSpreadsheetIO(this IServiceCollection services)
+    public static IServiceCollection AddSpreadsheetIO(
+        this IServiceCollection services,
+        Action<ICartographerBuilder>? mapOptions = default)
         => services.AddScoped<ISpreadsheetFactory, SpreadsheetFactory>()
-        .AddSpreadsheetIOMapping()
+        .AddSpreadsheetIOMapping(mapOptions)
         .AddSpreadsheetIOReading()
         .AddSpreadsheetIOShared()
         .AddSpreadsheetIOStyling()
         .AddSpreadsheetIOWriting();
 
-    private static IServiceCollection AddSpreadsheetIOMapping(this IServiceCollection services)
-        => services
-        .AddScoped<IResourceMapAggregateValidator, ResourceMapAggregateValidator>()
-        .AddScoped<IResourceMapManager, ResourceMapManager>()
-        .AddResourceMapValidators();
+    private static IServiceCollection AddSpreadsheetIOMapping(
+        this IServiceCollection services,
+        Action<ICartographerBuilder>? mapOptions = default)
+    {
+        if (mapOptions is not null)
+        {
+            services.AddScoped(provider => new CartographyOptions(mapOptions));
+        }
+
+        return services.AddScoped<ICartographerBuilder, CartographerBuilder>()
+            .AddScoped<IMapBuilderFactory, MapBuilderFactory>()
+            .AddScoped(typeof(IMapOptionConverter<,>), typeof(MapOptionConverter<,>))
+            .AddScoped<
+                IMapOptionConversionStrategy<IPropertyMapOptionRegistration, IPropertyMapOption>,
+                DefaultValuePropertyMapOptionConversionStrategy>()
+            .AddScoped<
+                IMapOptionConversionStrategy<IResourceMapOptionRegistration, IResourceMapOption>,
+                ExplicitConstructorResourceMapOptionConversionStrategy>()
+            .AddScoped<
+                IMapOptionConversionStrategy<IResourceMapOptionRegistration, IResourceMapOption>,
+                ImplicitConstructorResourceMapOptionConversionStrategy>()
+            .AddScoped<IResourceMapBuilderValidator, ResourceMapBuilderValidator>()
+            .AddScoped<IResourceMapBuilderValidationStrategy, PropertySetterCreationValidationStrategy>()
+            .AddScoped<IResourceMapBuilderValidationStrategy, UniquePropertyValidationStrategy>()
+            .AddScoped<IResourceMapBuilderValidationStrategy, UniquePropertyKeyNameValidationStrategy>()
+            .AddScoped<IResourceMapBuilderValidationStrategy, UniquePropertyKeyNumberValidationStrategy>();
+    }
 
     private static IServiceCollection AddSpreadsheetIOReading(this IServiceCollection services)
         => services
         .AddScoped<IResourceCreator, ResourceCreator>()
+        .AddScoped<IResourceCreationStrategy, ConstructorResourceCreationStrategy>()
+        .AddScoped<IResourceCreationStrategy, PropertySettersResourceCreationStrategy>()
         .AddScoped<IResourcePropertyDefaultValueResolver, ResourcePropertyDefaultValueResolver>()
         .AddScoped<IResourcePropertyValueResolver, ResourcePropertyValueResolver>()
         .AddScoped<IResourcePropertyParser, ResourcePropertyParser>()
@@ -72,10 +101,12 @@ public static class ServiceCollectionExtensions
         .AddScoped<IResourcePropertyCollectionFactory, ResourcePropertyCollectionFactory>()
         .AddScoped<IElementReaderFactory, ElementReaderFactory>()
         .AddScoped<IReadingSpreadsheetPageOperationFactory, ReadingSpreadsheetPageOperationFactory>()
-        .AddScoped<ISpreadsheetPageMapReader, SpreadsheetPageMapReader>();
+        .AddScoped<IMappedHeaderRowReader, MappedHeaderRowReader>()
+        .AddScoped<IMappedBodyRowReader, MappedBodyRowReader>();
 
     private static IServiceCollection AddSpreadsheetIOShared(this IServiceCollection services)
         => services
+        .AddScoped<IAssemblyWrapperFactory, AssemblyWrapperFactory>()
         .AddScoped<ISpreadsheetDocumentWrapperFactory, SpreadsheetDocumentWrapperFactory>()
         .AddScoped<ISpreadsheetGenerator, SharedStringTableGenerator>()
         .AddScoped<ISpreadsheetGenerator, StylesheetGenerator>()
@@ -108,22 +139,4 @@ public static class ServiceCollectionExtensions
         .AddScoped<IResourcePropertySerializerStrategy, IntegerResourcePropertySerializerStrategy>()
         .AddScoped<IResourcePropertySerializerStrategy, StringResourcePropertySerializerStrategy>()
         .AddScoped<ISpreadsheetPageMapWriter, SpreadsheetPageMapWriter>();
-
-    private static IServiceCollection AddResourceMapValidators(this IServiceCollection services)
-    {
-        var assembly = Assembly.GetAssembly(typeof(ServiceCollectionExtensions));
-        var serviceType = typeof(IResourceMapValidator);
-
-        var implementationTypes = assembly!.GetTypes()
-            .Where(type => type.GetInterface(serviceType.Name) != null)
-            .Where(type => type.IsClass)
-            .Where(type => !type.IsAbstract)
-            .ToArray();
-        foreach (var implementationType in implementationTypes)
-        {
-            services.AddScoped(serviceType, implementationType);
-        }
-
-        return services;
-    }
 }

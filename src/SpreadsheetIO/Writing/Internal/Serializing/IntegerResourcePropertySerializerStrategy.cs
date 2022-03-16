@@ -14,8 +14,7 @@ internal class IntegerResourcePropertySerializerStrategy : IResourcePropertySeri
                 typeof(int),
         };
 
-    public WritingCellValue Serialize<TResource>(object? value, PropertyMap<TResource> map)
-        where TResource : class
+    public WritingCellValue Serialize(object? value, PropertyMap map)
     {
         if (value is null)
         {

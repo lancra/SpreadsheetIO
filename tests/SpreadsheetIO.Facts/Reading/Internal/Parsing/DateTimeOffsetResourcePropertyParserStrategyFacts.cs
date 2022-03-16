@@ -1,5 +1,5 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal.Parsing;
 using LanceC.SpreadsheetIO.Shared;
@@ -103,7 +103,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
             var map = PropertyMapCreator
                 .CreateForFakeResourcePropertyStrategyModel(
                     model => model.DateTimeOffset,
-                    new DateKindMapOptionsExtension(CellDateKind.Number));
+                    new DateKindMapOption(CellDateKind.Number));
 
             var sut = CreateSystemUnderTest();
 
@@ -122,7 +122,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
             var map = PropertyMapCreator
                 .CreateForFakeResourcePropertyStrategyModel(
                     model => model.DateTimeOffset,
-                    new DateKindMapOptionsExtension(CellDateKind.Number));
+                    new DateKindMapOption(CellDateKind.Number));
 
             var sut = CreateSystemUnderTest();
 
@@ -141,7 +141,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
             var map = PropertyMapCreator
                 .CreateForFakeResourcePropertyStrategyModel(
                     model => model.DateTimeOffset,
-                    new DateKindMapOptionsExtension(CellDateKind.Number));
+                    new DateKindMapOption(CellDateKind.Number));
 
             var sut = CreateSystemUnderTest();
 
@@ -160,7 +160,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
             var map = PropertyMapCreator
                 .CreateForFakeResourcePropertyStrategyModel(
                     model => model.DateTimeOffset,
-                    new DateKindMapOptionsExtension(CellDateKind.Text));
+                    new DateKindMapOption(CellDateKind.Text));
 
             var sut = CreateSystemUnderTest();
 
@@ -179,7 +179,7 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
             var map = PropertyMapCreator
                 .CreateForFakeResourcePropertyStrategyModel(
                     model => model.DateTimeOffset,
-                    new DateKindMapOptionsExtension(CellDateKind.Text));
+                    new DateKindMapOption(CellDateKind.Text));
 
             var sut = CreateSystemUnderTest();
 

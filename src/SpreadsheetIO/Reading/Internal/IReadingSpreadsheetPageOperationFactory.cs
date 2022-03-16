@@ -19,6 +19,6 @@ internal interface IReadingSpreadsheetPageOperationFactory
     IReadingSpreadsheetPageOperation<TResource> Create<TResource>(
         IWorksheetElementReader worksheetReader,
         HeaderRowReadingResult<TResource> headerRowResult,
-        ResourceMap<TResource> map)
+        ResourceMap map)
         where TResource : class;
 }

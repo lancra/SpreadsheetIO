@@ -1,5 +1,4 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 using Moq.AutoMock;
@@ -11,8 +10,8 @@ public class ResourcePropertyValuesFacts
 {
     private readonly AutoMocker _mocker = new();
 
-    private ResourcePropertyValues<FakeModel> CreateSystemUnderTest()
-        => _mocker.CreateInstance<ResourcePropertyValues<FakeModel>>();
+    private ResourcePropertyValues CreateSystemUnderTest()
+        => _mocker.CreateInstance<ResourcePropertyValues>();
 
     public class TheAddMethod : ResourcePropertyValuesFacts
     {
@@ -38,7 +37,7 @@ public class ResourcePropertyValuesFacts
         public void ThrowsArgumentNullExceptionWhenMapIsNull()
         {
             // Arrange
-            var map = default(PropertyMap<FakeModel>);
+            var map = default(PropertyMap);
             var value = 1;
 
             var sut = CreateSystemUnderTest();
@@ -92,7 +91,7 @@ public class ResourcePropertyValuesFacts
         public void ThrowsArgumentNullExceptionWhenMapIsNull()
         {
             // Arrange
-            var map = default(PropertyMap<FakeModel>);
+            var map = default(PropertyMap);
             var sut = CreateSystemUnderTest();
 
             // Act

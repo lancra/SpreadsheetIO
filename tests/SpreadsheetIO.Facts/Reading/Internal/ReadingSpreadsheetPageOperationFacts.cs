@@ -1,5 +1,5 @@
+using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.ResourceMaps;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Failures;
@@ -15,8 +15,11 @@ public class ReadingSpreadsheetPageOperationFacts
 {
     private readonly AutoMocker _mocker = new();
 
-    private ReadingSpreadsheetPageOperation<FakeModel> CreateSystemUnderTest()
-        => _mocker.CreateInstance<ReadingSpreadsheetPageOperation<FakeModel>>();
+    private ReadingSpreadsheetPageOperation<FakeModel> CreateSystemUnderTest(ResourceMap? map = default)
+    {
+        _mocker.Use(map ?? ResourceMapCreator.Create<FakeModel>(Array.Empty<PropertyMap>()));
+        return _mocker.CreateInstance<ReadingSpreadsheetPageOperation<FakeModel>>();
+    }
 
     public class TheHeaderFailureProperty : ReadingSpreadsheetPageOperationFacts
     {
@@ -24,7 +27,7 @@ public class ReadingSpreadsheetPageOperationFacts
         public void ReturnsFailureFromHeaderRowReadingResult()
         {
             // Arrange
-            var headersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var headersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             var headerRowResult = new HeaderRowReadingResult<FakeModel>(
                 headersMock.Object,
                 new HeaderReadingFailure(
@@ -49,7 +52,7 @@ public class ReadingSpreadsheetPageOperationFacts
         public void ReturnsFalseWhenHeaderRowResultFailureIsNotNull()
         {
             // Arrange
-            var headersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var headersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             var headerRowResult = new HeaderRowReadingResult<FakeModel>(
                 headersMock.Object,
                 new HeaderReadingFailure(
@@ -77,7 +80,7 @@ public class ReadingSpreadsheetPageOperationFacts
                 .Setup(worksheetReader => worksheetReader.ReadNextRow())
                 .Returns(expectedResult);
 
-            var headersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var headersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             var headerRowResult = new HeaderRowReadingResult<FakeModel>(headersMock.Object, default);
             _mocker.Use(headerRowResult);
 
@@ -98,22 +101,17 @@ public class ReadingSpreadsheetPageOperationFacts
             worksheetReaderMock.Setup(worksheetReader => worksheetReader.ReadNextRow())
                 .Returns(true);
 
-            var headersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var headersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             var headerRowResult = new HeaderRowReadingResult<FakeModel>(headersMock.Object, default);
             _mocker.Use(headerRowResult);
 
-            var map = new FakeModelMap();
-            _mocker.Use<ResourceMap<FakeModel>>(map);
-
+            var map = ResourceMapCreator.Create<FakeModel>(Array.Empty<PropertyMap>());
             var resourceReadingResult = new ResourceReadingResult<FakeModel>(new NumberedResource<FakeModel>(2U, new()), default);
-            _mocker.GetMock<ISpreadsheetPageMapReader>()
-                .Setup(spreadsheetPageMapReader => spreadsheetPageMapReader.ReadBodyRow(
-                    worksheetReaderMock.Object,
-                    map,
-                    headersMock.Object))
+            _mocker.GetMock<IMappedBodyRowReader>()
+                .Setup(mappedBodyRowReader => mappedBodyRowReader.Read<FakeModel>(worksheetReaderMock.Object, map, headersMock.Object))
                 .Returns(resourceReadingResult);
 
-            var sut = CreateSystemUnderTest();
+            var sut = CreateSystemUnderTest(map: map);
 
             // Act
             sut.ReadNext();
@@ -130,14 +128,12 @@ public class ReadingSpreadsheetPageOperationFacts
                 .Setup(worksheetReader => worksheetReader.ReadNextRow())
                 .Returns(false);
 
-            var headersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var headersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             var headerRowResult = new HeaderRowReadingResult<FakeModel>(headersMock.Object, default);
             _mocker.Use(headerRowResult);
 
-            var map = new FakeModelMap();
-            _mocker.Use<ResourceMap<FakeModel>>(map);
-
-            var sut = CreateSystemUnderTest();
+            var map = ResourceMapCreator.Create<FakeModel>(Array.Empty<PropertyMap>());
+            var sut = CreateSystemUnderTest(map: map);
 
             // Act
             sut.ReadNext();
@@ -153,7 +149,7 @@ public class ReadingSpreadsheetPageOperationFacts
         public void DisposesWorksheetReader()
         {
             // Arrange
-            var headersMock = _mocker.GetMock<IResourcePropertyHeaders<FakeModel>>();
+            var headersMock = _mocker.GetMock<IResourcePropertyHeaders>();
             var headerRowResult = new HeaderRowReadingResult<FakeModel>(headersMock.Object, default);
             _mocker.Use(headerRowResult);
 

@@ -14,6 +14,6 @@ internal interface ISpreadsheetPageMapWriter
     /// <param name="spreadsheetPage">The spreadsheet page to write to.</param>
     /// <param name="resources">The resource to write.</param>
     /// <param name="map">The resource map.</param>
-    void Write<TResource>(IWritingSpreadsheetPage spreadsheetPage, IEnumerable<TResource> resources, ResourceMap<TResource> map)
+    void Write<TResource>(IWritingSpreadsheetPage spreadsheetPage, IEnumerable<TResource> resources, ResourceMap map)
         where TResource : class;
 }

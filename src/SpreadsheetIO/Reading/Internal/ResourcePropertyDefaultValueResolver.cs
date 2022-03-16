@@ -1,16 +1,12 @@
 using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Options;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal;
 
 internal class ResourcePropertyDefaultValueResolver : IResourcePropertyDefaultValueResolver
 {
-    public bool TryResolve<TResource>(
-        PropertyMap<TResource> map,
-        ResourcePropertyParseResultKind parseResultKind,
-        out object? value)
-        where TResource : class
+    public bool TryResolve(PropertyMap map, ResourcePropertyParseResultKind parseResultKind, out object? value)
     {
         Guard.Against.Null(map, nameof(map));
         Guard.Against.Null(parseResultKind, nameof(parseResultKind));
@@ -22,15 +18,15 @@ internal class ResourcePropertyDefaultValueResolver : IResourcePropertyDefaultVa
             return false;
         }
 
-        var defaultValueExtension = map.Options.FindExtension<DefaultValuePropertyMapOptionsExtension>();
-        if (defaultValueExtension is null)
+        var defaultValueOption = map.Options.Find<DefaultValuePropertyMapOption>();
+        if (defaultValueOption is null)
         {
             return false;
         }
 
-        if (defaultValueExtension.Resolutions.Any(resolution => resolution.ParseResultKind == parseResultKind))
+        if (defaultValueOption.Resolutions.Any(resolution => resolution.ParseResultKind == parseResultKind))
         {
-            value = defaultValueExtension.Value;
+            value = defaultValueOption.Value;
             return true;
         }
 

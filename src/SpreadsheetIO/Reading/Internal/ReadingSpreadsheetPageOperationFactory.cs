@@ -7,22 +7,21 @@ namespace LanceC.SpreadsheetIO.Reading.Internal;
 [ExcludeFromCodeCoverage]
 internal class ReadingSpreadsheetPageOperationFactory : IReadingSpreadsheetPageOperationFactory
 {
-    private readonly ISpreadsheetPageMapReader _spreadsheetPageMapReader;
+    private readonly IMappedBodyRowReader _mappedBodyRowReader;
 
-    public ReadingSpreadsheetPageOperationFactory(
-        ISpreadsheetPageMapReader spreadsheetPageMapReader)
+    public ReadingSpreadsheetPageOperationFactory(IMappedBodyRowReader mappedBodyRowReader)
     {
-        _spreadsheetPageMapReader = spreadsheetPageMapReader;
+        _mappedBodyRowReader = mappedBodyRowReader;
     }
 
     public IReadingSpreadsheetPageOperation<TResource> Create<TResource>(
         IWorksheetElementReader worksheetReader,
         HeaderRowReadingResult<TResource> headerRowResult,
-        ResourceMap<TResource> map)
+        ResourceMap map)
         where TResource : class
         => new ReadingSpreadsheetPageOperation<TResource>(
             worksheetReader,
             headerRowResult,
             map,
-            _spreadsheetPageMapReader);
+            _mappedBodyRowReader);
 }

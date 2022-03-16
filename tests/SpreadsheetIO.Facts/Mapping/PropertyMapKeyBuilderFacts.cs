@@ -1,40 +1,28 @@
 using System.Reflection;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
+using Moq.AutoMock;
 using Xunit;
 
 namespace LanceC.SpreadsheetIO.Facts.Mapping;
 
 public class PropertyMapKeyBuilderFacts
 {
-    public static PropertyInfo Property
-        => typeof(FakeModel).GetProperty(nameof(FakeModel.Name))!;
+    private readonly AutoMocker _mocker = new();
+
+    private PropertyMapKeyBuilder CreateSystemUnderTest(PropertyInfo propertyInfo)
+    {
+        _mocker.Use(propertyInfo);
+        return _mocker.CreateInstance<PropertyMapKeyBuilder>(true);
+    }
 
     public class TheConstructor : PropertyMapKeyBuilderFacts
     {
         [Fact]
-        public void SetsKeyNameFromProvidedProperty()
+        public void ThrowsArgumentNullExceptionWhenPropertyInfoIsNull()
         {
-            // Arrange
-            var sut = new PropertyMapKeyBuilder(Property);
-
             // Act
-            var key = sut.Key;
-
-            // Assert
-            Assert.Equal(nameof(FakeModel.Name), key.Name);
-            Assert.Equal(default, key.Number);
-            Assert.Equal(default, key.IsNameIgnored);
-        }
-
-        [Fact]
-        public void ThrowArgumentNullExceptionWhenPropertyIsNull()
-        {
-            // Arrange
-            var property = default(PropertyInfo);
-
-            // Act
-            var exception = Record.Exception(() => new PropertyMapKeyBuilder(property!));
+            var exception = Record.Exception(() => CreateSystemUnderTest(default!));
 
             // Assert
             Assert.NotNull(exception);
@@ -42,20 +30,24 @@ public class PropertyMapKeyBuilderFacts
         }
     }
 
-    public class TheOverrideNameMethod : PropertyMapKeyBuilderFacts
+    public class TheWithNameMethod : PropertyMapKeyBuilderFacts
     {
         [Fact]
-        public void SetsKeyName()
+        public void OverridesName()
         {
             // Arrange
-            var name = "Bar";
-            var sut = new PropertyMapKeyBuilder(Property);
+            var name = "foo";
+
+            var propertyInfo = typeof(FakeModel).GetProperty(nameof(FakeModel.Id))!;
+            var sut = CreateSystemUnderTest(propertyInfo);
 
             // Act
-            sut.OverrideName(name);
+            sut.WithName(name);
 
             // Assert
             Assert.Equal(name, sut.Key.Name);
+            Assert.Null(sut.Key.Number);
+            Assert.False(sut.Key.IsNameIgnored);
         }
 
         [Fact]
@@ -63,10 +55,12 @@ public class PropertyMapKeyBuilderFacts
         {
             // Arrange
             var name = string.Empty;
-            var sut = new PropertyMapKeyBuilder(Property);
+
+            var propertyInfo = typeof(FakeModel).GetProperty(nameof(FakeModel.Id))!;
+            var sut = CreateSystemUnderTest(propertyInfo);
 
             // Act
-            var exception = Record.Exception(() => sut.OverrideName(name));
+            var exception = Record.Exception(() => sut.WithName(name));
 
             // Assert
             Assert.NotNull(exception);
@@ -78,10 +72,12 @@ public class PropertyMapKeyBuilderFacts
         {
             // Arrange
             var name = default(string);
-            var sut = new PropertyMapKeyBuilder(Property);
+
+            var propertyInfo = typeof(FakeModel).GetProperty(nameof(FakeModel.Id))!;
+            var sut = CreateSystemUnderTest(propertyInfo);
 
             // Act
-            var exception = Record.Exception(() => sut.OverrideName(name!));
+            var exception = Record.Exception(() => sut.WithName(name!));
 
             // Assert
             Assert.NotNull(exception);
@@ -89,37 +85,45 @@ public class PropertyMapKeyBuilderFacts
         }
     }
 
-    public class TheIgnoreNameMethod : PropertyMapKeyBuilderFacts
+    public class TheWithoutNameMethod : PropertyMapKeyBuilderFacts
     {
         [Fact]
-        public void SetsKeyNameAsIgnored()
+        public void MarksNameAsIgnored()
         {
             // Arrange
-            var sut = new PropertyMapKeyBuilder(Property);
+            var name = nameof(FakeModel.Id);
+            var propertyInfo = typeof(FakeModel).GetProperty(name)!;
+            var sut = CreateSystemUnderTest(propertyInfo);
 
             // Act
-            sut.IgnoreName();
+            sut.WithoutName();
 
             // Assert
+            Assert.Equal(name, sut.Key.Name);
+            Assert.Null(sut.Key.Number);
             Assert.True(sut.Key.IsNameIgnored);
-            Assert.Equal(nameof(FakeModel.Name), sut.Key.Name);
         }
     }
 
-    public class TheUseNumberMethod : PropertyMapKeyBuilderFacts
+    public class TheWithNumberMethod : PropertyMapKeyBuilderFacts
     {
         [Fact]
-        public void SetsKeyNumber()
+        public void OverridesNumber()
         {
             // Arrange
-            var number = 1U;
-            var sut = new PropertyMapKeyBuilder(Property);
+            var number = 3U;
+
+            var name = nameof(FakeModel.Id);
+            var propertyInfo = typeof(FakeModel).GetProperty(name)!;
+            var sut = CreateSystemUnderTest(propertyInfo);
 
             // Act
-            sut.UseNumber(number);
+            sut.WithNumber(number);
 
             // Assert
+            Assert.Equal(name, sut.Key.Name);
             Assert.Equal(number, sut.Key.Number);
+            Assert.False(sut.Key.IsNameIgnored);
         }
 
         [Fact]
@@ -127,10 +131,12 @@ public class PropertyMapKeyBuilderFacts
         {
             // Arrange
             var number = 0U;
-            var sut = new PropertyMapKeyBuilder(Property);
+
+            var propertyInfo = typeof(FakeModel).GetProperty(nameof(FakeModel.Id))!;
+            var sut = CreateSystemUnderTest(propertyInfo);
 
             // Act
-            var exception = Record.Exception(() => sut.UseNumber(number));
+            var exception = Record.Exception(() => sut.WithNumber(number));
 
             // Assert
             Assert.NotNull(exception);

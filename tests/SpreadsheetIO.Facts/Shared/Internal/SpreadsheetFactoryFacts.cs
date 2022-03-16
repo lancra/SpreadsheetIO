@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping.Internal;
+using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading.Internal;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 using LanceC.SpreadsheetIO.Shared.Internal;
@@ -50,18 +50,18 @@ public class SpreadsheetFactoryFacts
             .Returns(new[] { _mocker.GetMock<ISpreadsheetGenerator>().Object, });
         serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ISpreadsheetPageMapWriter)))
             .Returns(_mocker.GetMock<ISpreadsheetPageMapWriter>().Object);
-        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IResourceMapManager)))
-            .Returns(_mocker.GetMock<IResourceMapManager>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ICartographerBuilder)))
+            .Returns(_mocker.GetMock<ICartographerBuilder>().Object);
     }
 
     private void MockForOpenRead(Mock<IServiceProvider> serviceProviderMock)
     {
         serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IElementReaderFactory)))
             .Returns(_mocker.GetMock<IElementReaderFactory>().Object);
-        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IResourceMapManager)))
-            .Returns(_mocker.GetMock<IResourceMapManager>().Object);
-        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ISpreadsheetPageMapReader)))
-            .Returns(_mocker.GetMock<ISpreadsheetPageMapReader>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ICartographerBuilder)))
+            .Returns(_mocker.GetMock<ICartographerBuilder>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IMappedHeaderRowReader)))
+            .Returns(_mocker.GetMock<IMappedHeaderRowReader>().Object);
         serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IReadingSpreadsheetPageOperationFactory)))
             .Returns(_mocker.GetMock<IReadingSpreadsheetPageOperationFactory>().Object);
         serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IStringIndexer)))

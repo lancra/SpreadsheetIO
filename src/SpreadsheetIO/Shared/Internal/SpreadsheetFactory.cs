@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using LanceC.SpreadsheetIO.Mapping.Internal;
+using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
@@ -73,7 +73,7 @@ internal class SpreadsheetFactory : ISpreadsheetFactory
         var stringIndexer = scope.ServiceProvider.GetRequiredService<IStringIndexer>();
         var spreadsheetGenerators = scope.ServiceProvider.GetRequiredService<IEnumerable<ISpreadsheetGenerator>>();
         var spreadsheetPageMapWriter = scope.ServiceProvider.GetRequiredService<ISpreadsheetPageMapWriter>();
-        var resourceMapManager = scope.ServiceProvider.GetRequiredService<IResourceMapManager>();
+        var cartographer = CreateCartographer(scope);
 
         var spreadsheet = new WritingSpreadsheet(
             spreadsheetDocument,
@@ -82,7 +82,7 @@ internal class SpreadsheetFactory : ISpreadsheetFactory
             stringIndexer,
             spreadsheetGenerators,
             spreadsheetPageMapWriter,
-            resourceMapManager);
+            cartographer);
         return spreadsheet;
     }
 
@@ -91,8 +91,8 @@ internal class SpreadsheetFactory : ISpreadsheetFactory
         ISpreadsheetDocumentWrapper spreadsheetDocument)
     {
         var elementReaderFactory = scope.ServiceProvider.GetRequiredService<IElementReaderFactory>();
-        var resourceMapManager = scope.ServiceProvider.GetRequiredService<IResourceMapManager>();
-        var spreadsheetPageMapReader = scope.ServiceProvider.GetRequiredService<ISpreadsheetPageMapReader>();
+        var cartographer = CreateCartographer(scope);
+        var mappedHeaderRowReader = scope.ServiceProvider.GetRequiredService<IMappedHeaderRowReader>();
         var operationFactory = scope.ServiceProvider.GetRequiredService<IReadingSpreadsheetPageOperationFactory>();
 
         var stringIndexer = scope.ServiceProvider.GetRequiredService<IStringIndexer>();
@@ -105,14 +105,27 @@ internal class SpreadsheetFactory : ISpreadsheetFactory
             var spreadsheetPage = new ReadingSpreadsheetPage(
                 worksheetPart,
                 elementReaderFactory,
-                resourceMapManager,
-                spreadsheetPageMapReader,
+                cartographer,
+                mappedHeaderRowReader,
                 operationFactory);
             spreadsheetPages.Add(spreadsheetPage, worksheetPart.Name);
         }
 
         var spreadsheet = new ReadingSpreadsheet(spreadsheetPages);
         return spreadsheet;
+    }
+
+    private static ICartographer CreateCartographer(IServiceScope scope)
+    {
+        var builder = scope.ServiceProvider.GetRequiredService<ICartographerBuilder>();
+
+        var options = scope.ServiceProvider.GetService<CartographyOptions>();
+        if (options is not null)
+        {
+            options.ConfigureAction(builder);
+        }
+
+        return builder.Build();
     }
 
     private static void PopulateStringIndexer(

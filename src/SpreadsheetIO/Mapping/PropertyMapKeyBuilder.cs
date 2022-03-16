@@ -4,59 +4,38 @@ using Ardalis.GuardClauses;
 namespace LanceC.SpreadsheetIO.Mapping;
 
 /// <summary>
-/// Provides a builder for modifying a property map key.
+/// Provides the builder for generating a property map key.
 /// </summary>
-public class PropertyMapKeyBuilder
+internal class PropertyMapKeyBuilder : IInternalPropertyMapKeyBuilder
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PropertyMapKeyBuilder"/> class.
-    /// </summary>
-    /// <param name="property">The underlying resource property.</param>
-    public PropertyMapKeyBuilder(PropertyInfo property)
+    public PropertyMapKeyBuilder(PropertyInfo propertyInfo)
     {
-        Guard.Against.Null(property, nameof(property));
+        Guard.Against.Null(propertyInfo, nameof(propertyInfo));
 
-        Key = new PropertyMapKey(property.Name, default, false);
+        Key = new(propertyInfo.Name, default, false);
     }
 
-    /// <summary>
-    /// Gets the current property map key.
-    /// </summary>
     public PropertyMapKey Key { get; private set; }
 
-    /// <summary>
-    /// Overrides the underlying property name for the property map key.
-    /// </summary>
-    /// <param name="name">The name to use for the property map key.</param>
-    /// <returns>The resulting property map key builder.</returns>
-    public PropertyMapKeyBuilder OverrideName(string name)
+    public IPropertyMapKeyBuilder WithName(string name)
     {
         Guard.Against.NullOrEmpty(name, nameof(name));
 
-        Key = new PropertyMapKey(name, Key.Number, Key.IsNameIgnored);
+        Key = new(name, Key.Number, Key.IsNameIgnored);
         return this;
     }
 
-    /// <summary>
-    /// Ignores the name in the property map key for reading.
-    /// </summary>
-    /// <returns>The resulting property map key builder.</returns>
-    public PropertyMapKeyBuilder IgnoreName()
+    public IPropertyMapKeyBuilder WithoutName()
     {
-        Key = new PropertyMapKey(Key.Name, Key.Number, true);
+        Key = new(Key.Name, Key.Number, true);
         return this;
     }
 
-    /// <summary>
-    /// Sets the column number for the property map key.
-    /// </summary>
-    /// <param name="number">The column number to use for the property map key.</param>
-    /// <returns>The resulting property map key builder.</returns>
-    public PropertyMapKeyBuilder UseNumber(uint number)
+    public IPropertyMapKeyBuilder WithNumber(uint number)
     {
         Guard.Against.Zero(number, nameof(number));
 
-        Key = new PropertyMapKey(Key.Name, number, Key.IsNameIgnored);
+        Key = new(Key.Name, number, Key.IsNameIgnored);
         return this;
     }
 }

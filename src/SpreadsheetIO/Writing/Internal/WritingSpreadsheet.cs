@@ -1,7 +1,6 @@
 using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
-using LanceC.SpreadsheetIO.Mapping.Internal;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Shared.Internal.Generators;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
@@ -19,7 +18,7 @@ internal class WritingSpreadsheet : IWritingSpreadsheet
     private readonly IStringIndexer _stringIndexer;
     private readonly IEnumerable<ISpreadsheetGenerator> _spreadsheetGenerators;
     private readonly ISpreadsheetPageMapWriter _spreadsheetPageMapWriter;
-    private readonly IResourceMapManager _resourceMapManager;
+    private readonly ICartographer _cartographer;
 
     public WritingSpreadsheet(
         ISpreadsheetDocumentWrapper spreadsheetDocument,
@@ -28,7 +27,7 @@ internal class WritingSpreadsheet : IWritingSpreadsheet
         IStringIndexer stringIndexer,
         IEnumerable<ISpreadsheetGenerator> spreadsheetGenerators,
         ISpreadsheetPageMapWriter spreadsheetPageMapWriter,
-        IResourceMapManager resourceMapManager)
+        ICartographer cartographer)
     {
         _spreadsheetDocument = spreadsheetDocument;
         _spreadsheetPages = spreadsheetPages;
@@ -36,7 +35,7 @@ internal class WritingSpreadsheet : IWritingSpreadsheet
         _stringIndexer = stringIndexer;
         _spreadsheetGenerators = spreadsheetGenerators;
         _spreadsheetPageMapWriter = spreadsheetPageMapWriter;
-        _resourceMapManager = resourceMapManager;
+        _cartographer = cartographer;
     }
 
     public IWritingSpreadsheetPageCollection Pages
@@ -57,15 +56,7 @@ internal class WritingSpreadsheet : IWritingSpreadsheet
     public IWritingSpreadsheetPage WritePage<TResource>(string name, IEnumerable<TResource> resources)
         where TResource : class
     {
-        var map = _resourceMapManager.Single<TResource>();
-        return WritePageImpl(name, resources, map);
-    }
-
-    public IWritingSpreadsheetPage WritePage<TResource, TResourceMap>(string name, IEnumerable<TResource> resources)
-        where TResource : class
-        where TResourceMap : ResourceMap<TResource>
-    {
-        var map = _resourceMapManager.Single<TResource, TResourceMap>();
+        var map = _cartographer.GetMap<TResource>();
         return WritePageImpl(name, resources, map);
     }
 
@@ -122,23 +113,23 @@ internal class WritingSpreadsheet : IWritingSpreadsheet
     private IWritingSpreadsheetPage WritePageImpl<TResource>(
         string name,
         IEnumerable<TResource> resources,
-        ResourceMap<TResource> map)
+        ResourceMap map)
         where TResource : class
     {
         var spreadsheetPage = AddPage(name);
 
         foreach (var propertyMap in map.Properties)
         {
-            var headerStyleExtension = propertyMap.Options.FindExtension<HeaderStyleMapOptionsExtension>();
-            if (headerStyleExtension is not null)
+            var headerStyleOption = propertyMap.Options.Find<HeaderStyleMapOption>();
+            if (headerStyleOption is not null)
             {
-                _styleIndexer.Add(headerStyleExtension.Key, headerStyleExtension.Style);
+                _styleIndexer.Add(headerStyleOption.Key, headerStyleOption.Style);
             }
 
-            var bodyStyleExtension = propertyMap.Options.FindExtension<BodyStyleMapOptionsExtension>();
-            if (bodyStyleExtension is not null)
+            var bodyStyleOption = propertyMap.Options.Find<BodyStyleMapOption>();
+            if (bodyStyleOption is not null)
             {
-                _styleIndexer.Add(bodyStyleExtension.Key, bodyStyleExtension.Style);
+                _styleIndexer.Add(bodyStyleOption.Key, bodyStyleOption.Style);
             }
         }
 

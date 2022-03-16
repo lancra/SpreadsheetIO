@@ -8,16 +8,12 @@ internal interface IResourcePropertyCollectionFactory
     /// <summary>
     /// Creates a resource property headers collection.
     /// </summary>
-    /// <typeparam name="TResource">The type of resource the properties are defined in.</typeparam>
     /// <returns>The resource property headers collection.</returns>
-    IResourcePropertyHeaders<TResource> CreateHeaders<TResource>()
-        where TResource : class;
+    IResourcePropertyHeaders CreateHeaders();
 
     /// <summary>
     /// Creates a resource property values collection.
     /// </summary>
-    /// <typeparam name="TResource">The type of resource the properties are defined in.</typeparam>
     /// <returns>The resource property values collection.</returns>
-    IResourcePropertyValues<TResource> CreateValues<TResource>()
-        where TResource : class;
+    IResourcePropertyValues CreateValues();
 }

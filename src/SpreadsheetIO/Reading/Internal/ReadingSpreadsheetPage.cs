@@ -1,6 +1,5 @@
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
-using LanceC.SpreadsheetIO.Mapping.Internal;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Reading.Failures;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
@@ -11,62 +10,44 @@ internal class ReadingSpreadsheetPage : IReadingSpreadsheetPage
 {
     private readonly IWorksheetPartWrapper _worksheetPart;
     private readonly IElementReaderFactory _elementReaderFactory;
-    private readonly IResourceMapManager _resourceMapManager;
-    private readonly ISpreadsheetPageMapReader _spreadsheetPageMapReader;
+    private readonly ICartographer _cartographer;
+    private readonly IMappedHeaderRowReader _mappedHeaderRowReader;
     private readonly IReadingSpreadsheetPageOperationFactory _operationFactory;
 
     public ReadingSpreadsheetPage(
         IWorksheetPartWrapper worksheetPart,
         IElementReaderFactory elementReaderFactory,
-        IResourceMapManager resourceMapManager,
-        ISpreadsheetPageMapReader spreadsheetPageMapReader,
+        ICartographer cartographer,
+        IMappedHeaderRowReader mappedHeaderRowReader,
         IReadingSpreadsheetPageOperationFactory operationFactory)
     {
         _worksheetPart = worksheetPart;
         _elementReaderFactory = elementReaderFactory;
-        _resourceMapManager = resourceMapManager;
-        _spreadsheetPageMapReader = spreadsheetPageMapReader;
+        _cartographer = cartographer;
+        _mappedHeaderRowReader = mappedHeaderRowReader;
         _operationFactory = operationFactory;
     }
 
     public ReadingResult<TResource> ReadAll<TResource>()
         where TResource : class
     {
-        var map = _resourceMapManager.Single<TResource>();
-        var result = ReadAllImpl(map);
-        return result;
-    }
-
-    public ReadingResult<TResource> ReadAll<TResource, TResourceMap>()
-        where TResource : class
-        where TResourceMap : ResourceMap<TResource>
-    {
-        var map = _resourceMapManager.Single<TResource, TResourceMap>();
-        var result = ReadAllImpl(map);
+        var map = _cartographer.GetMap<TResource>();
+        var result = ReadAllImpl<TResource>(map);
         return result;
     }
 
     public IReadingSpreadsheetPageOperation<TResource> StartRead<TResource>()
         where TResource : class
     {
-        var map = _resourceMapManager.Single<TResource>();
-        var operation = StartReadImpl(map);
+        var map = _cartographer.GetMap<TResource>();
+        var operation = StartReadImpl<TResource>(map);
         return operation;
     }
 
-    public IReadingSpreadsheetPageOperation<TResource> StartRead<TResource, TResourceMap>()
-        where TResource : class
-        where TResourceMap : ResourceMap<TResource>
-    {
-        var map = _resourceMapManager.Single<TResource, TResourceMap>();
-        var operation = StartReadImpl(map);
-        return operation;
-    }
-
-    private ReadingResult<TResource> ReadAllImpl<TResource>(ResourceMap<TResource> map)
+    private ReadingResult<TResource> ReadAllImpl<TResource>(ResourceMap map)
         where TResource : class
     {
-        using var operation = StartReadImpl(map);
+        using var operation = StartReadImpl<TResource>(map);
         if (operation.HeaderFailure is not null)
         {
             return new ReadingResult<TResource>(
@@ -78,9 +59,7 @@ internal class ReadingSpreadsheetPage : IReadingSpreadsheetPage
         var resources = new List<NumberedResource<TResource>>();
         var resourceFailures = new List<ResourceReadingFailure>();
 
-        var shouldExitOnResourceReadingFailure = map.Options
-            .HasExtension<ExitOnResourceReadingFailureResourceMapOptionsExtension>();
-
+        var continueOnResourceReadingFailure = map.Options.Has<ContinueOnResourceReadingFailureResourceMapOption>();
         while (operation.ReadNext())
         {
             if (operation.CurrentResult!.NumberedResource is not null)
@@ -92,7 +71,7 @@ internal class ReadingSpreadsheetPage : IReadingSpreadsheetPage
             {
                 resourceFailures.Add(operation.CurrentResult.Failure);
 
-                if (shouldExitOnResourceReadingFailure)
+                if (!continueOnResourceReadingFailure)
                 {
                     break;
                 }
@@ -103,11 +82,11 @@ internal class ReadingSpreadsheetPage : IReadingSpreadsheetPage
         return result;
     }
 
-    private IReadingSpreadsheetPageOperation<TResource> StartReadImpl<TResource>(ResourceMap<TResource> map)
+    private IReadingSpreadsheetPageOperation<TResource> StartReadImpl<TResource>(ResourceMap map)
         where TResource : class
     {
         var worksheetReader = _elementReaderFactory.CreateWorksheetReader(_worksheetPart);
-        var headerRowResult = _spreadsheetPageMapReader.ReadHeaderRow(worksheetReader, map);
+        var headerRowResult = _mappedHeaderRowReader.Read<TResource>(worksheetReader, map);
         var operation = _operationFactory.Create(worksheetReader, headerRowResult, map);
         return operation;
     }

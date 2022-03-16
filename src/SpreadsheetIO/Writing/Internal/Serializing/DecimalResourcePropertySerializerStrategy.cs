@@ -10,8 +10,7 @@ internal class DecimalResourcePropertySerializerStrategy : IResourcePropertySeri
                 typeof(decimal),
         };
 
-    public WritingCellValue Serialize<TResource>(object? value, PropertyMap<TResource> map)
-        where TResource : class
+    public WritingCellValue Serialize(object? value, PropertyMap map)
     {
         var decimalValue = (decimal?)value;
         var cellValue = new WritingCellValue(decimalValue);

@@ -1,7 +1,6 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
-using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Extensions;
+using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
 using Moq.AutoMock;
@@ -19,18 +18,21 @@ public class ResourcePropertyDefaultValueResolverFacts
     public class TheTryResolveMethod : ResourcePropertyDefaultValueResolverFacts
     {
         [Fact]
-        public void ReturnsTrueWhenDefaultValueOptionsExtensionHasCorrespondingResolutionToParseResult()
+        public void ReturnsTrueWhenDefaultValueMapOptionHasCorrespondingResolutionToParseResult()
         {
             // Arrange
             var expectedValue = 1.5M;
 
             var map = PropertyMapCreator.CreateForFakeModel(
                 model => model.Decimal,
-                new DefaultValuePropertyMapOptionsExtension(
+                options: new DefaultValuePropertyMapOption(
                     expectedValue,
-                    ResourcePropertyDefaultReadingResolution.Empty,
-                    ResourcePropertyDefaultReadingResolution.Missing,
-                    ResourcePropertyDefaultReadingResolution.Invalid));
+                    new[]
+                    {
+                        ResourcePropertyDefaultReadingResolution.Empty,
+                        ResourcePropertyDefaultReadingResolution.Missing,
+                        ResourcePropertyDefaultReadingResolution.Invalid,
+                    }));
             var parseResultKind = ResourcePropertyParseResultKind.Invalid;
 
             var sut = CreateSystemUnderTest();
@@ -51,11 +53,14 @@ public class ResourcePropertyDefaultValueResolverFacts
 
             var map = PropertyMapCreator.CreateForFakeModel(
                 model => model.Decimal,
-                new DefaultValuePropertyMapOptionsExtension(
+                options: new DefaultValuePropertyMapOption(
                     defaultValue,
-                    ResourcePropertyDefaultReadingResolution.Empty,
-                    ResourcePropertyDefaultReadingResolution.Missing,
-                    ResourcePropertyDefaultReadingResolution.Invalid));
+                    new[]
+                    {
+                        ResourcePropertyDefaultReadingResolution.Empty,
+                        ResourcePropertyDefaultReadingResolution.Missing,
+                        ResourcePropertyDefaultReadingResolution.Invalid,
+                    }));
             var parseResultKind = ResourcePropertyParseResultKind.Success;
 
             var sut = CreateSystemUnderTest();
@@ -69,7 +74,7 @@ public class ResourcePropertyDefaultValueResolverFacts
         }
 
         [Fact]
-        public void ReturnsFalseWhenDefaultValueOptionsExtensionIsNotFound()
+        public void ReturnsFalseWhenDefaultValueMapOptionIsNotFound()
         {
             // Arrange
             var map = PropertyMapCreator.CreateForFakeModel(model => model.Decimal);
@@ -86,17 +91,20 @@ public class ResourcePropertyDefaultValueResolverFacts
         }
 
         [Fact]
-        public void ReturnsFalseWhenParseResultDoesNotMatchAnyResolutionsDefinedInDefaultValueOptionsExtension()
+        public void ReturnsFalseWhenParseResultDoesNotMatchAnyResolutionsDefinedInDefaultValueMapOption()
         {
             // Arrange
             var defaultValue = 1.5M;
 
             var map = PropertyMapCreator.CreateForFakeModel(
                 model => model.Decimal,
-                new DefaultValuePropertyMapOptionsExtension(
+                options: new DefaultValuePropertyMapOption(
                     defaultValue,
-                    ResourcePropertyDefaultReadingResolution.Empty,
-                    ResourcePropertyDefaultReadingResolution.Missing));
+                    new[]
+                    {
+                        ResourcePropertyDefaultReadingResolution.Empty,
+                        ResourcePropertyDefaultReadingResolution.Missing,
+                    }));
             var parseResultKind = ResourcePropertyParseResultKind.Invalid;
 
             var sut = CreateSystemUnderTest();
@@ -113,7 +121,7 @@ public class ResourcePropertyDefaultValueResolverFacts
         public void ThrowsArgumentNullExceptionWhenMapIsNull()
         {
             // Arrange
-            var map = default(PropertyMap<FakeModel>);
+            var map = default(PropertyMap);
             var parseResultKind = ResourcePropertyParseResultKind.Invalid;
 
             var sut = CreateSystemUnderTest();
