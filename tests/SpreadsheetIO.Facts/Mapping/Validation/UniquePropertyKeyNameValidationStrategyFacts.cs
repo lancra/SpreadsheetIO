@@ -1,3 +1,4 @@
+using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Extensions;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
@@ -60,12 +61,12 @@ public class UniquePropertyKeyNameValidationStrategyFacts
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Display),
-                            new PropertyMapKey(nameof(FakeModel.Id), default, false)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Id))).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(resourceType, nameof(FakeModel.Decimal)).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.DateTime),
-                            new PropertyMapKey(nameof(FakeModel.Decimal), default, false)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Decimal))).Object,
                     });
 
             var sut = CreateSystemUnderTest();
@@ -94,7 +95,7 @@ public class UniquePropertyKeyNameValidationStrategyFacts
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Display),
-                            new PropertyMapKey(nameof(FakeModel.Id), default, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Id), isNameIgnored: true)).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(resourceType, nameof(FakeModel.Decimal)).Object,
                     });
 

@@ -42,9 +42,9 @@ public class PropertySettersResourceCreationStrategyFacts
                     typeof(FakeConstructionModel).GetConstructor(new[] { typeof(int), typeof(string), typeof(decimal), })!,
                     new[]
                     {
-                        new PropertyMapKey(nameof(FakeConstructionModel.Id), default, default),
-                        new PropertyMapKey(nameof(FakeConstructionModel.Name), default, default),
-                        new PropertyMapKey(nameof(FakeConstructionModel.Amount), default, default),
+                        PropertyMapKeyCreator.Create(name: nameof(FakeConstructionModel.Id)),
+                        PropertyMapKeyCreator.Create(name: nameof(FakeConstructionModel.Name)),
+                        PropertyMapKeyCreator.Create(name: nameof(FakeConstructionModel.Amount)),
                     }));
 
             var sut = CreateSystemUnderTest();

@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Mapping;
 using Moq;
 using Moq.AutoMock;
@@ -25,7 +26,7 @@ internal static class AutoMockerMappingExtensions
 
         var keyBuilderMock = new Mock<IInternalPropertyMapKeyBuilder>();
         keyBuilderMock.SetupGet(builder => builder.Key)
-            .Returns(key ?? new PropertyMapKey(propertyName, default, false));
+            .Returns(key ?? PropertyMapKeyCreator.Create(name: propertyName));
 
         builderMock.SetupGet(builder => builder.KeyBuilder)
             .Returns(keyBuilderMock.Object);

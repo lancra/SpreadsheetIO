@@ -6,7 +6,7 @@ namespace LanceC.SpreadsheetIO.Mapping;
 /// Represents an identifier for a resource property map.
 /// </summary>
 [ExcludeFromCodeCoverage]
-public sealed record PropertyMapKey(string Name, uint? Number, bool IsNameIgnored)
+public sealed record PropertyMapKey(string Name, uint? Number, bool IsNameIgnored, IReadOnlyCollection<string> AlternateNames)
 {
     /// <summary>
     /// Gets the name for the property.
@@ -22,6 +22,11 @@ public sealed record PropertyMapKey(string Name, uint? Number, bool IsNameIgnore
     /// Gets the value that determines whether the name is ignored for reading.
     /// </summary>
     public bool IsNameIgnored { get; init; } = IsNameIgnored;
+
+    /// <summary>
+    /// Gets the altername names that can be used when reading the property.
+    /// </summary>
+    public IReadOnlyCollection<string> AlternateNames { get; init; } = AlternateNames;
 
     /// <summary>
     /// Compares another property map key for equality.

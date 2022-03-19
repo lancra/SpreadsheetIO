@@ -12,7 +12,7 @@ internal class PropertyMapKeyBuilder : IInternalPropertyMapKeyBuilder
     {
         Guard.Against.Null(propertyInfo, nameof(propertyInfo));
 
-        Key = new(propertyInfo.Name, default, false);
+        Key = new(propertyInfo.Name, default, false, Array.Empty<string>());
     }
 
     public PropertyMapKey Key { get; private set; }
@@ -21,13 +21,13 @@ internal class PropertyMapKeyBuilder : IInternalPropertyMapKeyBuilder
     {
         Guard.Against.NullOrEmpty(name, nameof(name));
 
-        Key = new(name, Key.Number, Key.IsNameIgnored);
+        Key = new(name, Key.Number, Key.IsNameIgnored, Key.AlternateNames);
         return this;
     }
 
     public IPropertyMapKeyBuilder WithoutName()
     {
-        Key = new(Key.Name, Key.Number, true);
+        Key = new(Key.Name, Key.Number, true, Key.AlternateNames);
         return this;
     }
 
@@ -35,7 +35,16 @@ internal class PropertyMapKeyBuilder : IInternalPropertyMapKeyBuilder
     {
         Guard.Against.Zero(number, nameof(number));
 
-        Key = new(Key.Name, number, Key.IsNameIgnored);
+        Key = new(Key.Name, number, Key.IsNameIgnored, Key.AlternateNames);
+        return this;
+    }
+
+    public IPropertyMapKeyBuilder WithAlternateNames(params string[] names)
+    {
+        Guard.Against.Null(names, nameof(names));
+        Guard.Against.NullOrEmptyElements(names, nameof(names));
+
+        Key = new(Key.Name, Key.Number, Key.IsNameIgnored, names);
         return this;
     }
 }
