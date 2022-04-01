@@ -57,7 +57,7 @@ namespace LanceC.SpreadsheetIO.Properties
                 type);
 
         /// <summary>
-        /// {resourceType} has duplicate key names for the following properties: {keyNames}.
+        /// {resourceType} has duplicate key names: {keyNames}.
         /// </summary>
         public static string DuplicatePropertyMapKeyNames(object? resourceType, object? keyNames)
             => string.Format(
@@ -65,7 +65,7 @@ namespace LanceC.SpreadsheetIO.Properties
                 resourceType, keyNames);
 
         /// <summary>
-        /// {resourceType} has duplicate key numbers for the following properties: {keyNumbers}.
+        /// {resourceType} has duplicate key numbers: {keyNumbers}.
         /// </summary>
         public static string DuplicatePropertyMapKeyNumbers(object? resourceType, object? keyNumbers)
             => string.Format(

@@ -136,10 +136,10 @@
     <value>Cannot retrieve assembly for {type}.</value>
   </data>
   <data name="DuplicatePropertyMapKeyNames" xml:space="preserve">
-    <value>{resourceType} has duplicate key names for the following properties: {keyNames}.</value>
+    <value>{resourceType} has duplicate key names: {keyNames}.</value>
   </data>
   <data name="DuplicatePropertyMapKeyNumbers" xml:space="preserve">
-    <value>{resourceType} has duplicate key numbers for the following properties: {keyNumbers}.</value>
+    <value>{resourceType} has duplicate key numbers: {keyNumbers}.</value>
   </data>
   <data name="DuplicatePropertyMaps" xml:space="preserve">
     <value>{resourceType} has duplicate maps for the following properties: {propertyNames}.</value>
