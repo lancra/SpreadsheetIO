@@ -344,5 +344,43 @@ public class MappedHeaderRowReaderFacts
 
             Assert.Null(readingResult.Failure);
         }
+
+        [Fact]
+        public void UsesAlternateNameWhenNoMapIsFoundForName()
+        {
+            // Arrange
+            var readerMock = _mocker.GetMock<IWorksheetElementReader>();
+            readerMock.Setup(reader => reader.ReadToRow(1U))
+                .Returns(true);
+
+            var alternateName = "AlternateId";
+            MockWorksheetElementReaderCells(new FakeWorksheetCell(new CellLocation("A1"), alternateName));
+
+            var map = ResourceMapCreator.Create<FakeModel>(
+                new[]
+                {
+                    PropertyMapCreator.CreateForFakeModel(model => model.Id, keyAction: key => key.WithAlternateNames(alternateName)),
+                });
+
+            var idPropertyMap = map.Properties.Single(p => p.Property.Name == nameof(FakeModel.Id));
+
+            var resourcePropertyHeadersMock = _mocker.GetMock<IResourcePropertyHeaders>();
+            resourcePropertyHeadersMock.Setup(resourcePropertyHeaders => resourcePropertyHeaders.ContainsMap(idPropertyMap))
+                .Returns(true);
+
+            _mocker.GetMock<IResourcePropertyCollectionFactory>()
+                .Setup(resourcePropertyCollectionFactory => resourcePropertyCollectionFactory.CreateHeaders())
+                .Returns(resourcePropertyHeadersMock.Object);
+
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var readingResult = sut.Read<FakeModel>(readerMock.Object, map);
+
+            // Assert
+            resourcePropertyHeadersMock.Verify(resourcePropertyHeaders => resourcePropertyHeaders.Add(idPropertyMap, 1U));
+
+            Assert.Null(readingResult.Failure);
+        }
     }
 }
