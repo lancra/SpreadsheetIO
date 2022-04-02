@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using LanceC.SpreadsheetIO.Mapping.Builders;
 using LanceC.SpreadsheetIO.Mapping.Options.Registrations;
 using LanceC.SpreadsheetIO.Reading;
 

@@ -1,4 +1,4 @@
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Builders;
 using LanceC.SpreadsheetIO.Mapping.Validation;
 using Moq;
 using Moq.AutoMock;

@@ -1,7 +1,7 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Extensions;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Builders;
 using LanceC.SpreadsheetIO.Mapping.Validation;
 using LanceC.SpreadsheetIO.Properties;
 using Moq.AutoMock;

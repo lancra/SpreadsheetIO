@@ -4,6 +4,7 @@ using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Builders;
 using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Mapping.Options.Converters;
 using LanceC.SpreadsheetIO.Mapping.Options.Registrations;
@@ -16,7 +17,7 @@ using Moq;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Mapping;
+namespace LanceC.SpreadsheetIO.Facts.Mapping.Builders;
 
 public class PropertyMapBuilderFacts
 {

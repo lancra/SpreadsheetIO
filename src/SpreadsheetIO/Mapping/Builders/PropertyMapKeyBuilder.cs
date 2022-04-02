@@ -1,7 +1,7 @@
 using System.Reflection;
 using Ardalis.GuardClauses;
 
-namespace LanceC.SpreadsheetIO.Mapping;
+namespace LanceC.SpreadsheetIO.Mapping.Builders;
 
 /// <summary>
 /// Provides the builder for generating a property map key.

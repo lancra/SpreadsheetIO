@@ -2,7 +2,7 @@ using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Mapping.Options.Converters;
 using LanceC.SpreadsheetIO.Mapping.Options.Registrations;
 
-namespace LanceC.SpreadsheetIO.Mapping;
+namespace LanceC.SpreadsheetIO.Mapping.Builders;
 
 /// <summary>
 /// Defines the internal builder for generating a resource map.

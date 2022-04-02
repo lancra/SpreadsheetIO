@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Builders;
 using Moq;
 using Moq.AutoMock;
 

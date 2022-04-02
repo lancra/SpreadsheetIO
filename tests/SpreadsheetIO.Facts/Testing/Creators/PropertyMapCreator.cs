@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Builders;
 using LanceC.SpreadsheetIO.Mapping.Options;
 
 namespace LanceC.SpreadsheetIO.Facts.Testing.Creators;

@@ -1,10 +1,10 @@
 using System.Reflection;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Builders;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Mapping;
+namespace LanceC.SpreadsheetIO.Facts.Mapping.Builders;
 
 public class PropertyMapKeyBuilderFacts
 {

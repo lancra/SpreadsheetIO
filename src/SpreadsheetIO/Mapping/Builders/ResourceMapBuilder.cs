@@ -4,7 +4,7 @@ using LanceC.SpreadsheetIO.Mapping.Options.Converters;
 using LanceC.SpreadsheetIO.Mapping.Options.Registrations;
 using LanceC.SpreadsheetIO.Mapping.Validation;
 
-namespace LanceC.SpreadsheetIO.Mapping;
+namespace LanceC.SpreadsheetIO.Mapping.Builders;
 
 internal abstract class ResourceMapBuilder : IInternalResourceMapBuilder
 {
