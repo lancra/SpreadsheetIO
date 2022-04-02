@@ -37,9 +37,8 @@ internal class MappedHeaderRowReader : IMappedHeaderRowReader
             var location = reader.GetCellLocation();
             var value = reader.GetCellValue();
 
-            var numberPropertyMap = map.Properties.SingleOrDefault(map => map.Key.Number == location.Column.Number);
-            var namePropertyMap = map.Properties.SingleOrDefault(map => map.Key.Name == value && !map.Key.IsNameIgnored)
-                ?? map.Properties.SingleOrDefault(map => map.Key.AlternateNames.Contains(value) && !map.Key.IsNameIgnored);
+            var numberPropertyMap = map.Properties.Find(location.Column.Number);
+            var namePropertyMap = map.Properties.Find(value);
             var propertyMap = numberPropertyMap ?? namePropertyMap;
 
             if (propertyMap is null)

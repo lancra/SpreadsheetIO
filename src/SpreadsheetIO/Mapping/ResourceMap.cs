@@ -9,7 +9,7 @@ namespace LanceC.SpreadsheetIO.Mapping;
 [ExcludeFromCodeCoverage]
 public class ResourceMap
 {
-    internal ResourceMap(Type resourceType, IReadOnlyCollection<PropertyMap> properties, MapOptions<IResourceMapOption> options)
+    internal ResourceMap(Type resourceType, PropertyMapCollection properties, MapOptions<IResourceMapOption> options)
     {
         ResourceType = resourceType;
         Properties = properties;
@@ -24,7 +24,7 @@ public class ResourceMap
     /// <summary>
     /// Gets the property maps for the resource.
     /// </summary>
-    public IReadOnlyCollection<PropertyMap> Properties { get; }
+    public PropertyMapCollection Properties { get; }
 
     /// <summary>
     /// Gets the map options.
