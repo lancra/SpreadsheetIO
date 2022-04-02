@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Mapping.Options;
+using LanceC.SpreadsheetIO.Mapping.Options.Extensions;
 using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal.Writers;
@@ -25,10 +26,10 @@ internal class SpreadsheetPageMapWriter : ISpreadsheetPageMapWriter
 
         var numberedPropertyMaps = GetNumberedPropertyMaps(map);
 
-        var headerRowNumberOption = map.Options.Find<HeaderRowNumberResourceMapOption>();
-        if (headerRowNumberOption is not null && spreadsheetPage.CurrentRowNumber != headerRowNumberOption.Number)
+        var headerRowNumber = map.Options.GetHeaderRowNumber();
+        if (spreadsheetPage.CurrentRowNumber != headerRowNumber)
         {
-            spreadsheetPage.AdvanceToRow(headerRowNumberOption.Number);
+            spreadsheetPage.AdvanceToRow(headerRowNumber);
         }
 
         foreach (var (columnNumber, propertyMap) in numberedPropertyMaps)

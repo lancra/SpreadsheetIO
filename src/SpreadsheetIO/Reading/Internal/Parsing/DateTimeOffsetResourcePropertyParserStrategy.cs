@@ -1,5 +1,5 @@
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Options;
+using LanceC.SpreadsheetIO.Mapping.Options.Extensions;
 using LanceC.SpreadsheetIO.Shared;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing;
@@ -19,8 +19,8 @@ internal class DateTimeOffsetResourcePropertyParserStrategy : IDefaultResourcePr
                 : ResourcePropertyParseResultKind.Missing;
         }
 
-        var option = map.Options.Find<DateKindMapOption>();
-        if (option is null || option.DateKind == CellDateKind.Number)
+        var dateKind = map.Options.GetDateKind();
+        if (dateKind == CellDateKind.Number)
         {
             return TryParseFromNumber(cellValue, out value);
         }

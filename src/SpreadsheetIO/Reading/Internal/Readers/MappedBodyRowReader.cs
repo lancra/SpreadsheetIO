@@ -1,5 +1,5 @@
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Options;
+using LanceC.SpreadsheetIO.Mapping.Options.Extensions;
 using LanceC.SpreadsheetIO.Reading.Failures;
 using LanceC.SpreadsheetIO.Reading.Internal.Creation;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
@@ -72,11 +72,7 @@ internal class MappedBodyRowReader : IMappedBodyRowReader
             }
 
             var propertyMap = propertyHeaders.GetMap(columnNumber);
-
-            var optionalMapOption = propertyMap.Options.Find<OptionalPropertyMapOption>();
-            var isRequired = optionalMapOption is null ||
-                (optionalMapOption.Kind != PropertyElementKind.All && optionalMapOption.Kind != PropertyElementKind.Body);
-
+            var isRequired = propertyMap.Options.IsRequired(PropertyElementKind.Body);
             var hasDefaultValue = _resourcePropertyDefaultValueResolver
                 .TryResolve(
                     propertyMap,
