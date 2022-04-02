@@ -50,16 +50,16 @@ public class SpreadsheetFactoryFacts
             .Returns(new[] { _mocker.GetMock<ISpreadsheetGenerator>().Object, });
         serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ISpreadsheetPageMapWriter)))
             .Returns(_mocker.GetMock<ISpreadsheetPageMapWriter>().Object);
-        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ICartographerBuilder)))
-            .Returns(_mocker.GetMock<ICartographerBuilder>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IInternalCartographerBuilder)))
+            .Returns(_mocker.GetMock<IInternalCartographerBuilder>().Object);
     }
 
     private void MockForOpenRead(Mock<IServiceProvider> serviceProviderMock)
     {
         serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IElementReaderFactory)))
             .Returns(_mocker.GetMock<IElementReaderFactory>().Object);
-        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(ICartographerBuilder)))
-            .Returns(_mocker.GetMock<ICartographerBuilder>().Object);
+        serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IInternalCartographerBuilder)))
+            .Returns(_mocker.GetMock<IInternalCartographerBuilder>().Object);
         serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IMappedHeaderRowReader)))
             .Returns(_mocker.GetMock<IMappedHeaderRowReader>().Object);
         serviceProviderMock.Setup(serviceProvider => serviceProvider.GetService(typeof(IReadingSpreadsheetPageOperationFactory)))

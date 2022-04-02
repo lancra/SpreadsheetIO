@@ -2,8 +2,7 @@ using LanceC.SpreadsheetIO.Properties;
 
 namespace LanceC.SpreadsheetIO.Mapping;
 
-/// <inheritdoc/>
-public class Cartographer : ICartographer
+internal class Cartographer : ICartographer
 {
     private readonly IDictionary<Type, ResourceMapResult> _resourceMaps;
 
@@ -12,7 +11,6 @@ public class Cartographer : ICartographer
         _resourceMaps = resourceMaps;
     }
 
-    /// <inheritdoc/>
     public ResourceMap GetMap<TResource>()
         where TResource : class
     {

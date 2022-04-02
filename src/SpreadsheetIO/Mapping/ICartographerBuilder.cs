@@ -8,12 +8,6 @@ namespace LanceC.SpreadsheetIO.Mapping;
 public interface ICartographerBuilder
 {
     /// <summary>
-    /// Builds the cartographer.
-    /// </summary>
-    /// <returns>The cartographer.</returns>
-    ICartographer Build();
-
-    /// <summary>
     /// Applies a defined configuration for a resource.
     /// </summary>
     /// <typeparam name="TResource">The type of resource to apply the configuration to.</typeparam>

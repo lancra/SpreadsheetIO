@@ -7,7 +7,7 @@ using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 
 namespace LanceC.SpreadsheetIO.Mapping;
 
-internal class CartographerBuilder : ICartographerBuilder
+internal class CartographerBuilder : IInternalCartographerBuilder
 {
     private readonly IMapBuilderFactory _mapBuilderFactory;
     private readonly IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption> _resourceOptionConverter;

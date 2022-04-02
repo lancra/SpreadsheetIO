@@ -55,7 +55,7 @@ public static class ServiceCollectionExtensions
             services.AddScoped(provider => new CartographyOptions(mapOptions));
         }
 
-        return services.AddScoped<ICartographerBuilder, CartographerBuilder>()
+        return services.AddScoped<IInternalCartographerBuilder, CartographerBuilder>()
             .AddScoped<IMapBuilderFactory, MapBuilderFactory>()
             .AddScoped(typeof(IMapOptionConverter<,>), typeof(MapOptionConverter<,>))
             .AddScoped<
