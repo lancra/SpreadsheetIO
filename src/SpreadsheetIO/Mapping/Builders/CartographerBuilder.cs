@@ -5,9 +5,9 @@ using LanceC.SpreadsheetIO.Mapping.Options.Converters;
 using LanceC.SpreadsheetIO.Mapping.Options.Registrations;
 using LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 
-namespace LanceC.SpreadsheetIO.Mapping;
+namespace LanceC.SpreadsheetIO.Mapping.Builders;
 
-internal class CartographerBuilder : ICartographerBuilder
+internal class CartographerBuilder : IInternalCartographerBuilder
 {
     private readonly IMapBuilderFactory _mapBuilderFactory;
     private readonly IMapOptionConverter<IResourceMapOptionRegistration, IResourceMapOption> _resourceOptionConverter;

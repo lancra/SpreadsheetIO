@@ -17,7 +17,7 @@ internal class ConstructorResourceCreationStrategy : IResourceCreationStrategy
         var constructorParameters = new List<object?>();
         foreach (var propertyKey in constructorOption!.PropertyKeys)
         {
-            var propertyMap = map.Properties.SingleOrDefault(p => p.Key.Equals(propertyKey));
+            var propertyMap = map.Properties.Find(propertyKey);
             if (propertyMap is null)
             {
                 throw new ArgumentException(Messages.MissingResourcePropertyForConstructorParameter(propertyKey.Name));

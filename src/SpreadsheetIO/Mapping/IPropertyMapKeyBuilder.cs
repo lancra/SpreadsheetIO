@@ -24,4 +24,11 @@ public interface IPropertyMapKeyBuilder
     /// <param name="number">The column number.</param>
     /// <returns>The resulting property map key builder.</returns>
     IPropertyMapKeyBuilder WithNumber(uint number);
+
+    /// <summary>
+    /// Specifies the alternate names to use when reading the property.
+    /// </summary>
+    /// <param name="names">The new alternate property names.</param>
+    /// <returns>The resulting property map key builder.</returns>
+    IPropertyMapKeyBuilder WithAlternateNames(params string[] names);
 }

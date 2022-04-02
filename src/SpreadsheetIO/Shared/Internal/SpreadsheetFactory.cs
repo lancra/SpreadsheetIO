@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Builders;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Reading.Internal;
 using LanceC.SpreadsheetIO.Reading.Internal.Readers;
@@ -117,7 +118,7 @@ internal class SpreadsheetFactory : ISpreadsheetFactory
 
     private static ICartographer CreateCartographer(IServiceScope scope)
     {
-        var builder = scope.ServiceProvider.GetRequiredService<ICartographerBuilder>();
+        var builder = scope.ServiceProvider.GetRequiredService<IInternalCartographerBuilder>();
 
         var options = scope.ServiceProvider.GetService<CartographyOptions>();
         if (options is not null)

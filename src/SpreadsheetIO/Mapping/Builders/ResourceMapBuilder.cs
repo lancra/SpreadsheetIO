@@ -4,7 +4,7 @@ using LanceC.SpreadsheetIO.Mapping.Options.Converters;
 using LanceC.SpreadsheetIO.Mapping.Options.Registrations;
 using LanceC.SpreadsheetIO.Mapping.Validation;
 
-namespace LanceC.SpreadsheetIO.Mapping;
+namespace LanceC.SpreadsheetIO.Mapping.Builders;
 
 internal abstract class ResourceMapBuilder : IInternalResourceMapBuilder
 {
@@ -77,8 +77,8 @@ internal abstract class ResourceMapBuilder : IInternalResourceMapBuilder
         {
             var map = new ResourceMap(
                 ResourceType,
-                propertyMapResults.Select(result => result.Value!)
-                    .ToArray(),
+                new PropertyMapCollection(propertyMapResults.Select(result => result.Value!)
+                    .ToList()),
                 new MapOptions<IResourceMapOption>(options));
             return ResourceMapResult.Success(map);
         }

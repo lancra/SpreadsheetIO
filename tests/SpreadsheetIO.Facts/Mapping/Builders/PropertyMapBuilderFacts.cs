@@ -1,8 +1,10 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
 using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Builders;
 using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Mapping.Options.Converters;
 using LanceC.SpreadsheetIO.Mapping.Options.Registrations;
@@ -15,7 +17,7 @@ using Moq;
 using Moq.AutoMock;
 using Xunit;
 
-namespace LanceC.SpreadsheetIO.Facts.Mapping;
+namespace LanceC.SpreadsheetIO.Facts.Mapping.Builders;
 
 public class PropertyMapBuilderFacts
 {
@@ -78,7 +80,7 @@ public class PropertyMapBuilderFacts
                 .Returns((HeaderStyleMapOption registration, IInternalResourceMapBuilder _)
                     => MapOptionConversionResult.Success<IPropertyMapOption>(registration, registration));
 
-            var expectedKey = new PropertyMapKey(nameof(FakeModel.Id), default, false);
+            var expectedKey = PropertyMapKeyCreator.Create(name: nameof(FakeModel.Id));
             var propertyMapKeyBuilderMock = _mocker.GetMock<IInternalPropertyMapKeyBuilder>();
             propertyMapKeyBuilderMock.SetupGet(builder => builder.Key)
                 .Returns(expectedKey);

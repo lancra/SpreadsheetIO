@@ -9,7 +9,7 @@ using LanceC.SpreadsheetIO.Shared;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 
-namespace LanceC.SpreadsheetIO.Mapping;
+namespace LanceC.SpreadsheetIO.Mapping.Builders;
 
 internal class PropertyMapBuilder<TResource, TProperty> : PropertyMapBuilder, IInternalPropertyMapBuilder<TResource, TProperty>
     where TResource : class

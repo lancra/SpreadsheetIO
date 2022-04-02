@@ -1,4 +1,4 @@
-namespace LanceC.SpreadsheetIO.Mapping;
+namespace LanceC.SpreadsheetIO.Mapping.Builders;
 
 /// <summary>
 /// Defines the internal builder for generating a property map.

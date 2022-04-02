@@ -1,5 +1,5 @@
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Options;
+using LanceC.SpreadsheetIO.Mapping.Options.Extensions;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 
@@ -14,17 +14,9 @@ internal class DateTimeResourcePropertySerializerStrategy : IResourcePropertySer
     public WritingCellValue Serialize(object? value, PropertyMap map)
     {
         var dateTimeValue = (DateTime?)value;
-        var dateKindOption = map.Options.Find<DateKindMapOption>();
+        var dateKind = map.Options.GetDateKind();
 
-        if (dateKindOption is not null)
-        {
-            var cellValue = new WritingCellValue(dateTimeValue, dateKindOption.DateKind);
-            return cellValue;
-        }
-        else
-        {
-            var cellValue = new WritingCellValue(dateTimeValue);
-            return cellValue;
-        }
+        var cellValue = new WritingCellValue(dateTimeValue, dateKind);
+        return cellValue;
     }
 }

@@ -1,6 +1,7 @@
+using LanceC.SpreadsheetIO.Facts.Testing.Creators;
 using LanceC.SpreadsheetIO.Facts.Testing.Extensions;
 using LanceC.SpreadsheetIO.Facts.Testing.Fakes.Models;
-using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Builders;
 using LanceC.SpreadsheetIO.Mapping.Validation;
 using LanceC.SpreadsheetIO.Properties;
 using Moq.AutoMock;
@@ -31,15 +32,15 @@ public class UniquePropertyKeyNumberValidationStrategyFacts
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Id),
-                            new PropertyMapKey(nameof(FakeModel.Id), 1U, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Id), number: 1U, isNameIgnored: true)).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Name),
-                            new PropertyMapKey(nameof(FakeModel.Name), 2U, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Name), number: 2U, isNameIgnored: true)).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Decimal),
-                            new PropertyMapKey(nameof(FakeModel.Decimal), 3U, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Decimal), number: 3U, isNameIgnored: true)).Object,
                     });
 
             var sut = CreateSystemUnderTest();
@@ -67,23 +68,23 @@ public class UniquePropertyKeyNumberValidationStrategyFacts
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Id),
-                            new PropertyMapKey(nameof(FakeModel.Id), 1U, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Id), number: 1U, isNameIgnored: true)).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Name),
-                            new PropertyMapKey(nameof(FakeModel.Name), 2U, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Name), number: 2U, isNameIgnored: true)).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Display),
-                            new PropertyMapKey(nameof(FakeModel.Display), 1U, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Display), number: 1U, isNameIgnored: true)).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Decimal),
-                            new PropertyMapKey(nameof(FakeModel.Decimal), 3U, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Decimal), number: 3U, isNameIgnored: true)).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.DateTime),
-                            new PropertyMapKey(nameof(FakeModel.DateTime), 3U, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.DateTime), number: 3U, isNameIgnored: true)).Object,
                     });
 
             var sut = CreateSystemUnderTest();
@@ -110,23 +111,23 @@ public class UniquePropertyKeyNumberValidationStrategyFacts
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Id),
-                            new PropertyMapKey(nameof(FakeModel.Id), 1U, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Id), number: 1U, isNameIgnored: true)).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Name),
-                            new PropertyMapKey(nameof(FakeModel.Name), 2U, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Name), number: 2U, isNameIgnored: true)).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Display),
-                            new PropertyMapKey(nameof(FakeModel.Display), default, false)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Display))).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.Decimal),
-                            new PropertyMapKey(nameof(FakeModel.Decimal), 3U, true)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.Decimal), number: 3U, isNameIgnored: true)).Object,
                         _mocker.GetMockForInternalPropertyMapBuilder(
                             resourceType,
                             nameof(FakeModel.DateTime),
-                            new PropertyMapKey(nameof(FakeModel.DateTime), default, false)).Object,
+                            PropertyMapKeyCreator.Create(name: nameof(FakeModel.DateTime))).Object,
                     });
 
             var sut = CreateSystemUnderTest();

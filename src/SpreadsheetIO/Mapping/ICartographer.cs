@@ -3,7 +3,7 @@ namespace LanceC.SpreadsheetIO.Mapping;
 /// <summary>
 /// Defines the manager for maps.
 /// </summary>
-public interface ICartographer
+internal interface ICartographer
 {
     /// <summary>
     /// Gets the map for a resource.

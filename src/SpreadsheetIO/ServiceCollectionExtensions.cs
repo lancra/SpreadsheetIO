@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Builders;
 using LanceC.SpreadsheetIO.Mapping.Options;
 using LanceC.SpreadsheetIO.Mapping.Options.Converters;
 using LanceC.SpreadsheetIO.Mapping.Options.Registrations;
@@ -55,7 +56,7 @@ public static class ServiceCollectionExtensions
             services.AddScoped(provider => new CartographyOptions(mapOptions));
         }
 
-        return services.AddScoped<ICartographerBuilder, CartographerBuilder>()
+        return services.AddScoped<IInternalCartographerBuilder, CartographerBuilder>()
             .AddScoped<IMapBuilderFactory, MapBuilderFactory>()
             .AddScoped(typeof(IMapOptionConverter<,>), typeof(MapOptionConverter<,>))
             .AddScoped<

@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using LanceC.SpreadsheetIO.Mapping.Validation;
 
-namespace LanceC.SpreadsheetIO.Mapping;
+namespace LanceC.SpreadsheetIO.Mapping.Builders;
 
 internal class MapBuilderFactory : IMapBuilderFactory
 {

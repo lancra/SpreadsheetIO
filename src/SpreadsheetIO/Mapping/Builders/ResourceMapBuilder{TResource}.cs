@@ -8,7 +8,7 @@ using LanceC.SpreadsheetIO.Shared;
 using LanceC.SpreadsheetIO.Shared.Internal.Indexers;
 using LanceC.SpreadsheetIO.Styling;
 
-namespace LanceC.SpreadsheetIO.Mapping;
+namespace LanceC.SpreadsheetIO.Mapping.Builders;
 
 internal class ResourceMapBuilder<TResource> : ResourceMapBuilder, IInternalResourceMapBuilder<TResource>
     where TResource : class

@@ -1,5 +1,5 @@
 using LanceC.SpreadsheetIO.Mapping;
-using LanceC.SpreadsheetIO.Mapping.Options;
+using LanceC.SpreadsheetIO.Mapping.Options.Extensions;
 using LanceC.SpreadsheetIO.Reading.Failures;
 using LanceC.SpreadsheetIO.Reading.Internal.Properties;
 
@@ -21,8 +21,7 @@ internal class MappedHeaderRowReader : IMappedHeaderRowReader
         var missingHeaderFailures = new List<MissingHeaderReadingFailure>();
         var invalidHeaderFailures = new List<InvalidHeaderReadingFailure>();
 
-        var headerRowNumberOption = map.Options.Find<HeaderRowNumberResourceMapOption>();
-        var headerRowNumber = headerRowNumberOption?.Number ?? 1U;
+        var headerRowNumber = map.Options.GetHeaderRowNumber();
 
         var hasHeaderRow = reader.ReadToRow(headerRowNumber);
         if (!hasHeaderRow)
@@ -37,8 +36,8 @@ internal class MappedHeaderRowReader : IMappedHeaderRowReader
             var location = reader.GetCellLocation();
             var value = reader.GetCellValue();
 
-            var numberPropertyMap = map.Properties.SingleOrDefault(map => map.Key.Number == location.Column.Number);
-            var namePropertyMap = map.Properties.SingleOrDefault(map => map.Key.Name == value && !map.Key.IsNameIgnored);
+            var numberPropertyMap = map.Properties.Find(location.Column.Number);
+            var namePropertyMap = map.Properties.Find(value);
             var propertyMap = numberPropertyMap ?? namePropertyMap;
 
             if (propertyMap is null)
@@ -61,10 +60,7 @@ internal class MappedHeaderRowReader : IMappedHeaderRowReader
         foreach (var propertyMap in map.Properties)
         {
             var isIndexed = propertyHeaders.ContainsMap(propertyMap);
-
-            var optionalMapOption = propertyMap.Options.Find<OptionalPropertyMapOption>();
-            var isRequired = optionalMapOption is null ||
-                (optionalMapOption.Kind != PropertyElementKind.All && optionalMapOption.Kind != PropertyElementKind.Header);
+            var isRequired = propertyMap.Options.IsRequired(PropertyElementKind.Header);
 
             if (!isIndexed && isRequired)
             {
