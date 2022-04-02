@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Build and deploy scripts.
+- Allow properties to be read using more than one header name.
 
 ### Changed
 - Redefine mapping process.
