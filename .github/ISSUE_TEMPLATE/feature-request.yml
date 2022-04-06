@@ -1,0 +1,33 @@
+name: 🚀 Feature Request
+description: Suggest a feature
+labels: ["status: Under Review", "type: Feature"]
+assignees:
+  - lanceccraig
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: A concise description of the requested feature.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Purpose
+      description: The reason for the request and the benefits it will provide.
+    validations:
+      required: true
+  -type: textarea
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative features or solutions you've considered.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: |
+        Anything that provides additional context for the issue.
+
+        Tip: You can attach images or files by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
