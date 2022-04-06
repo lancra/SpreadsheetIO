@@ -30,12 +30,12 @@ public record Font(string Name, double Size, Color Color, bool IsBold = false, b
     public Color Color { get; init; } = Color;
 
     /// <summary>
-    /// Gets the value that determines whether the font is bold.
+    /// Gets a value indicating whether the font is bold.
     /// </summary>
     public bool IsBold { get; init; } = IsBold;
 
     /// <summary>
-    /// Gets the value that determines whether the font is italicized.
+    /// Gets a value indicating whether the font is italicized.
     /// </summary>
     public bool IsItalic { get; init; } = IsItalic;
 }

@@ -19,7 +19,7 @@ public sealed record PropertyMapKey(string Name, uint? Number, bool IsNameIgnore
     public uint? Number { get; init; } = Number;
 
     /// <summary>
-    /// Gets the value that determines whether the name is ignored for reading.
+    /// Gets a value indicating whether the name is ignored for reading.
     /// </summary>
     public bool IsNameIgnored { get; init; } = IsNameIgnored;
 

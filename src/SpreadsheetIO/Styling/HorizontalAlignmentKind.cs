@@ -67,7 +67,7 @@ public class HorizontalAlignmentKind : SmartEnum<HorizontalAlignmentKind>
     }
 
     /// <summary>
-    /// Gets the value that determines whether this is the default horizontal alignment kind.
+    /// Gets a value indicating whether this is the default horizontal alignment kind.
     /// </summary>
     public bool IsDefault { get; }
 

@@ -14,7 +14,7 @@ internal class StylesheetStyleMutator : IStylesheetMutator
     private readonly IStyleIndexer _styleIndexer;
 
     private readonly IDictionary<Style, uint> _excelFormatIdLookup = new Dictionary<Style, uint>();
-    private uint _excelFormatIdProvider = 0U;
+    private uint _excelFormatIdProvider;
 
     public StylesheetStyleMutator(
         IBorderIndexer borderIndexer,

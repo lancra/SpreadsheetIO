@@ -25,7 +25,7 @@ public class SpreadsheetPageMapWriterFacts
         public void SortsPropertyMapsByColumnNumberIfSpecifiedThenByDefinedOrder()
         {
             // Arrange
-            var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
+            using var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
             var resources = Array.Empty<FakeModel>();
 
             var map = ResourceMapCreator.Create<FakeModel>(
@@ -55,7 +55,7 @@ public class SpreadsheetPageMapWriterFacts
         public void UsesResourcePropertySerializerForBodyCells()
         {
             // Arrange
-            var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
+            using var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
 
             var resource = new FakeModel { Id = 1, Name = "One", Display = "Uno", };
             var resources = new[] { resource, };
@@ -100,7 +100,7 @@ public class SpreadsheetPageMapWriterFacts
         public void AdvancesHeaderRowWhenMapOptionSpecified()
         {
             // Arrange
-            var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
+            using var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
             var resources = Array.Empty<FakeModel>();
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
@@ -126,7 +126,7 @@ public class SpreadsheetPageMapWriterFacts
         public void SetsHeaderStyleWhenMapOptionSpecified()
         {
             // Arrange
-            var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
+            using var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
             var resources = Array.Empty<FakeModel>();
 
             var idStyle = Style.Default;
@@ -163,7 +163,7 @@ public class SpreadsheetPageMapWriterFacts
         public void SetsBodyStyleWhenMapOptionSpecified()
         {
             // Arrange
-            var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
+            using var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
 
             var resource = new FakeModel { Id = 1, Name = "One", Display = "Uno", };
             var resources = new[] { resource, };
@@ -219,7 +219,7 @@ public class SpreadsheetPageMapWriterFacts
         public void TreatsNullResourceCollectionAsEmptyCollection()
         {
             // Arrange
-            var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
+            using var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
             var resources = default(IEnumerable<FakeModel>);
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]
@@ -244,7 +244,7 @@ public class SpreadsheetPageMapWriterFacts
         public void HandlesGapBetweenColumns()
         {
             // Arrange
-            var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
+            using var spreadsheetPageMock = new FakeWritingSpreadsheetPage();
             var resources = default(IEnumerable<FakeModel>);
             var map = ResourceMapCreator.Create<FakeModel>(
                 new[]

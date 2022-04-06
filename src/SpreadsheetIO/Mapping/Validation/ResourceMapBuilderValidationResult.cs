@@ -12,7 +12,7 @@ public class ResourceMapBuilderValidationResult
     }
 
     /// <summary>
-    /// Gets the value that determines whether the validation passed.
+    /// Gets a value indicating whether the validation passed.
     /// </summary>
     public bool IsValid { get; }
 

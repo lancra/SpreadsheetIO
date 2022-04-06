@@ -8,12 +8,12 @@ namespace LanceC.SpreadsheetIO.Shared.Internal.Wrappers;
 internal interface IOpenXmlReaderWrapper : IDisposable
 {
     /// <summary>
-    /// Gets the value that determines whether the current element is a start element.
+    /// Gets a value indicating whether the current element is a start element.
     /// </summary>
     bool IsStartElement { get; }
 
     /// <summary>
-    /// Gets the value that determines whether the current element is an end element.
+    /// Gets a value indicating whether the current element is an end element.
     /// </summary>
     bool IsEndElement { get; }
 

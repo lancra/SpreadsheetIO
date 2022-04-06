@@ -23,7 +23,7 @@ public abstract class MapOptionConversionResult
     }
 
     /// <summary>
-    /// Gets the value that determines whether the conversion is valid.
+    /// Gets a value indicating whether the conversion is valid.
     /// </summary>
     public bool IsValid { get; }
 

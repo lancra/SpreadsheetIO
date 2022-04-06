@@ -19,7 +19,7 @@ public record NumberNumericFormat(int DecimalPlaces, bool UseThousandsSeparator,
     public int DecimalPlaces { get; init; } = DecimalPlaces;
 
     /// <summary>
-    /// Gets the value that determines whether the thousands separator is shown.
+    /// Gets a value indicating whether the thousands separator is shown.
     /// </summary>
     public bool UseThousandsSeparator { get; init; } = UseThousandsSeparator;
 

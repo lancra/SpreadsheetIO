@@ -38,12 +38,12 @@ public class NegativeNumericFormatKind : SmartEnum<NegativeNumericFormatKind>
     }
 
     /// <summary>
-    /// Gets the value that determines whether the format has a color.
+    /// Gets a value indicating whether the format has a color.
     /// </summary>
     public bool HasColor { get; }
 
     /// <summary>
-    /// Gets the value that determines whether the format is surrounded by parentheses.
+    /// Gets a value indicating whether the format is surrounded by parentheses.
     /// </summary>
     public bool HasParentheses { get; }
 }

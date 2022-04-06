@@ -12,7 +12,7 @@ public record HeaderReadingFailure(
     IReadOnlyCollection<InvalidHeaderReadingFailure> InvalidHeaders)
 {
     /// <summary>
-    /// Gets the value that determines whether the specified header row is not found.
+    /// Gets a value indicating whether the specified header row is not found.
     /// </summary>
     public bool MissingHeaderRow { get; init; } = MissingHeaderRow;
 
