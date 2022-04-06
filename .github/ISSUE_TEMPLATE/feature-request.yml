@@ -16,7 +16,7 @@ body:
       description: The reason for the request and the benefits it will provide.
     validations:
       required: true
-  -type: textarea
+  - type: textarea
     attributes:
       label: Alternatives Considered
       description: Any alternative features or solutions you've considered.
