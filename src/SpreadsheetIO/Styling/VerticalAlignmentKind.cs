@@ -44,7 +44,7 @@ public class VerticalAlignmentKind : SmartEnum<VerticalAlignmentKind>
     }
 
     /// <summary>
-    /// Gets the value that determines whether this is the default vertical alignment kind.
+    /// Gets a value indicating whether this is the default vertical alignment kind.
     /// </summary>
     public bool IsDefault { get; }
 

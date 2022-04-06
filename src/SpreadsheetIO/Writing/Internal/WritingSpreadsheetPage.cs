@@ -15,8 +15,8 @@ internal class WritingSpreadsheetPage : IWritingSpreadsheetPage
     private readonly IStyleIndexer _styleIndexer;
     private readonly IStringIndexer _stringIndexer;
 
-    private bool _isWorksheetEndWritten = false;
-    private bool _isCurrentRowStartWritten = false;
+    private bool _isWorksheetEndWritten;
+    private bool _isCurrentRowStartWritten;
 
     public WritingSpreadsheetPage(
         IWorksheetPartWrapper worksheetPart,

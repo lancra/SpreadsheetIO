@@ -13,7 +13,7 @@ public class ResourceMapResult
     }
 
     /// <summary>
-    /// Gets the value that determines whether the map is valid.
+    /// Gets a value indicating whether the map is valid.
     /// </summary>
     public bool IsValid { get; }
 

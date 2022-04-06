@@ -45,7 +45,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
             var sut = CreateSystemUnderTest();
@@ -75,7 +75,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
             var sut = CreateSystemUnderTest();
@@ -102,7 +102,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -126,7 +126,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SheetData)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -160,7 +160,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -182,7 +182,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateStart(typeof(OpenXml.Cell)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -211,7 +211,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -235,7 +235,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -263,7 +263,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -288,7 +288,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -324,7 +324,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -350,7 +350,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -382,7 +382,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -415,7 +415,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Cell)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
@@ -442,7 +442,7 @@ public class WorksheetElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 

@@ -34,7 +34,7 @@ public class ResourcePropertyParseResultKind : SmartEnum<ResourcePropertyParseRe
     }
 
     /// <summary>
-    /// Gets the value that determines whether the parsed value is valid for the associated resource property.
+    /// Gets a value indicating whether the parsed value is valid for the associated resource property.
     /// </summary>
     public bool Valid { get; }
 }

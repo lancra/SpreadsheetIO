@@ -29,7 +29,7 @@ public class SharedStringTableElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringTable)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
             var sut = CreateSystemUnderTest();
@@ -54,7 +54,7 @@ public class SharedStringTableElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringTable)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
@@ -86,7 +86,7 @@ public class SharedStringTableElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringTable)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 
             var sut = CreateSystemUnderTest();
@@ -112,7 +112,7 @@ public class SharedStringTableElementReaderFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.SharedStringTable)),
             };
 
-            var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
+            using var readerMock = new FakeOpenXmlReaderWrapper(readerElements);
             readerMock.Read();
             _mocker.Use<IOpenXmlReaderWrapper>(readerMock);
 

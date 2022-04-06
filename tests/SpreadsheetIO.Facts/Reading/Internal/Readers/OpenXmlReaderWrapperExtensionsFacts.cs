@@ -28,7 +28,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Worksheet)),
             };
 
-            var sut = new FakeOpenXmlReaderWrapper(readerElements);
+            using var sut = new FakeOpenXmlReaderWrapper(readerElements);
 
             // Act
             var isRead = sut.ReadNextElement(typeof(OpenXml.Row), typeof(OpenXml.SheetData));
@@ -54,7 +54,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
-            var sut = new FakeOpenXmlReaderWrapper(readerElements);
+            using var sut = new FakeOpenXmlReaderWrapper(readerElements);
 
             // Act
             var isRead = sut.ReadNextElement(typeof(OpenXml.Cell), typeof(OpenXml.Row));
@@ -76,7 +76,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
                 FakeOpenXmlElement.CreateEnd(typeof(OpenXml.Row)),
             };
 
-            var sut = new FakeOpenXmlReaderWrapper(readerElements);
+            using var sut = new FakeOpenXmlReaderWrapper(readerElements);
 
             // Act
             var isRead = sut.ReadNextElement(typeof(OpenXml.Cell), typeof(OpenXml.SheetData));
@@ -105,7 +105,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
         public void ThrowsArgumentNullExceptionWhenStartElementTypeIsNull()
         {
             // Arrange
-            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
+            using var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
             var startElementType = default(Type);
             var endElementType = typeof(OpenXml.Row);
 
@@ -121,7 +121,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
         public void ThrowsArgumentNullExceptionWhenEndElementTypeIsNull()
         {
             // Arrange
-            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
+            using var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
             var startElementType = typeof(OpenXml.Cell);
             var endElementType = default(Type);
 
@@ -152,7 +152,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
                     new OpenXmlAttribute(string.Empty, ElementAttributeKind.CellValueType.LocalName, string.Empty, "bar")),
             };
 
-            var sut = new FakeOpenXmlReaderWrapper(readerElements);
+            using var sut = new FakeOpenXmlReaderWrapper(readerElements);
             sut.Read();
 
             // Act
@@ -176,7 +176,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
                     new OpenXmlAttribute(string.Empty, ElementAttributeKind.CellValueType.LocalName, string.Empty, "bar")),
             };
 
-            var sut = new FakeOpenXmlReaderWrapper(readerElements);
+            using var sut = new FakeOpenXmlReaderWrapper(readerElements);
             sut.Read();
 
             // Act
@@ -205,7 +205,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
         public void ThrowsArgumentNullExceptionWhenKindIsNull()
         {
             // Arrange
-            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
+            using var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
             var kind = default(ElementAttributeKind);
 
             // Act
@@ -229,7 +229,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
                 FakeOpenXmlElement.CreateStart(elementType),
             };
 
-            var sut = new FakeOpenXmlReaderWrapper(readerElements);
+            using var sut = new FakeOpenXmlReaderWrapper(readerElements);
             sut.Read();
 
             // Act
@@ -248,7 +248,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
                 FakeOpenXmlElement.CreateStart(typeof(OpenXml.Row)),
             };
 
-            var sut = new FakeOpenXmlReaderWrapper(readerElements);
+            using var sut = new FakeOpenXmlReaderWrapper(readerElements);
             sut.Read();
 
             // Act
@@ -269,7 +269,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
                 FakeOpenXmlElement.CreateEnd(elementType),
             };
 
-            var sut = new FakeOpenXmlReaderWrapper(readerElements);
+            using var sut = new FakeOpenXmlReaderWrapper(readerElements);
             sut.Read();
 
             // Act
@@ -298,7 +298,7 @@ public class OpenXmlReaderWrapperExtensionsFacts
         public void ThrowsArgumentNullExceptionWhenElementTypeIsNull()
         {
             // Arrange
-            var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
+            using var sut = new FakeOpenXmlReaderWrapper(Array.Empty<FakeOpenXmlElement>());
             var elementType = default(Type);
 
             // Act

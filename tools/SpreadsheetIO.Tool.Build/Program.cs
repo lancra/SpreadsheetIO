@@ -6,8 +6,19 @@ using LanceC.Tooling.DevOps;
 
 namespace LanceC.SpreadsheetIO.Tool.Build;
 
+/// <summary>
+/// Provides the program for the build tool.
+/// </summary>
 public static class Program
 {
+    /// <summary>
+    /// Provides the build tool entry point.
+    /// </summary>
+    /// <param name="args">The command line arguments.</param>
+    /// <returns>
+    /// The <see cref="Task"/> that represents the asynchronous operation,
+    /// containing the command exit code.
+    /// </returns>
     public static async Task<int> Main(string[] args)
         => await new CommandLineBuilder(new BuildCommand())
         .UseDefaults()

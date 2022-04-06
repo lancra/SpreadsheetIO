@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using LanceC.SpreadsheetIO.Mapping;
 
 namespace LanceC.SpreadsheetIO.Reading;
@@ -19,5 +20,6 @@ public interface IResourcePropertyParserStrategy
     /// <param name="map">The resource property map.</param>
     /// <param name="value">The parsed value.</param>
     /// <returns>The kind of result from parsing the value.</returns>
+    [SuppressMessage("Design", "CA1021:Avoid out parameters", Justification = "Implements the Try<Something> pattern.")]
     ResourcePropertyParseResultKind TryParse(string cellValue, PropertyMap map, out object? value);
 }

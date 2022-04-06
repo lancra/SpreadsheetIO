@@ -11,7 +11,7 @@ public interface IWritingSpreadsheetPage : IDisposable
     string Name { get; }
 
     /// <summary>
-    /// Gets the value that determines whether the spreadsheet page can be written to.
+    /// Gets a value indicating whether the spreadsheet page can be written to.
     /// </summary>
     bool CanWrite { get; }
 

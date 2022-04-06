@@ -56,6 +56,6 @@ internal static class PropertyMapCreator
             }
         }
 
-        throw new ArgumentException();
+        throw new ArgumentException("Invalid property expression", nameof(property));
     }
 }
