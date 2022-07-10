@@ -7,11 +7,11 @@ internal class IntegerResourcePropertySerializerStrategy : IResourcePropertySeri
     public IReadOnlyCollection<Type> PropertyTypes { get; } =
         new[]
         {
-                typeof(sbyte),
-                typeof(byte),
-                typeof(short),
-                typeof(ushort),
-                typeof(int),
+            typeof(sbyte),
+            typeof(byte),
+            typeof(short),
+            typeof(ushort),
+            typeof(int),
         };
 
     public WritingCellValue Serialize(object? value, PropertyMap map)

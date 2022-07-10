@@ -7,7 +7,7 @@ internal class BooleanResourcePropertySerializerStrategy : IResourcePropertySeri
     public IReadOnlyCollection<Type> PropertyTypes { get; } =
         new[]
         {
-                typeof(bool),
+            typeof(bool),
         };
 
     public WritingCellValue Serialize(object? value, PropertyMap map)

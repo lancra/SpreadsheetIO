@@ -8,7 +8,7 @@ internal class DateTimeResourcePropertySerializerStrategy : IResourcePropertySer
     public IReadOnlyCollection<Type> PropertyTypes { get; } =
         new[]
         {
-                typeof(DateTime),
+            typeof(DateTime),
         };
 
     public WritingCellValue Serialize(object? value, PropertyMap map)

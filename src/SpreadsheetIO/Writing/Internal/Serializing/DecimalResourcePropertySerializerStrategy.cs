@@ -7,7 +7,7 @@ internal class DecimalResourcePropertySerializerStrategy : IResourcePropertySeri
     public IReadOnlyCollection<Type> PropertyTypes { get; } =
         new[]
         {
-                typeof(decimal),
+            typeof(decimal),
         };
 
     public WritingCellValue Serialize(object? value, PropertyMap map)
