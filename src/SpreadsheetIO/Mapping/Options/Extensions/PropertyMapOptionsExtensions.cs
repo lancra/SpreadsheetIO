@@ -16,4 +16,10 @@ internal static class PropertyMapOptionsExtensions
         var option = options.Find<DateKindMapOption>();
         return option?.DateKind ?? CellDateKind.Number;
     }
+
+    public static CellStringKind GetStringKind(this MapOptions<IPropertyMapOption> options)
+    {
+        var option = options.Find<StringKindMapOption>();
+        return option?.StringKind ?? CellStringKind.SharedString;
+    }
 }

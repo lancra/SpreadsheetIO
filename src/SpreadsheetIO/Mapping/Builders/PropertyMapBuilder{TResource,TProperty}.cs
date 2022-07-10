@@ -104,6 +104,14 @@ internal class PropertyMapBuilder<TResource, TProperty> : PropertyMapBuilder, II
         return this;
     }
 
+    public IPropertyMapBuilder<TResource, TProperty> UsesStringKind(CellStringKind stringKind)
+    {
+        Guard.Against.Null(stringKind, nameof(stringKind));
+
+        AddOrUpdateRegistration(new StringKindMapOption(stringKind));
+        return this;
+    }
+
     private static PropertyInfo GetPropertyInfo(Expression<Func<TResource, TProperty>> propertyExpression)
     {
         Guard.Against.Null(propertyExpression, nameof(propertyExpression));

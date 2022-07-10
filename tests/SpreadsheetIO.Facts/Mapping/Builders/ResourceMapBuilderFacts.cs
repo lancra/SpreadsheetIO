@@ -810,6 +810,39 @@ public class ResourceMapBuilderFacts
         }
     }
 
+    public class TheUsesStringKindMethod : ResourceMapBuilderFacts
+    {
+        [Fact]
+        public void AddsOptionRegistration()
+        {
+            // Arrange
+            var stringKind = CellStringKind.InlineString;
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            sut.UsesStringKind(stringKind);
+
+            // Assert
+            Assert.True(sut.TryGetRegistration<StringKindMapOption>(out var registration));
+            Assert.Equal(stringKind, registration!.StringKind);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenStringKindIsNull()
+        {
+            // Arrange
+            var stringKind = default(CellStringKind);
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var exception = Record.Exception(() => sut.UsesStringKind(stringKind!));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+    }
+
     public class TheUsesExplicitConstructorMethod : ResourceMapBuilderFacts
     {
         [Fact]

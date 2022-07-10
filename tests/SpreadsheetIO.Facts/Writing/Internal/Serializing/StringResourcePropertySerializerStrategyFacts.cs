@@ -1,5 +1,7 @@
 using LanceC.SpreadsheetIO.Facts.Testing.Assertions;
 using LanceC.SpreadsheetIO.Facts.Testing.Creators;
+using LanceC.SpreadsheetIO.Mapping.Options;
+using LanceC.SpreadsheetIO.Shared;
 using LanceC.SpreadsheetIO.Writing;
 using LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 using Moq.AutoMock;
@@ -33,6 +35,13 @@ public class StringResourcePropertySerializerStrategyFacts
 
     public class TheSerializeMethod : StringResourcePropertySerializerStrategyFacts
     {
+        public static TheoryData<string, CellStringKind> DataForUsesStringKindFromMapOptionWhenSpecified
+            => new()
+            {
+                { "Foo", CellStringKind.SharedString },
+                { "Bar", CellStringKind.InlineString },
+            };
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -42,6 +51,25 @@ public class StringResourcePropertySerializerStrategyFacts
             // Arrange
             var expectedCellValue = new WritingCellValue(value);
             var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.String);
+
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var actualCellValue = sut.Serialize(value, map);
+
+            // Assert
+            AssertWritingCellValues.Equal(expectedCellValue, actualCellValue);
+        }
+
+        [Theory]
+        [MemberData(nameof(DataForUsesStringKindFromMapOptionWhenSpecified))]
+        public void UsesStringKindFromMapOptionWhenSpecified(string value, CellStringKind stringKind)
+        {
+            // Arrange
+            var expectedCellValue = new WritingCellValue(value, stringKind);
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(
+                model => model.String,
+                new StringKindMapOption(stringKind));
 
             var sut = CreateSystemUnderTest();
 

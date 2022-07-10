@@ -92,6 +92,13 @@ public interface IResourceMapBuilder<TResource>
     IResourceMapBuilder<TResource> UsesDateKind(CellDateKind dateKind);
 
     /// <summary>
+    /// Specifies the kind of string format to use for all properties.
+    /// </summary>
+    /// <param name="stringKind">The kind of string format.</param>
+    /// <returns>The resulting resource map builder.</returns>
+    IResourceMapBuilder<TResource> UsesStringKind(CellStringKind stringKind);
+
+    /// <summary>
     /// Specifies that the resource will be created using a constructor with explicitly defined parameters.
     /// </summary>
     /// <param name="propertyNames">The name of the properties to use for the constructor parameters.</param>
