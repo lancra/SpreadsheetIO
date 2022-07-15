@@ -1,4 +1,5 @@
 using LanceC.SpreadsheetIO.Mapping;
+using LanceC.SpreadsheetIO.Mapping.Options.Extensions;
 
 namespace LanceC.SpreadsheetIO.Writing.Internal.Serializing;
 
@@ -7,13 +8,15 @@ internal class CharacterResourcePropertySerializerStrategy : IResourcePropertySe
     public IReadOnlyCollection<Type> PropertyTypes { get; } =
         new[]
         {
-                typeof(char),
+            typeof(char),
         };
 
     public WritingCellValue Serialize(object? value, PropertyMap map)
     {
         var characterValue = (char?)value;
-        var cellValue = new WritingCellValue(characterValue);
+        var stringKind = map.Options.GetStringKind();
+
+        var cellValue = new WritingCellValue(characterValue, stringKind);
         return cellValue;
     }
 }

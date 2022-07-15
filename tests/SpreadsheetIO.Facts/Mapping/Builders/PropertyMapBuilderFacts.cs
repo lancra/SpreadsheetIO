@@ -700,4 +700,55 @@ public class PropertyMapBuilderFacts
                 invalidOperationException.Message);
         }
     }
+
+    public class TheUsesStringKindMethod : PropertyMapBuilderFacts
+    {
+        [Fact]
+        public void AddsOptionRegistration()
+        {
+            // Arrange
+            var stringKind = CellStringKind.InlineString;
+            var sut = CreateSystemUnderTest(model => model.Name);
+
+            // Act
+            sut.UsesStringKind(stringKind);
+
+            // Assert
+            Assert.True(sut.TryGetRegistration<StringKindMapOption>(out var registration));
+            Assert.Equal(stringKind, registration!.StringKind);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenStringKindIsNull()
+        {
+            // Arrange
+            var stringKind = default(CellStringKind);
+            var sut = CreateSystemUnderTest(model => model.Name);
+
+            // Act
+            var exception = Record.Exception(() => sut.UsesStringKind(stringKind!));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+
+        [Fact]
+        public void ThrowsInvalidOperationExceptionWhenPropertyTypeIsNotText()
+        {
+            // Arrange
+            var stringKind = CellStringKind.SharedString;
+            var sut = CreateSystemUnderTest(model => model.Id);
+
+            // Act
+            var exception = Record.Exception(() => sut.UsesStringKind(stringKind!));
+
+            // Assert
+            Assert.NotNull(exception);
+            var invalidOperationException = Assert.IsType<InvalidOperationException>(exception);
+            Assert.Equal(
+                Messages.MapOptionRegistrationNotAllowedForType(typeof(StringKindMapOption), typeof(int).Name),
+                invalidOperationException.Message);
+        }
+    }
 }

@@ -86,4 +86,11 @@ public interface IPropertyMapBuilder<TResource, TProperty>
     /// <param name="dateKind">The kind of date format.</param>
     /// <returns>The resulting property map builder.</returns>
     IPropertyMapBuilder<TResource, TProperty> UsesDateKind(CellDateKind dateKind);
+
+    /// <summary>
+    /// Specifies the kind of string format to use.
+    /// </summary>
+    /// <param name="stringKind">The kind of string format.</param>
+    /// <returns>The resulting property map builder.</returns>
+    IPropertyMapBuilder<TResource, TProperty> UsesStringKind(CellStringKind stringKind);
 }

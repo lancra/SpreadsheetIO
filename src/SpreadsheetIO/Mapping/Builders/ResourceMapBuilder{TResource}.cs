@@ -115,6 +115,14 @@ internal class ResourceMapBuilder<TResource> : ResourceMapBuilder, IInternalReso
         return this;
     }
 
+    public IResourceMapBuilder<TResource> UsesStringKind(CellStringKind stringKind)
+    {
+        Guard.Against.Null(stringKind, nameof(stringKind));
+
+        AddOrUpdateRegistration(new StringKindMapOption(stringKind));
+        return this;
+    }
+
     public IResourceMapBuilder<TResource> UsesExplicitConstructor(params string[] propertyNames)
     {
         Guard.Against.NullOrEmpty(propertyNames, nameof(propertyNames));

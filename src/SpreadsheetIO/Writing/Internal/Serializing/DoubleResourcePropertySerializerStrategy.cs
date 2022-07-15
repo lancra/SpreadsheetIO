@@ -7,11 +7,11 @@ internal class DoubleResourcePropertySerializerStrategy : IResourcePropertySeria
     public IReadOnlyCollection<Type> PropertyTypes { get; } =
         new[]
         {
-                typeof(uint),
-                typeof(long),
-                typeof(ulong),
-                typeof(float),
-                typeof(double),
+            typeof(uint),
+            typeof(long),
+            typeof(ulong),
+            typeof(float),
+            typeof(double),
         };
 
     public WritingCellValue Serialize(object? value, PropertyMap map)
