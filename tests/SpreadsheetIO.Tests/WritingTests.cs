@@ -153,6 +153,31 @@ public class WritingTests : IDisposable
     }
 
     [Fact]
+    [ExcelSourceFile("Write1900Dates.xlsx")]
+    public void Mapped1900Dates()
+    {
+        // Arrange
+        var models = new[]
+        {
+            new FakeDateModel(new DateTime(1900, 3, 1)),
+            new FakeDateModel(new DateTime(1900, 2, 28)),
+            new FakeDateModel(new DateTime(1900, 2, 27)),
+            new FakeDateModel(new DateTime(1900, 1, 2)),
+            new FakeDateModel(new DateTime(1900, 1, 1)),
+            new FakeDateModel(new DateTime(1899, 12, 31)),
+        };
+
+        // Act
+        using (var spreadsheet = _excelFixture.CreateSpreadsheet(map => map.ApplyConfiguration(new FakeDateModelMapConfiguration())))
+        {
+            spreadsheet.WritePage("1900 Dates", models);
+        }
+
+        // Assert
+        _excelFixture.EquivalentToSource();
+    }
+
+    [Fact]
     [ExcelSourceFile("StyleAlignment.xlsx")]
     public void StylingAlignments()
     {

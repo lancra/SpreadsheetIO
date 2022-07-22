@@ -1,4 +1,5 @@
 using LanceC.SpreadsheetIO.Shared;
+using LanceC.SpreadsheetIO.Shared.Internal;
 using OpenXml = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace LanceC.SpreadsheetIO.Writing;
@@ -303,7 +304,7 @@ public class WritingCellValue
         {
             if (dateKind == CellDateKind.Number)
             {
-                cell.CellValue = new OpenXml.CellValue(value.ToOADate());
+                cell.CellValue = new OpenXml.CellValue(value.ToExcelOADate());
             }
             else if (dateKind == CellDateKind.Text)
             {
@@ -317,7 +318,7 @@ public class WritingCellValue
         {
             if (dateKind == CellDateKind.Number)
             {
-                cell.CellValue = new OpenXml.CellValue(value.DateTime.ToOADate());
+                cell.CellValue = new OpenXml.CellValue(value.DateTime.ToExcelOADate());
             }
             else if (dateKind == CellDateKind.Text)
             {

@@ -5,53 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Testing\Content\ManualMultiple.xlsx" />
-    <None Remove="Testing\Content\ManualSingle.xlsx" />
-    <None Remove="Testing\Content\ManualSingleNumbers.xlsx" />
-    <None Remove="Testing\Content\MapSimple.xlsx" />
-    <None Remove="Testing\Content\StyleAlignment.xlsx" />
-    <None Remove="Testing\Content\StyleBorder.xlsx" />
-    <None Remove="Testing\Content\StyleFill.xlsx" />
-    <None Remove="Testing\Content\StyleFont.xlsx" />
-    <None Remove="Testing\Content\StyleNumericFormat.xlsx" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Testing\Content\ManualMultiple.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Testing\Content\ManualSingle.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Testing\Content\ManualSingleNumbers.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Testing\Content\MapSimple.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Testing\Content\StyleAlignment.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Testing\Content\StyleBorder.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Testing\Content\StyleFill.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Testing\Content\StyleFont.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Testing\Content\StyleNumericFormat.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\SpreadsheetIO\LanceC.SpreadsheetIO.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Testing\Content\*.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
