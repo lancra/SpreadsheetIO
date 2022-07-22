@@ -127,6 +127,12 @@ namespace LanceC.SpreadsheetIO.Properties
                 value);
 
         /// <summary>
+        /// The provided Excel date is not valid.
+        /// </summary>
+        public static string InvalidExcelDate
+            => GetString("InvalidExcelDate");
+
+        /// <summary>
         /// The {styleName} Excel style has not been set up with an identifier. Please contact the package maintainer.
         /// </summary>
         public static string InvalidExcelStyleSetup(object? styleName)

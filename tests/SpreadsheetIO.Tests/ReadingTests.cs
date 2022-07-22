@@ -1,3 +1,4 @@
+using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Reading;
 using LanceC.SpreadsheetIO.Tests.Testing;
 using LanceC.SpreadsheetIO.Tests.Testing.Fakes;
@@ -77,6 +78,52 @@ public class ReadingTests : IDisposable
             Assert.Equal(expectedModel.Date, actualNumberedModel.Resource.Date);
             Assert.Equal(expectedModel.Amount, actualNumberedModel.Resource.Amount);
             Assert.Equal(expectedModel.Letter, actualNumberedModel.Resource.Letter);
+        }
+    }
+
+    [Fact]
+    [ExcelSourceFile("Read1900Dates.xlsx")]
+    public void Mapped1900Dates()
+    {
+        // Arrange
+        var expectedResources = new[]
+        {
+            new NumberedResource<FakeDateModel>(2U, new(new DateTime(1900, 3, 1))),
+            new NumberedResource<FakeDateModel>(4U, new(new DateTime(1900, 2, 28))),
+            new NumberedResource<FakeDateModel>(5U, new(new DateTime(1900, 2, 27))),
+            new NumberedResource<FakeDateModel>(6U, new(new DateTime(1900, 1, 2))),
+            new NumberedResource<FakeDateModel>(7U, new(new DateTime(1900, 1, 1))),
+            new NumberedResource<FakeDateModel>(9U, new(new DateTime(1899, 12, 31))),
+        };
+
+        var spreadsheet = _excelFixture.OpenReadSpreadsheet(map => map.ApplyConfiguration(new FakeDateModelMapConfiguration()));
+        var spreadsheetPage = spreadsheet.Pages[0];
+
+        // Act
+        var readingResult = spreadsheetPage.ReadAll<FakeDateModel>();
+
+        // Assert
+        Assert.Equal(ReadingResultKind.PartialFailure, readingResult.Kind);
+        Assert.Null(readingResult.HeaderFailure);
+
+        Assert.Equal(2, readingResult.ResourceFailures.Count);
+        Assert.Single(
+            readingResult.ResourceFailures,
+            resourceFailure => resourceFailure.RowNumber == 3U && resourceFailure.InvalidProperties.Count == 2);
+        Assert.Single(
+            readingResult.ResourceFailures,
+            resourceFailure => resourceFailure.RowNumber == 8U && resourceFailure.InvalidProperties.Count == 2);
+
+        var actualResources = readingResult.Resources.ToArray();
+        Assert.Equal(expectedResources.Length, actualResources.Length);
+        for (var i = 0; i < expectedResources.Length; i++)
+        {
+            var expectedResource = expectedResources[i];
+            var actualResource = actualResources[i];
+
+            Assert.Equal(expectedResource.RowNumber, actualResource.RowNumber);
+            Assert.Equal(expectedResource.Resource!.DateNumber, actualResource.Resource!.DateNumber);
+            Assert.Equal(expectedResource.Resource.DateText, actualResource.Resource.DateText);
         }
     }
 

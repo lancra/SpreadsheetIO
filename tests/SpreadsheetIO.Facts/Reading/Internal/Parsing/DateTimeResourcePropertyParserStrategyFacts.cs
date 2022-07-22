@@ -17,6 +17,18 @@ public class DateTimeResourcePropertyParserStrategyFacts
 
     public class TheTryParseMethod : DateTimeResourcePropertyParserStrategyFacts
     {
+        public static readonly TheoryData<string, DateTime> DataForReturnsSuccessParseResultForValid1900Dates =
+            new()
+            {
+                { "61", new DateTime(1900, 3, 1) },
+                { "59", new DateTime(1900, 2, 28) },
+                { "58", new DateTime(1900, 2, 27) },
+                { "2", new DateTime(1900, 1, 2) },
+                { "1", new DateTime(1900, 1, 1) },
+                { "-1", new DateTime(1899, 12, 31) },
+                { "-2", new DateTime(1899, 12, 30) },
+            };
+
         [Theory]
         [InlineData(default)]
         [InlineData("")]
@@ -179,6 +191,39 @@ public class DateTimeResourcePropertyParserStrategyFacts
             // Assert
             Assert.Equal(ResourcePropertyParseResultKind.Success, parseResult);
             Assert.Equal(new DateTime(2021, 2, 3, 4, 5, 6, 789), value);
+        }
+
+        [Theory]
+        [MemberData(nameof(DataForReturnsSuccessParseResultForValid1900Dates))]
+        public void ReturnsSuccessParseResultForValid1900Dates(string cellValue, DateTime expectedValue)
+        {
+            // Arrange
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTime);
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var parseResult = sut.TryParse(cellValue, map, out var actualValue);
+
+            // Assert
+            Assert.Equal(ResourcePropertyParseResultKind.Success, parseResult);
+            Assert.Equal(expectedValue, actualValue);
+        }
+
+        [Theory]
+        [InlineData("60")]
+        [InlineData("0")]
+        public void ReturnsInvalidParseResultForInvalid1900Dates(string cellValue)
+        {
+            // Arrange
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTime);
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var parseResult = sut.TryParse(cellValue, map, out var value);
+
+            // Assert
+            Assert.Equal(ResourcePropertyParseResultKind.Invalid, parseResult);
+            Assert.Null(value);
         }
     }
 }

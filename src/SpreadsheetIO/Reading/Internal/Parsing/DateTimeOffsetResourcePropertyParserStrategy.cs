@@ -1,6 +1,7 @@
 using LanceC.SpreadsheetIO.Mapping;
 using LanceC.SpreadsheetIO.Mapping.Options.Extensions;
 using LanceC.SpreadsheetIO.Shared;
+using LanceC.SpreadsheetIO.Shared.Internal;
 
 namespace LanceC.SpreadsheetIO.Reading.Internal.Parsing;
 
@@ -32,8 +33,8 @@ internal class DateTimeOffsetResourcePropertyParserStrategy : IDefaultResourcePr
 
     private static ResourcePropertyParseResultKind TryParseFromNumber(string cellValue, out object? value)
     {
-        var hasDoubleValue = double.TryParse(cellValue, out var doubleValue);
-        if (!hasDoubleValue)
+        var hasOADate = double.TryParse(cellValue, out var oaDate);
+        if (!hasOADate)
         {
             value = null;
             return ResourcePropertyParseResultKind.Invalid;
@@ -41,7 +42,7 @@ internal class DateTimeOffsetResourcePropertyParserStrategy : IDefaultResourcePr
 
         try
         {
-            var dateTimeValue = DateTime.FromOADate(doubleValue);
+            var dateTimeValue = oaDate.FromExcelOADate();
             value = new DateTimeOffset(dateTimeValue);
             return ResourcePropertyParseResultKind.Success;
         }

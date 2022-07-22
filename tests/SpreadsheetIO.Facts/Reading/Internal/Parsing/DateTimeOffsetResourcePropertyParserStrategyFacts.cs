@@ -17,6 +17,18 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
 
     public class TheTryParseMethod : DateTimeOffsetResourcePropertyParserStrategyFacts
     {
+        public static readonly TheoryData<string, DateTimeOffset> DataForReturnsSuccessParseResultForValid1900Dates =
+            new()
+            {
+                { "61", new DateTimeOffset(new DateTime(1900, 3, 1)) },
+                { "59", new DateTimeOffset(new DateTime(1900, 2, 28)) },
+                { "58", new DateTimeOffset(new DateTime(1900, 2, 27)) },
+                { "2", new DateTimeOffset(new DateTime(1900, 1, 2)) },
+                { "1", new DateTimeOffset(new DateTime(1900, 1, 1)) },
+                { "-1", new DateTimeOffset(new DateTime(1899, 12, 31)) },
+                { "-2", new DateTimeOffset(new DateTime(1899, 12, 30)) },
+            };
+
         [Theory]
         [InlineData(default)]
         [InlineData("")]
@@ -189,6 +201,39 @@ public class DateTimeOffsetResourcePropertyParserStrategyFacts
             // Assert
             Assert.Equal(ResourcePropertyParseResultKind.Success, parseResult);
             Assert.Equal(new DateTimeOffset(2021, 2, 3, 4, 5, 6, 789, new TimeSpan(-5, 0, 0)), value);
+        }
+
+        [Theory]
+        [MemberData(nameof(DataForReturnsSuccessParseResultForValid1900Dates))]
+        public void ReturnsSuccessParseResultForValid1900Dates(string cellValue, DateTimeOffset expectedValue)
+        {
+            // Arrange
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var parseResult = sut.TryParse(cellValue, map, out var actualValue);
+
+            // Assert
+            Assert.Equal(ResourcePropertyParseResultKind.Success, parseResult);
+            Assert.Equal(expectedValue, actualValue);
+        }
+
+        [Theory]
+        [InlineData("60")]
+        [InlineData("0")]
+        public void ReturnsInvalidParseResultForInvalid1900Dates(string cellValue)
+        {
+            // Arrange
+            var map = PropertyMapCreator.CreateForFakeResourcePropertyStrategyModel(model => model.DateTimeOffset);
+            var sut = CreateSystemUnderTest();
+
+            // Act
+            var parseResult = sut.TryParse(cellValue, map, out var value);
+
+            // Assert
+            Assert.Equal(ResourcePropertyParseResultKind.Invalid, parseResult);
+            Assert.Null(value);
         }
     }
 }

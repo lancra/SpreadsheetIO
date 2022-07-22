@@ -7,6 +7,18 @@ namespace LanceC.SpreadsheetIO.Facts.Writing;
 
 public class WritingCellValueFacts
 {
+    public static readonly TheoryData<DateTime, string> DataForHandles1900Dates =
+            new()
+            {
+                { new DateTime(1900, 3, 1), "61" },
+                { new DateTime(1900, 2, 28), "59" },
+                { new DateTime(1900, 2, 27), "58" },
+                { new DateTime(1900, 1, 2), "2" },
+                { new DateTime(1900, 1, 1), "1" },
+                { new DateTime(1899, 12, 31), "-1" },
+                { new DateTime(1899, 12, 30), "-2" },
+            };
+
     private readonly OpenXml.Cell _cell = new();
 
     public class TheConstructorWithIntegerParameter : WritingCellValueFacts
@@ -370,6 +382,19 @@ public class WritingCellValueFacts
             cellValue.CellModifier!(_cell);
             Assert.Equal("43831.08546952546", _cell.CellValue.Text);
         }
+
+        [Theory]
+        [MemberData(nameof(DataForHandles1900Dates))]
+        public void Handles1900Dates(DateTime value, string expectedCellValue)
+        {
+            // Act
+            var cellValue = new WritingCellValue(value);
+
+            // Assert
+            Assert.NotNull(cellValue.CellModifier);
+            cellValue.CellModifier!(_cell);
+            Assert.Equal(expectedCellValue, _cell.CellValue.Text);
+        }
     }
 
     public class TheConstructorWithDateTimeAndCellDateKindParameters : WritingCellValueFacts
@@ -404,6 +429,19 @@ public class WritingCellValueFacts
             Assert.Equal("2020-01-01T02:03:04.567", _cell.CellValue.Text);
             Assert.Equal(OpenXml.CellValues.SharedString, _cell.DataType.Value);
         }
+
+        [Theory]
+        [MemberData(nameof(DataForHandles1900Dates))]
+        public void Handles1900DatesWhenDateKindIsNumber(DateTime value, string expectedCellValue)
+        {
+            // Act
+            var cellValue = new WritingCellValue(value, CellDateKind.Number);
+
+            // Assert
+            Assert.NotNull(cellValue.CellModifier);
+            cellValue.CellModifier!(_cell);
+            Assert.Equal(expectedCellValue, _cell.CellValue.Text);
+        }
     }
 
     public class TheConstructorWithNullableDateTimeParameter : WritingCellValueFacts
@@ -434,6 +472,22 @@ public class WritingCellValueFacts
 
             // Assert
             Assert.Null(cellValue.CellModifier);
+        }
+
+        [Theory]
+        [MemberData(nameof(DataForHandles1900Dates))]
+        public void Handles1900Dates(DateTime value, string expectedCellValue)
+        {
+            // Arrange
+            DateTime? nullableValue = value;
+
+            // Act
+            var cellValue = new WritingCellValue(nullableValue);
+
+            // Assert
+            Assert.NotNull(cellValue.CellModifier);
+            cellValue.CellModifier!(_cell);
+            Assert.Equal(expectedCellValue, _cell.CellValue.Text);
         }
     }
 
@@ -482,6 +536,22 @@ public class WritingCellValueFacts
             // Assert
             Assert.Null(cellValue.CellModifier);
         }
+
+        [Theory]
+        [MemberData(nameof(DataForHandles1900Dates))]
+        public void Handles1900DatesWhenDateKindIsNumber(DateTime value, string expectedCellValue)
+        {
+            // Arrange
+            DateTime? nullableValue = value;
+
+            // Act
+            var cellValue = new WritingCellValue(nullableValue, CellDateKind.Number);
+
+            // Assert
+            Assert.NotNull(cellValue.CellModifier);
+            cellValue.CellModifier!(_cell);
+            Assert.Equal(expectedCellValue, _cell.CellValue.Text);
+        }
     }
 
     public class TheConstructorWithDateTimeOffsetParameter : WritingCellValueFacts
@@ -499,6 +569,22 @@ public class WritingCellValueFacts
             Assert.NotNull(cellValue.CellModifier);
             cellValue.CellModifier!(_cell);
             Assert.Equal("43831.08546952546", _cell.CellValue.Text);
+        }
+
+        [Theory]
+        [MemberData(nameof(DataForHandles1900Dates))]
+        public void Handles1900Dates(DateTime value, string expectedCellValue)
+        {
+            // Arrange
+            var dateTimeOffsetValue = new DateTimeOffset(value);
+
+            // Act
+            var cellValue = new WritingCellValue(dateTimeOffsetValue);
+
+            // Assert
+            Assert.NotNull(cellValue.CellModifier);
+            cellValue.CellModifier!(_cell);
+            Assert.Equal(expectedCellValue, _cell.CellValue.Text);
         }
     }
 
@@ -534,6 +620,22 @@ public class WritingCellValueFacts
             Assert.Equal("2020-01-01T02:03:04.567-05:00", _cell.CellValue.Text);
             Assert.Equal(OpenXml.CellValues.SharedString, _cell.DataType.Value);
         }
+
+        [Theory]
+        [MemberData(nameof(DataForHandles1900Dates))]
+        public void Handles1900DatesWhenDateKindIsNumber(DateTime value, string expectedCellValue)
+        {
+            // Arrange
+            var dateTimeOffsetValue = new DateTimeOffset(value);
+
+            // Act
+            var cellValue = new WritingCellValue(dateTimeOffsetValue, CellDateKind.Number);
+
+            // Assert
+            Assert.NotNull(cellValue.CellModifier);
+            cellValue.CellModifier!(_cell);
+            Assert.Equal(expectedCellValue, _cell.CellValue.Text);
+        }
     }
 
     public class TheConstructorWithNullableDateTimeOffsetParameter : WritingCellValueFacts
@@ -564,6 +666,22 @@ public class WritingCellValueFacts
 
             // Assert
             Assert.Null(cellValue.CellModifier);
+        }
+
+        [Theory]
+        [MemberData(nameof(DataForHandles1900Dates))]
+        public void Handles1900Dates(DateTime value, string expectedCellValue)
+        {
+            // Arrange
+            DateTimeOffset? dateTimeOffsetValue = new(value);
+
+            // Act
+            var cellValue = new WritingCellValue(dateTimeOffsetValue);
+
+            // Assert
+            Assert.NotNull(cellValue.CellModifier);
+            cellValue.CellModifier!(_cell);
+            Assert.Equal(expectedCellValue, _cell.CellValue.Text);
         }
     }
 
@@ -611,6 +729,22 @@ public class WritingCellValueFacts
 
             // Assert
             Assert.Null(cellValue.CellModifier);
+        }
+
+        [Theory]
+        [MemberData(nameof(DataForHandles1900Dates))]
+        public void Handles1900DatesWhenDateKindIsNumber(DateTime value, string expectedCellValue)
+        {
+            // Arrange
+            DateTimeOffset? dateTimeOffsetValue = new(value);
+
+            // Act
+            var cellValue = new WritingCellValue(dateTimeOffsetValue, CellDateKind.Number);
+
+            // Assert
+            Assert.NotNull(cellValue.CellModifier);
+            cellValue.CellModifier!(_cell);
+            Assert.Equal(expectedCellValue, _cell.CellValue.Text);
         }
     }
 
